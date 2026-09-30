@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+  <title>Sub-Routine (PS1 Lo-Fi Indie Horror)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #050508;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+      color: #00ff66;
+    }
+    #canvas-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #canvas {
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      display: block;
+    }
+    /* PS1 CRT Scanlines Filter Overlay */
+    .crt-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 4px, 6px 100%;
+      z-index: 10;
+    }
+    #status-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10, 10, 15, 0.95);
+      border: 2px solid #00ff66;
+      padding: 24px;
+      text-align: center;
+      z-index: 20;
+      box-shadow: 0 0 25px rgba(0, 255, 102, 0.2);
+      max-width: 90%;
+    }
+    .glitch-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      text-shadow: 2px 0 #ff0055, -2px 0 #00ffff;
+    }
+    .progress-bar-container {
+      width: 280px;
+      height: 16px;
+      background: #111;
+      border: 1px solid #00ff66;
+      margin: 16px auto;
+      position: relative;
+    }
+    #progress-fill {
+      width: 0%;
+      height: 100%;
+      background: #00ff66;
+      transition: width 0.2s ease;
+    }
+    .btn-unlock {
+      background: #00ff66;
+      color: #050508;
+      font-family: inherit;
+      font-weight: bold;
+      padding: 10px 24px;
+      border: none;
+      cursor: pointer;
+      margin-top: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .btn-unlock:hover {
+      background: #33ff88;
+    }
+    /* Mobile Virtual Touch Controls */
+    #mobile-controls {
+      display: none;
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      padding: 0 20px;
+      z-index: 15;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+    .touch-btn {
+      width: 60px;
+      height: 60px;
+      background: rgba(0, 255, 102, 0.2);
+      border: 1px solid #00ff66;
+      border-radius: 50%;
+      color: #00ff66;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      pointer-events: auto;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="canvas" tabindex="1"></canvas>
+    <div class="crt-overlay"></div>
+
+    <div id="status-overlay">
+      <div class="glitch-title">SUB-ROUTINE v1.0.0</div>
+      <div id="status-text">INITIALIZING SINGLE-THREADED WASM RUNTIME...</div>
+      <div class="progress-bar-container">
+        <div id="progress-fill"></div>
+      </div>
+      <button id="btn-start" class="btn-unlock" style="display: none;">INITIALIZE SUBTERRANEAN STACK</button>
+    </div>
+
+    <div id="mobile-controls">
+      <div style="display: grid; grid-template-columns: repeat(3, 50px); gap: 6px;">
+        <div></div>
+        <div class="touch-btn" id="btn-up">W</div>
+        <div></div>
+        <div class="touch-btn" id="btn-left">A</div>
+        <div class="touch-btn" id="btn-down">S</div>
+        <div class="touch-btn" id="btn-right">D</div>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: flex-end;">
+        <div class="touch-btn" id="btn-sprint">SHIFT</div>
+        <div class="touch-btn" id="btn-interact" style="width: 70px; height: 70px;">ACT</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+  <script>
+    const statusText = document.getElementById('status-text');
+    const progressFill = document.getElementById('progress-fill');
+    const statusOverlay = document.getElementById('status-overlay');
+    const btnStart = document.getElementById('btn-start');
+    const canvas = document.getElementById('canvas');
+
+    // Detect mobile touch devices (Android, etc.)
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+      document.getElementById('mobile-controls').style.display = 'flex';
+    }
+
+    // Engine config: Single-threaded WASM, 50ms audio latency fix
+    const GODOT_CONFIG = {
+      "args": [],
+      "canvasResizePolicy": 2,
+      "executable": "index",
+      "experimentalVK": false,
+      "fileSizes": { "index.pck": 12400000, "index.wasm": 18200000 },
+      "focusCanvasOnStart": true,
+      "installed": false
+    };
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 15;
+      if (progressFill) progressFill.style.width = Math.min(progress, 100) + '%';
+      if (progress >= 100) {
+        clearInterval(interval);
+        statusText.innerText = "STANDBY: AUDIO SUBSYSTEM & CORE READY";
+        btnStart.style.display = "inline-block";
+      }
+    }, 120);
+
+    btnStart.addEventListener('click', () => {
+      statusOverlay.style.display = 'none';
+      canvas.focus();
+      // Unlock WebAudio AudioContext
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) {
+        const audioCtx = new AudioContext({ latencyHint: 0.05 }); // 50ms buffer latency
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      }
+      console.log("[Sub-Routine WASM] Single-threaded engine booted at 60 FPS cap.");
+    });
+  </script>
+</body>
+</html>

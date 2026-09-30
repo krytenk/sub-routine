@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://mainframeprop01"]
+
+[ext_resource type="PackedScene" path="res://assets/models/mainframe_bank.glb" id="1_mesh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_chassis"]
+size = Vector3(2.4, 2.8, 1.2)
+
+[node name="MainframeBankProp" type="Node3D"]
+
+[node name="Model" parent="." instance=ExtResource("1_mesh")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+shape = SubResource("BoxShape3D_chassis")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.7)
+light_color = Color(0.2, 0.45, 0.85, 1)
+light_energy = 0.4
+omni_range = 1.8
+omni_attenuation = 2.0

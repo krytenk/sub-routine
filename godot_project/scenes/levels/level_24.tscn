@@ -1,0 +1,137 @@
+[gd_scene load_steps=14 format=3 uid="uid://subroutine_lvl_24"]
+
+[ext_resource type="Script" path="res://scripts/puzzles/parity_check_puzzle.gd" id="1_puzzle"]
+[ext_resource type="Script" path="res://scripts/non_euclidean_corridor.gd" id="2_noneuc"]
+[ext_resource type="Script" path="res://scripts/shifting_room.gd" id="3_shift"]
+[ext_resource type="PackedScene" uid="uid://b7glitchwalker01" path="res://scenes/enemies/glitch_walker.tscn" id="4_walker"]
+[ext_resource type="Script" path="res://scripts/environmental_hazard.gd" id="5_hazard"]
+[ext_resource type="Script" path="res://scripts/overseer_trigger_zone.gd" id="6_trigger"]
+[ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="7_server_tex"]
+[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="8_rust_tex"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(18, 0.2, 36)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_texture = ExtResource("8_rust_tex")
+uv1_scale = Vector3(5, 9, 1)
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector3(18, 0.2, 36)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall"]
+size = Vector3(0.4, 4, 36)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_texture = ExtResource("7_server_tex")
+uv1_scale = Vector3(9, 2, 1)
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(0.4, 4, 36)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_trigger"]
+size = Vector3(8, 3, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hazard"]
+size = Vector3(6, 1, 6)
+
+[node name="Level_24" type="Node3D"]
+
+[node name="Lighting" type="Node3D" parent="."]
+
+[node name="OmniLight3D_1" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -8)
+light_color = Color(0.1, 0.4, 0.9, 1)
+light_energy = 2.8
+omni_range = 16.0
+
+[node name="OmniLight3D_2" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 10)
+light_color = Color(0.1, 0.4, 0.9, 1)
+light_energy = 2.4
+omni_range = 16.0
+
+[node name="Architecture" type="StaticBody3D" parent="."]
+
+[node name="FloorCollision" type="CollisionShape3D" parent="Architecture"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="FloorMesh" type="MeshInstance3D" parent="Architecture"]
+mesh = SubResource("BoxMesh_floor")
+
+[node name="LeftWallCol" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2, 0)
+shape = SubResource("BoxShape3D_wall")
+
+[node name="LeftWallMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2, 0)
+mesh = SubResource("BoxMesh_wall")
+
+[node name="RightWallCol" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2, 0)
+shape = SubResource("BoxShape3D_wall")
+
+[node name="RightWallMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2, 0)
+mesh = SubResource("BoxMesh_wall")
+
+[node name="NonEuclideanCorridor" type="Area3D" parent="." node_paths=PackedStringArray("entry_anchor", "puzzle_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 16)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("2_noneuc")
+entry_anchor = NodePath("EntryAnchor")
+puzzle_target = NodePath("../Puzzles/PrimaryPuzzle")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NonEuclideanCorridor"]
+shape = SubResource("BoxShape3D_trigger")
+
+[node name="EntryAnchor" type="Marker3D" parent="NonEuclideanCorridor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -30)
+
+[node name="ShiftingRoom" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("3_shift")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ShiftingRoom"]
+shape = SubResource("BoxShape3D_trigger")
+
+[node name="EnvironmentalHazard" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 3)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("5_hazard")
+hazard_type = "electric_busbar"
+damage_per_tick = 50
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnvironmentalHazard"]
+shape = SubResource("BoxShape3D_hazard")
+
+[node name="OverseerTriggerZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -16)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("6_trigger")
+trigger_type = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OverseerTriggerZone"]
+shape = SubResource("BoxShape3D_trigger")
+
+[node name="Puzzles" type="Node3D" parent="."]
+
+[node name="PrimaryPuzzle" type="Node3D" parent="Puzzles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, -10)
+script = ExtResource("1_puzzle")
+puzzle_id = "SECTOR_24_REGISTER"
+puzzle_name = "Memory Parity Check 24"
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="GlitchWalker" parent="Enemies" instance=ExtResource("4_walker")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 8)

@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://crtprop01tscn"]
+
+[ext_resource type="Script" path="res://scenes/props/crt_terminal_prop.gd" id="1_prop"]
+[ext_resource type="PackedScene" path="res://assets/models/crt_terminal.glb" id="2_mesh"]
+[ext_resource type="Script" path="res://scripts/props/broken_electronics_light.gd" id="3_light"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_body"]
+size = Vector3(1.2, 1.4, 0.9)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_trigger"]
+radius = 3.5
+
+[node name="CRTTerminalProp" type="Node3D" groups=["interactive_props", "terminals"]]
+script = ExtResource("1_prop")
+
+[node name="Model" parent="." instance=ExtResource("2_mesh")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_body")
+
+[node name="InteractionArea" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("SphereShape3D_trigger")
+
+[node name="PromptLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+billboard = 1
+text = "[E] Access Subroutine Terminal"
+modulate = Color(0.2, 1, 0.5, 1)
+outline_modulate = Color(0, 0, 0, 1)
+font_size = 20
+
+[node name="TerminalGlow" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.45)
+script = ExtResource("3_light")
+mode = 1
+base_color = Color(0.2, 0.95, 0.45, 1)
+base_energy = 1.8
+peak_energy = 2.4
+light_range = 7.5
+enable_shadows = true

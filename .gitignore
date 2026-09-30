@@ -1,0 +1,10 @@
+# Godot 4+ ignores
+.godot/
+*.translation
+
+# Next.js / PWA
+node_modules/
+.next/
+out/
+.DS_Store
+*.tmp

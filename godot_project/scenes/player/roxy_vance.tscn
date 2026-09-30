@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8roxyvance01"]
+
+[ext_resource type="Script" path="res://scenes/player/roxy_vance.gd" id="1_roxy"]
+[ext_resource type="PackedScene" path="res://assets/models/roxy_vance.glb" id="2_model"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_roxy"]
+radius = 0.4
+height = 1.8
+
+[node name="RoxyVance" type="CharacterBody3D" groups=["player"]]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_roxy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_roxy")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0.25, 0)
+collision_mask = 1
+spring_length = 2.4
+margin = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+current = true
+fov = 75.0
+
+[node name="InteractionRay" type="RayCast3D" parent="CameraPivot"]
+target_position = Vector3(0, 0, -4.5)
+collision_mask = 5
+collide_with_areas = true
+collide_with_bodies = true
+
+[node name="ModelAnchor" type="Node3D" parent="."]
+
+[node name="Model" parent="ModelAnchor" instance=ExtResource("2_model")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)

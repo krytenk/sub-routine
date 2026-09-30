@@ -1,0 +1,24 @@
+{
+  "name": "sub-routine-pwa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sub-Routine PS1-Style Indie Horror Game Next.js PWA Wrapper",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint",
+    "serve-static": "npx -y serve public -p 8080"
+  },
+  "dependencies": {
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.3"
+  }
+}

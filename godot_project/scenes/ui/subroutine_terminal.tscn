@@ -1,0 +1,294 @@
+[gd_scene load_steps=5 format=3 uid="uid://dmaptrmnl01"]
+
+[ext_resource type="Script" path="res://scenes/ui/subroutine_terminal.gd" id="1_term"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.03, 0.06, 0.04, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.1, 0.8, 0.35, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.06, 0.12, 0.08, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.15, 0.6, 0.3, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_notes"]
+bg_color = Color(0.02, 0.04, 0.02, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.08, 0.35, 0.18, 1)
+
+[node name="SubroutineTerminal" type="Control"]
+z_index = 50
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_term")
+
+[node name="DimOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.01, 0.02, 0.01, 0.75)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(560, 310)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Header" type="HBoxContainer" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SectorTitle" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.1, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "SECTOR 01 // SUBTERRANEAN BIOS BOOT"
+
+[node name="SystemClock" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.8, 0.5, 0.8)
+theme_override_font_sizes/font_size = 11
+text = "SYS_VER 1.0.4 [ACTIVE]"
+
+[node name="HSeparator1" type="HSeparator" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Grid" type="HBoxContainer" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopologyStatus" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "ANOMALY: Looping Corridor"
+
+[node name="RegisterStatus" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.8, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "MATRIX: Server Register 01"
+
+[node name="ThreatStatus" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 11
+text = "THREAT: Glitch Entity Active"
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PuzzleSection" type="VBoxContainer" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CipherDisplay" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "TARGET MEMORY CIPHER: [ ---- ]  <-- ENTER THIS CODE"
+
+[node name="EnteredDisplay" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 1, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "INPUT REGISTER BUFFER: [ _ _ _ _ ]"
+
+[node name="KeypadGrid" type="GridContainer" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection"]
+layout_mode = 2
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 3
+columns = 8
+
+[node name="Btn0" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "0"
+
+[node name="Btn1" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "1"
+
+[node name="Btn2" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "2"
+
+[node name="Btn3" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "3"
+
+[node name="Btn4" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "4"
+
+[node name="Btn5" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "5"
+
+[node name="Btn6" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "6"
+
+[node name="Btn7" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "7"
+
+[node name="Btn8" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "8"
+
+[node name="Btn9" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "9"
+
+[node name="BtnA" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "A"
+
+[node name="BtnB" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "B"
+
+[node name="BtnC" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "C"
+
+[node name="BtnD" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "D"
+
+[node name="BtnE" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "E"
+
+[node name="BtnF" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/KeypadGrid"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "F"
+
+[node name="ActionContainer" type="HBoxContainer" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BtnClear" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/ActionContainer"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7, 0.3, 1)
+text = "CLR [BKSP]"
+
+[node name="BtnDereference" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/PuzzleSection/ActionContainer"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.1, 1, 0.4, 1)
+text = "[ DEREFERENCE POINTER & UNLOCK BLAST DOOR (ENTER) ]"
+
+[node name="NotesPanel" type="PanelContainer" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_notes")
+
+[node name="DevNotes" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/NotesPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.85, 0.6, 1)
+theme_override_font_sizes/font_size = 10
+text = "[OVERSEER DIRECTIVE]: Input memory register hex cipher to dereference corridor memory address and unlock blast gate."
+autowrap_mode = 3
+
+[node name="CloseButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+text = "EXIT TERMINAL [ESC / TAB]"

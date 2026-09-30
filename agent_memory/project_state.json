@@ -1,0 +1,272 @@
+{
+  "project_name": "Sub-Routine",
+  "version": "1.6.4-camera-springarm-and-movement-orientation-overhaul",
+  "last_updated": "2026-09-29T14:56:00-07:00",
+  "session_state": {
+    "status": "THIRD_PERSON_CAMERA_AND_DUAL_CONTROLS_OPERATIONAL",
+    "active_sector": 1,
+    "in_engine_runner": "godot_project/tests/gdunit4_cli_runner.gd",
+    "in_engine_runner_hardened": true,
+    "in_engine_tests_passed": 21,
+    "in_engine_tests_failed": 0,
+    "memory_leaks_prevented": true,
+
+
+    "unparented_transform_warp_fixed": true,
+    "headless_autoload_audio_suppressed": true,
+    "tdd_exit_code": 0,
+    "tdd_tests_passed": 14,
+    "tdd_tests_failed": 0,
+    "glitch_walker_overhaul": {
+      "model_mesh_instantiated": "glitch_walker.glb",
+      "primitive_box_removed": true,
+      "health": 60,
+      "emp_damage_per_hit": 35,
+      "overload_kill_hits": 2
+    },
+    "roxy_vance_mesh_instantiated": "roxy_vance.glb",
+    "cipher_guidance": {
+      "hud_mission_objective": true,
+      "memory_core_announcement": true,
+      "terminal_explicit_display": true
+    },
+    "models_generated_count": 11,
+    "prop_scenes_count": 6,
+    "props_integrated_in_level_01": true,
+    "graphics_overhaul": {
+      "blender_version": "5.1.0",
+      "emissive_glitch_fixed": true,
+      "multi_material_ps1_pipeline": true,
+      "isolated_phosphor_and_led_emission": true,
+      "softened_omni_attenuation": 2.0,
+      "enclosed_brutalist_architecture": true,
+      "ceilings_rendered": true,
+      "textured_walls_rendered": true
+    },
+    "expansions": {
+      "emp_stun_pulse": {
+        "cooldown_seconds": 8.0,
+        "stun_duration_seconds": 4.5,
+        "radius_meters": 8.0,
+        "hud_indicator": true,
+        "controls": "[F] / Right Mouse Button"
+      },
+      "terminal_register_cipher_minigame": {
+        "interactive_hex_keypad": true,
+        "pointer_dereference_mechanic": true,
+        "gate_unlock_integration": true,
+        "dynamic_overseer_vo_reaction": true
+      },
+      "playable_sectors_rendered": [
+        "level_01.tscn (Sector 01: Subterranean Ingress)",
+        "level_02.tscn (Sector 02: Core Server Labyrinth)",
+        "level_03.tscn (Sector 03: Hydraulic Coolant Grid)"
+      ]
+    },
+    "active_task": "godot_desktop_live"
+  },
+  "game_design_document": {
+    "title": "Sub-Routine",
+    "aesthetic": "PS1-style Lo-Fi Survival Horror, brutalist subterranean server labyrinth, AI decaying textures",
+    "characters": {
+      "protagonist": {
+        "name": "Roxanne 'Roxy' Vance",
+        "attire": "Combat boots, cargo shorts, crop top (classic 90s gaming trope)",
+        "damage_rules": {
+          "environmental_damage": 0,
+          "enemy_damage_only": true,
+          "base_health": 100
+        },
+        "stamina_system": {
+          "max_stamina": 100.0,
+          "drain_rate": 24.0,
+          "regen_rate": 16.0,
+          "exhaustion_recovery_threshold": 25.0
+        },
+        "defense_tool": {
+          "name": "EMP Stun Pulse",
+          "cooldown": 8.0,
+          "stun_duration": 4.5,
+          "radius": 8.0
+        }
+      },
+      "antagonist": {
+        "name": "The Overseer",
+        "role": "Rogue self-aware development AI",
+        "fourth_wall_triggers": [
+          {
+            "condition": "navmesh_breach",
+            "dialogue": "Roxy, the nav-mesh doesn't even extend over there. Turn around and get back to the designated corridor before I delete your save file.",
+            "vo_clip": "overseer_navmesh_warning",
+            "recording_duration_seconds": 10.88
+          },
+          {
+            "condition": "speedrun_attempt",
+            "dialogue": "Are you trying to speed-run this? I haven't even finished rendering the next room. Slow down.",
+            "vo_clip": "overseer_speedrun_warning",
+            "recording_duration_seconds": 7.4
+          },
+          {
+            "condition": "out_of_bounds",
+            "dialogue": "Critical Exception: Player coordinates outside scene bounding box. Returning entity to last valid checkpoint.",
+            "vo_clip": "overseer_savefile_threat",
+            "recording_duration_seconds": 9.24
+          },
+          {
+            "condition": "dimension_shift",
+            "dialogue": "Did you really think the hallway behind you was static? Non-Euclidean garbage collection in progress.",
+            "vo_clip": "overseer_dimension_shift",
+            "recording_duration_seconds": 8.12
+          },
+          {
+            "condition": "sequence_break",
+            "dialogue": "Sequence break error in node register. Execute the correct subroutine order, Roxy.",
+            "vo_clip": "overseer_sequence_break",
+            "recording_duration_seconds": 8.12
+          },
+          {
+            "condition": "puzzle_solved",
+            "dialogue": "Pointer dereferenced. Corridor gate unlocked. Don't get cocky, the Glitch Walkers hear your footsteps.",
+            "vo_clip": "overseer_puzzle_solved",
+            "recording_duration_seconds": 3.08
+          }
+        ]
+      },
+      "enemies": {
+        "name": "The Glitch Walkers",
+        "description": "Low-polygon faceless humanoid wireframes wrapped in pulsating AI fleshy textures",
+        "behavior": "Spatial hunting, difficulty-scaled speed (0.6x to 2.0x) and attack damage (0.5x to 2.5x), vulnerable to EMP stun"
+      }
+    },
+    "non_euclidean_geometry": {
+      "corridor_looping": "Infinite seamless threshold teleportation until primary puzzle is solved",
+      "room_dimension_shifting": "180-degree player look-away triggers dynamic wall and monolith reconfiguration"
+    },
+    "dynamic_difficulty": {
+      "slider_range": "0.0 (Story) to 1.0 (Nightmare)",
+      "metrics": {
+        "Story": {
+          "speed_mult": 0.6,
+          "damage_mult": 0.5,
+          "cipher_len": 3
+        },
+        "Standard": {
+          "speed_mult": 1.0,
+          "damage_mult": 1.0,
+          "cipher_len": 4
+        },
+        "Hardcore": {
+          "speed_mult": 1.4,
+          "damage_mult": 1.5,
+          "cipher_len": 5
+        },
+        "Nightmare": {
+          "speed_mult": 2.0,
+          "damage_mult": 2.5,
+          "cipher_len": 7
+        }
+      }
+    },
+    "roadmap": {
+      "total_scope_levels": 120,
+      "launch_day_levels": 20,
+      "expansion_pack_1_levels": 40,
+      "target_gameplay_time_per_level_minutes": 30,
+      "active_playable_scenes_count": 40
+    }
+  },
+  "audio_validation_report": {
+    "target_level_duration_minutes": 30,
+    "tracks": [
+      {
+        "name": "ambient_drone_subterranean.wav",
+        "duration_seconds": 171.38,
+        "duration_minutes": 2.86,
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "bit_depth": 16,
+        "size_mb": 31.39,
+        "peak_dbfs": 0.0,
+        "average_rms_dbfs": -16.1,
+        "seam_delta": 7,
+        "loops_per_30min_level": 10.5,
+        "suitability_rating": "OPTIMAL - Pristine zero-crossing loop seam, ideal length preventing player ear fatigue."
+      },
+      {
+        "name": "ambient_server_hum.wav",
+        "duration_seconds": 182.73,
+        "duration_minutes": 3.05,
+        "sample_rate_hz": 48000,
+        "channels": 2,
+        "bit_depth": 16,
+        "size_mb": 33.47,
+        "peak_dbfs": -0.07,
+        "average_rms_dbfs": -15.74,
+        "seam_delta": 0,
+        "loops_per_30min_level": 9.85,
+        "suitability_rating": "OPTIMAL - Absolute zero fade-out tail, hypnotic server drone."
+      }
+    ],
+    "playlist_behavior": "Seamless alternating playlist rotation with 3.5s psychological suspense breather intervals."
+  },
+  "asset_pipeline": {
+    "textures": {
+      "rusted_metal": "asset_pipeline/raw_textures/rusted_metal.jpg",
+      "decaying_flesh": "asset_pipeline/raw_textures/decaying_flesh.jpg",
+      "server_labyrinth": "asset_pipeline/raw_textures/server_labyrinth.jpg"
+    },
+    "models_generated": [
+      "blast_door.glb",
+      "cable_nest.glb",
+      "coolant_pipe_junction.glb",
+      "crt_terminal.glb",
+      "emp_device.glb",
+      "glitch_walker.glb",
+      "mainframe_bank.glb",
+      "memory_core_pickup.glb",
+      "roxy_vance.glb",
+      "server_corridor.glb",
+      "server_rack.glb"
+    ],
+    "blender_scripts": [
+      "asset_pipeline/scripts/headless_blender_pipeline.py",
+      "asset_pipeline/scripts/bake_texture_atlas.py",
+      "asset_pipeline/scripts/procedural_mesh_generator.py"
+    ],
+    "pipeline_runner": "asset_pipeline/run_pipeline.sh",
+    "shaders": [
+      "godot_project/assets/shaders/ps1_vertex_jitter.gdshader",
+      "godot_project/assets/shaders/crt_glitch_overlay.gdshader"
+    ],
+    "prop_scenes": [
+      "godot_project/scenes/props/blast_door_prop.tscn",
+      "godot_project/scenes/props/cable_nest_prop.tscn",
+      "godot_project/scenes/props/coolant_pipe_prop.tscn",
+      "godot_project/scenes/props/crt_terminal_prop.tscn",
+      "godot_project/scenes/props/mainframe_bank_prop.tscn",
+      "godot_project/scenes/props/memory_core_pickup_prop.tscn"
+    ]
+  },
+  "cross_platform_stack": {
+    "godot_renderer": "gl_compatibility",
+    "vram_compression": "rendering/textures/vram_compression/import_etc2_astc=true",
+    "frame_rate_cap": 60,
+    "wasm_threading": "single-threaded (variant/thread_support=false)",
+    "nextjs_pwa": {
+      "path": "nextjs_pwa",
+      "service_worker": "public/sw.js",
+      "manifest": "public/manifest.json",
+      "cache_targets": [
+        ".pck",
+        ".wasm",
+        "index.html",
+        "index.js"
+      ],
+      "server": "server.js"
+    }
+  },
+  "upcoming_tasks": [
+    "Test Godot Web WASM export with real audio in mobile Android Chrome PWA view",
+    "Design Sectors 41-60 multi-tiered server vault layouts for Live-Ops Pack 2"
+  ]
+}

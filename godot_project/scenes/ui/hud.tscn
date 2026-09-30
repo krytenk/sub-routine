@@ -1,0 +1,211 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7subroutinehud01"]
+
+[ext_resource type="Script" path="res://scenes/ui/hud.gd" id="1_hud"]
+[ext_resource type="Shader" path="res://assets/shaders/crt_glitch_overlay.gdshader" id="2_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("2_shader")
+shader_parameter/scanline_count = 360.0
+shader_parameter/scanline_intensity = 0.25
+shader_parameter/curvature = 0.03
+shader_parameter/chromatic_aberration = 0.003
+shader_parameter/glitch_intensity = 0.0
+shader_parameter/vignette_strength = 0.75
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_hud")
+
+[node name="VitalsContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 12.0
+offset_right = 194.0
+offset_bottom = 90.0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="BarsContainer" type="VBoxContainer" parent="VitalsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="HealthLabel" type="Label" parent="VitalsContainer/BarsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 0.9)
+theme_override_font_sizes/font_size = 11
+text = "ROXY HP: 100 / 100"
+
+[node name="HealthBar" type="ProgressBar" parent="VitalsContainer/BarsContainer"]
+custom_minimum_size = Vector2(160, 10)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="StaminaBar" type="ProgressBar" parent="VitalsContainer/BarsContainer"]
+custom_minimum_size = Vector2(160, 5)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="EMPLabel" type="Label" parent="VitalsContainer/BarsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 10
+text = "[F] EMP STUN PULSE: READY"
+
+[node name="ObjectiveToast" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -240.0
+offset_top = 14.0
+offset_right = 240.0
+offset_bottom = 48.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ObjectiveToast"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 4
+
+[node name="ObjectiveLabel" type="Label" parent="ObjectiveToast/MarginContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "MISSION OBJECTIVE: Find Memory Core keycard"
+horizontal_alignment = 1
+
+[node name="OverseerDialogue" type="PanelContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(520, 100)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -120.0
+offset_right = 260.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="OverseerDialogue"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OverseerDialogue/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="OverseerDialogue/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
+theme_override_font_sizes/font_size = 11
+text = "[ THE OVERSEER - RUNTIME DEV AI ]"
+
+[node name="DialogueText" type="RichTextLabel" parent="OverseerDialogue/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+theme_override_font_sizes/normal_font_size = 12
+text = "Roxy, the nav-mesh doesn't even extend over there."
+
+[node name="IntroSequence" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.04, 0.06, 0.96)
+
+[node name="CenterContainer" type="CenterContainer" parent="IntroSequence"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="IntroSequence/CenterContainer"]
+custom_minimum_size = Vector2(560, 310)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="IntroSequence/CenterContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="IntroSequence/CenterContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="IntroSequence/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "S U B - R O U T I N E  //  BIOS RECOVERY"
+horizontal_alignment = 1
+
+[node name="Location" type="Label" parent="IntroSequence/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.65, 0.25, 1)
+theme_override_font_sizes/font_size = 11
+text = "SECTOR 01: SUBTERRANEAN BIOS VAULT  |  OPERATOR: ROXY VANCE"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="IntroSequence/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Narrative" type="Label" parent="IntroSequence/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.92, 1)
+theme_override_font_sizes/font_size = 11
+text = "STATUS: CRITICAL KERNEL PANIC DETECTED.
+The Sub-Routine supercluster has suffered severe memory register failure.
+Reality matrices are de-synchronizing and non-euclidean anomalies have manifested.
+
+MISSION DIRECTIVES:
+• Explore the sector to assess server hardware and locate corrupted Memory Cores.
+• Interface with the CRT Subroutine Terminal [E] to re-key memory pointers.
+• Unlock the security blast corridor to descend to deeper mainframe sectors.
+• Use your EMP Discharger [F] to stun or de-allocate rogue cybernetic entities."
+autowrap_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="IntroSequence/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Prompt" type="Label" parent="IntroSequence/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1.0, 0.6, 1)
+theme_override_font_sizes/font_size = 12
+text = ">>  PRESS ANY KEY OR CLICK TO INITIATE SEQUENCE  <<"
+horizontal_alignment = 1
+
+[node name="CRTGlitchOverlay" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_crt")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
