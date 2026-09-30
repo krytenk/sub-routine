@@ -141,7 +141,9 @@ func _on_dereference_pressed() -> void:
 
 				var hud = tree.root.find_child("HUD", true, false)
 				if hud and hud.has_method("update_objective"):
-					hud.update_objective("Blast Door Unlocked! Proceed forward through corridor to Sector 02.")
+					var lm = get_node_or_null("/root/LevelManager")
+					var next_sec = (lm.current_level_index + 1) if lm else 2
+					hud.update_objective("Blast Door Unlocked! Proceed forward through corridor to Sector %02d." % next_sec)
 
 			if has_node("/root/TheOverseer"):
 				get_node("/root/TheOverseer").trigger_dialogue("puzzle_solved", "Pointer dereferenced. Corridor gate unlocked. Don't get cocky, the Glitch Walkers hear your footsteps.")

@@ -67,17 +67,19 @@ func load_level(level_idx: int) -> bool:
     var path = "res://scenes/levels/level_%02d.tscn" % level_idx
 
     if active_level_instance:
-        active_level_instance.queue_free()
+        if is_instance_valid(active_level_instance):
+            active_level_instance.queue_free()
         active_level_instance = null
 
     if ResourceLoader.exists(path):
         var scene = ResourceLoader.load(path) as PackedScene
         if scene:
             var inst = scene.instantiate()
-            var root = get_tree().current_scene
+            var tree = get_tree() if is_inside_tree() else null
+            var root = tree.current_scene if tree else null
             if root and root.has_node("LevelContainer"):
                 root.get_node("LevelContainer").add_child(inst)
-            else:
+            elif is_inside_tree():
                 add_child(inst)
             active_level_instance = inst
             print("[LevelManager] Successfully loaded Sector ", level_idx, ": ", get_level_info(level_idx)["sector_name"])

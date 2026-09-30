@@ -22,7 +22,11 @@ func _ready() -> void:
     if has_node("/root/LevelManager"):
         var lm = get_node("/root/LevelManager")
         lm.level_loaded.connect(_on_level_loaded)
-        lm.load_level(1)
+        var start_lvl = 1
+        for arg in OS.get_cmdline_args():
+            if arg.begins_with("--level="):
+                start_lvl = int(arg.trim_prefix("--level="))
+        lm.load_level(start_lvl)
 
     if has_node("/root/TheOverseer"):
         var overseer = get_node("/root/TheOverseer")
