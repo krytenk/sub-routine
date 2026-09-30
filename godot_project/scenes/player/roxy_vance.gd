@@ -453,8 +453,23 @@ func _respawn() -> void:
     invulnerability_timer = 4.0
     health_changed.emit(current_health, max_health)
     stamina_changed.emit(current_stamina, max_stamina)
-    global_position = Vector3(0, 0.5, -10)
-    rotation = Vector3(0, PI, 0)
+
+    var spawn_pos = Vector3(0, 0.5, -10)
+    var spawn_rot = Vector3(0, PI, 0)
+    if is_inside_tree() and get_tree() and get_tree().current_scene:
+        var root = get_tree().current_scene
+        var lvl_container = root.find_child("LevelContainer", true, false)
+        var spawn: Marker3D = null
+        if lvl_container:
+            spawn = lvl_container.find_child("SpawnPoint", true, false) as Marker3D
+        if not spawn:
+            spawn = root.find_child("SpawnPoint", true, false) as Marker3D
+        if spawn:
+            spawn_pos = spawn.global_position
+            spawn_rot = spawn.global_rotation
+
+    global_position = spawn_pos
+    rotation = spawn_rot
     velocity = Vector3.ZERO
     print("[Roxy Vance] Thread state restored. Roxy re-spawned at sector checkpoint with 4s reboot invulnerability.")
 

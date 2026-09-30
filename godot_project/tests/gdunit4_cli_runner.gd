@@ -13,7 +13,8 @@ const TEST_FILES = [
 	"test_levels.gd",
 	"test_asset_models.gd",
 	"test_subroutine_terminal.gd",
-	"test_sector_04_concourse.gd"
+	"test_sector_04_concourse.gd",
+	"test_sector_3_transition.gd"
 ]
 
 func _init() -> void:

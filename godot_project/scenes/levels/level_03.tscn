@@ -70,23 +70,40 @@ size = Vector3(16, 0.2, 12)
 [sub_resource type="BoxShape3D" id="BoxShape3D_exit_trigger"]
 size = Vector3(4, 3.5, 3)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_thin_portal"]
+size = Vector3(4, 3.5, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_front_wall_side"]
+size = Vector3(7, 14, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_front_wall_side"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(7, 14, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_front_wall_lintel"]
+size = Vector3(4, 4, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_front_wall_lintel"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(4, 4, 0.4)
+
 [node name="Level_03" type="Node3D"]
 
 [node name="SpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.5, -14)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.5, -11)
 
 [node name="BacktrackSpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 17)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 13)
 
 [node name="BacktrackPortal" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -15.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -15.6)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("21_backtrack")
 target_level_index = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BacktrackPortal"]
-shape = SubResource("BoxShape3D_exit_trigger")
+shape = SubResource("BoxShape3D_thin_portal")
 
 [node name="Lighting" type="Node3D" parent="."]
 
@@ -150,13 +167,29 @@ shape = SubResource("BoxShape3D_end_wall")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -16)
 mesh = SubResource("BoxMesh_end_wall")
 
-[node name="FrontWallCol" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 21)
-shape = SubResource("BoxShape3D_end_wall")
+[node name="FrontWallL_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 6, 21)
+shape = SubResource("BoxShape3D_front_wall_side")
 
-[node name="FrontWallMesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 21)
-mesh = SubResource("BoxMesh_end_wall")
+[node name="FrontWallL_Mesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 6, 21)
+mesh = SubResource("BoxMesh_front_wall_side")
+
+[node name="FrontWallR_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 6, 21)
+shape = SubResource("BoxShape3D_front_wall_side")
+
+[node name="FrontWallR_Mesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 6, 21)
+mesh = SubResource("BoxMesh_front_wall_side")
+
+[node name="FrontWallLintel_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, 21)
+shape = SubResource("BoxShape3D_front_wall_lintel")
+
+[node name="FrontWallLintel_Mesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, 21)
+mesh = SubResource("BoxMesh_front_wall_lintel")
 
 [node name="GantryMidCol" type="CollisionShape3D" parent="Architecture"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 2)

@@ -169,23 +169,26 @@ size = Vector3(4, 4, 0.4)
 [sub_resource type="BoxShape3D" id="BoxShape3D_exit_trigger"]
 size = Vector3(3, 3, 2)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_thin_portal"]
+size = Vector3(3.5, 3.5, 0.8)
+
 [node name="Level_02" type="Node3D"]
 
 [node name="SpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 2.7, -15)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 2.7, -13)
 
 [node name="BacktrackSpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 21)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 18)
 
 [node name="BacktrackPortal" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, -17)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, -17.5)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("22_backtrack")
 target_level_index = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BacktrackPortal"]
-shape = SubResource("BoxShape3D_exit_trigger")
+shape = SubResource("BoxShape3D_thin_portal")
 
 [node name="Lighting" type="Node3D" parent="."]
 
