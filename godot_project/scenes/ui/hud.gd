@@ -136,7 +136,12 @@ func display_overseer_message(message: String, _clip_name: String = "") -> void:
 		overseer_title.text = "[ THE OVERSEER - RUNTIME DEV AI ]"
 		overseer_text.text = "[shake rate=15.0 level=4]" + message + "[/shake]"
 		overseer_panel.visible = true
-		dialogue_timer = 5.5
+		var dur: float = 5.5
+		if is_inside_tree() and has_node("/root/AudioManager"):
+			var am = get_node("/root/AudioManager")
+			if am.has_method("get_vo_duration"):
+				dur = maxf(5.5, am.get_vo_duration(_clip_name) + 0.8)
+		dialogue_timer = dur
 
 func _on_glitch_requested(intensity: float, duration: float) -> void:
 	target_glitch_intensity = intensity

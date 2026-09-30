@@ -6,10 +6,13 @@ class_name JumpscareTrigger
 
 signal jumpscare_activated
 
+@export var jumpscare_id: String = ""
 @export var dialogue_key: String = "jumpscare"
 @export var sound_clip: String = "res://assets/audio/sfx/sfx_jumpscare_sting.wav"
 @export var target_light: Light3D = null
 @export var trauma_amount: float = 0.9
+
+static var triggered_jumpscares: Dictionary = {}
 
 var triggered: bool = false
 var audio_player: AudioStreamPlayer = null
@@ -18,6 +21,11 @@ func _ready() -> void:
     collision_layer = 0
     collision_mask = 2 # Player layer
     body_entered.connect(_on_body_entered)
+    
+    if jumpscare_id.is_empty():
+        jumpscare_id = name + "_" + str(int(round(position.x))) + "_" + str(int(round(position.z)))
+    if triggered_jumpscares.get(jumpscare_id, false):
+        triggered = true
     
     audio_player = AudioStreamPlayer.new()
     audio_player.name = "JumpscareAudio"
@@ -33,7 +41,8 @@ func _on_body_entered(body: Node3D) -> void:
         return
         
     triggered = true
-    print("[JumpscareTrigger] Jumpscare triggered at: ", global_position)
+    triggered_jumpscares[jumpscare_id] = true
+    print("[JumpscareTrigger] Jumpscare triggered at: ", global_position, " (id: ", jumpscare_id, ")")
     jumpscare_activated.emit()
 
     # 1. Play harsh jumpscare sting

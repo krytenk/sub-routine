@@ -52,7 +52,8 @@ func scan_audio_directories() -> void:
     ambient_playlist.clear()
     
     _scan_folder(VO_DIR_PATH, vo_streams)
-    _scan_folder(AMBIENT_DIR_PATH, ambient_streams, true)
+    # Ambient tracks should not loop internally when playlist cycling is enabled; they cycle after full playback
+    _scan_folder(AMBIENT_DIR_PATH, ambient_streams, false)
     
     for key in ambient_streams.keys():
         if not key.ends_with(".wav") and not key.ends_with(".ogg"):
@@ -96,8 +97,17 @@ func load_audio_file(file_path: String, loop_enabled: bool = false) -> AudioStre
             if loop_enabled:
                 if res is AudioStreamWAV:
                     res.loop_mode = AudioStreamWAV.LOOP_FORWARD
+                    res.loop_begin = 0
+                    if res.loop_end <= 0:
+                        var frames = int(res.get_length() * res.mix_rate)
+                        res.loop_end = frames if frames > 0 else -1
                 elif res is AudioStreamOggVorbis:
                     res.loop = true
+            else:
+                if res is AudioStreamWAV:
+                    res.loop_mode = AudioStreamWAV.LOOP_DISABLED
+                elif res is AudioStreamOggVorbis:
+                    res.loop = false
             return res
             
     # Direct binary loading fallback for runtime drop-ins
@@ -218,6 +228,16 @@ func play_vo(clip_name: String) -> void:
         print("[AudioManager] Playing Overseer VO: ", clip_name)
     else:
         push_warning("[AudioManager] VO clip not found: " + clip_name)
+
+func get_vo_duration(clip_name: String) -> float:
+    var clean = clip_name.trim_suffix(".wav").trim_suffix(".ogg")
+    if vo_streams.has(clean):
+        var s = vo_streams[clean]
+        if s and s.has_method("get_length"):
+            var l = s.get_length()
+            if l > 0.1:
+                return l
+    return 4.5
 
 func play_spatial_vo(clip_name: String, world_pos: Vector3) -> AudioStreamPlayer3D:
     var player = create_spatial_player(world_pos)

@@ -44,6 +44,7 @@ const OVERSEER_LINES = {
 
 var last_played_clip: String = ""
 var dialogue_debounce_timer: float = 0.0
+var audio_manager_override: Node = null
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -83,11 +84,26 @@ func trigger_dialogue(key: String, custom_text: String = "", vo_clip: String = "
                 else:
                     clip = cand
 
-    # Prevent dialogue overlapping or identical clip spam within 4.0 seconds
-    if clip == last_played_clip and dialogue_debounce_timer > 0.0:
+    # Calculate clip duration to protect speech from being cut off mid-sentence
+    var clip_dur: float = 4.0
+    var am: Node = audio_manager_override
+    if not am and is_inside_tree() and has_node("/root/AudioManager"):
+        am = get_node("/root/AudioManager")
+    elif not am and Engine.get_main_loop() is SceneTree:
+        var tree = Engine.get_main_loop() as SceneTree
+        if tree and tree.root and tree.root.has_node("AudioManager"):
+            am = tree.root.get_node("AudioManager")
+            
+    if am and am.has_method("get_vo_duration"):
+        clip_dur = am.get_vo_duration(clip)
+    elif key == "jumpscare":
+        clip_dur = 6.9
+
+    # Prevent dialogue overlapping or interrupting while active voice line is playing
+    if dialogue_debounce_timer > 0.0 and (clip == last_played_clip or dialogue_debounce_timer > 1.2):
         return
     last_played_clip = clip
-    dialogue_debounce_timer = 4.0
+    dialogue_debounce_timer = maxf(3.5, clip_dur + 0.6)
 
     dialogue_history.append(message)
     print("[The Overseer] " + message)
