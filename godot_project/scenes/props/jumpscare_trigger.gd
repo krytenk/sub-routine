@@ -69,12 +69,13 @@ func _spawn_glitch_apparition(player: Node3D) -> void:
     mat.albedo_color = Color(1.0, 0.1, 0.2, 0.85)
     apparition.material_override = mat
     
-    # Place directly 1.6m in front of player facing them
-    var fwd = -player.global_transform.basis.z
-    apparition.global_position = player.global_position + fwd * 1.6 + Vector3(0, 0.4, 0)
-    apparition.look_at(player.global_position + Vector3(0, 1.2, 0), Vector3.UP)
-    
-    get_tree().current_scene.add_child(apparition)
+    var parent_node = get_tree().current_scene if (get_tree() and get_tree().current_scene) else (get_parent() if is_inside_tree() else null)
+    if parent_node:
+        parent_node.add_child(apparition)
+        if player and player.is_inside_tree():
+            var fwd = -player.global_transform.basis.z
+            apparition.global_position = player.global_position + fwd * 1.6 + Vector3(0, 0.4, 0)
+            apparition.look_at(player.global_position + Vector3(0, 1.2, 0), Vector3.UP)
     
     # Quick twitch flicker and disappear
     var tween = create_tween()

@@ -145,19 +145,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 21)
 mesh = SubResource("BoxMesh_end_wall")
 
 [node name="GantryMidCol" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 2)
 shape = SubResource("BoxShape3D_gantry_mid")
 
 [node name="GantryMidMesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 2)
 mesh = SubResource("BoxMesh_gantry_mid")
 
 [node name="UpperDeckCol" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.9, 14.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.9, 15)
 shape = SubResource("BoxShape3D_deck_upper")
 
 [node name="UpperDeckMesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.9, 14.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.9, 15)
 mesh = SubResource("BoxMesh_deck_upper")
 
 [node name="ExitArea" type="Area3D" parent="."]
