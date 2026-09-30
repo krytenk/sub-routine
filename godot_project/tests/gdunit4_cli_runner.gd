@@ -12,7 +12,8 @@ const TEST_FILES = [
 	"test_non_euclidean.gd",
 	"test_levels.gd",
 	"test_asset_models.gd",
-	"test_subroutine_terminal.gd"
+	"test_subroutine_terminal.gd",
+	"test_sector_04_concourse.gd"
 ]
 
 func _init() -> void:

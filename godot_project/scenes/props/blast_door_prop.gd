@@ -28,6 +28,11 @@ func _ready() -> void:
 	if door_leaf_r:
 		initial_leaf_r_x = door_leaf_r.position.x
 	
+	if is_inside_tree() and has_node("/root/LevelManager"):
+		var lm = get_node("/root/LevelManager")
+		if lm.has_method("is_level_completed") and lm.is_level_completed(lm.current_level_index):
+			is_open = true
+
 	if is_open:
 		open_door(true)
 	else:

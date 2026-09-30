@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/jumpscare_trigger.tscn" id="18_jumpscare"]
 [ext_resource type="PackedScene" path="res://scenes/props/staircase_prop.tscn" id="19_stairs"]
 [ext_resource type="Script" path="res://scripts/overseer_trigger_zone.gd" id="20_overseer_zone"]
+[ext_resource type="Script" path="res://scripts/sector_backtrack_trigger.gd" id="21_backtrack"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_texture = ExtResource("4_rust_tex")
@@ -73,6 +74,19 @@ size = Vector3(4, 3.5, 3)
 
 [node name="SpawnPoint" type="Marker3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.5, -14)
+
+[node name="BacktrackSpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 17)
+
+[node name="BacktrackPortal" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -15.5)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("21_backtrack")
+target_level_index = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BacktrackPortal"]
+shape = SubResource("BoxShape3D_exit_trigger")
 
 [node name="Lighting" type="Node3D" parent="."]
 

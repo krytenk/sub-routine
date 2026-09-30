@@ -32,7 +32,14 @@ const OVERSEER_LINES = {
     "stairs_ascent": "Climbing higher won't save you from a stack overflow. The higher you ascend, the harder the system crashes.",
     "escape_taunt": "Surface gateway detected. You actually believe there is an outside world waiting for you.",
     "darkness_whisper": "Power brownout in this sector. You can't debug what you can't see.",
-    "puzzle_solved": "Pointer dereferenced. Corridor gate unlocked. Don't get cocky, the Glitch Walkers hear your footsteps."
+    "puzzle_solved": "Pointer dereferenced. Corridor gate unlocked. Don't get cocky, the Glitch Walkers hear your footsteps.",
+    "fall_damage": "Gravity isn't a physics engine bug, Roxy. Watch your step on the gantry.",
+    "wirehound_alert": "That isn't a Glitch Walker. Sector four houses the scrap hounds. Faster, hungrier, and devoid of memory safety.",
+    "decision_choice": "Five doors, Roxy. Five branches in the logic tree. Choose poorly, and your thread terminates permanently.",
+    "stealth_locker": "Hiding inside a server locker? Classic survival horror trope. Just pray the garbage collector doesn't purge this container.",
+    "art_showcase": "The memorial of digital decay. Every deprecated build and scrapped mechanic ends up here.",
+    "dead_end_trap": "I warned you about unhandled branch execution. All five corridors terminate here... as do you.",
+    "backtrack_hint": "Retreating to previous sectors? You can scavenge respawned nanites, but the complex doesn't forget where you've been."
 }
 
 var last_played_clip: String = ""

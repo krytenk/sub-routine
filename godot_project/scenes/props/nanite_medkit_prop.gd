@@ -3,24 +3,40 @@ class_name NaniteMedkitProp
 
 # Nanite Medical Syringe / Health Replenishment Prop
 # Survival horror consumable found in side rooms to restore Roxy's health.
+# Automatically respawns after a cooldown to reward player backtracking.
 
 signal medkit_collected(heal_amount: int)
+signal medkit_respawned
 
 @export var heal_amount: int = 50
+@export var respawn_time: float = 60.0
+@export var can_respawn: bool = true
+
 @onready var model_node: Node3D = $Model
 
 var hover_phase: float = 0.0
+var is_collected: bool = false
+var respawn_timer: float = 0.0
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 
 func _process(delta: float) -> void:
+	if is_collected:
+		if can_respawn:
+			respawn_timer -= delta
+			if respawn_timer <= 0.0:
+				_respawn_medkit()
+		return
+
 	hover_phase += delta * 3.0
 	if model_node:
 		model_node.rotate_y(2.4 * delta)
 		model_node.position.y = 0.4 + sin(hover_phase) * 0.08
 
 func _on_body_entered(body: Node3D) -> void:
+	if is_collected:
+		return
 	if body is RoxyVance or body.has_method("heal"):
 		print("[NaniteMedkit] Medical injector retrieved! Restoring ", heal_amount, " HP.")
 		if body.has_method("heal"):
@@ -34,7 +50,24 @@ func _on_body_entered(body: Node3D) -> void:
 			if hud and hud.has_method("display_overseer_message"):
 				hud.display_overseer_message("NANITE INJECTOR: +%d HP [Cell Integrity Restored]" % heal_amount, "")
 
-		queue_free()
+		if can_respawn:
+			is_collected = true
+			respawn_timer = respawn_time
+			if model_node:
+				model_node.visible = false
+			set_deferred("monitoring", false)
+		else:
+			queue_free()
+
+func _respawn_medkit() -> void:
+	is_collected = false
+	if model_node:
+		model_node.visible = true
+	set_deferred("monitoring", true)
+	medkit_respawned.emit()
+	print("[NaniteMedkit] Nanite synthesis completed: medkit respawned in chamber.")
+	if is_inside_tree() and has_node("/root/AudioManager"):
+		get_node("/root/AudioManager").play_sfx("sfx_medkit_respawn")
 
 func _play_inject_sound() -> void:
 	if not is_inside_tree():

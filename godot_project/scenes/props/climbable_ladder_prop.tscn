@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://climbable_ladder_01"]
+
+[ext_resource type="Script" path="res://scenes/props/climbable_ladder_prop.gd" id="1_ladder"]
+[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="2_rust"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ladder_vol"]
+size = Vector3(1.2, 18, 1.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_metal"]
+albedo_texture = ExtResource("2_rust")
+roughness = 0.6
+metallic = 0.8
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_rail"]
+material = SubResource("StandardMaterial3D_metal")
+size = Vector3(0.08, 18, 0.08)
+
+[node name="ClimbableLadder" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_ladder")
+ladder_height = 18.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9, 0)
+shape = SubResource("BoxShape3D_ladder_vol")
+
+[node name="Rail_L" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 9, 0)
+mesh = SubResource("BoxMesh_rail")
+
+[node name="Rail_R" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 9, 0)
+mesh = SubResource("BoxMesh_rail")

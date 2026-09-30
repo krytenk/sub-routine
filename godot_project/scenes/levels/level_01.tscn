@@ -217,6 +217,9 @@ size = Vector3(6, 3, 2)
 [node name="SpawnPoint" type="Marker3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.5, -16)
 
+[node name="BacktrackSpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 18)
+
 [node name="Lighting" type="Node3D" parent="."]
 
 [node name="OmniLight_Hub" type="OmniLight3D" parent="Lighting"]

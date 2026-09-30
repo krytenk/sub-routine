@@ -13,6 +13,8 @@ signal out_of_bounds_triggered
 signal player_exhausted(is_exhausted: bool)
 signal emp_fired(cooldown: float)
 signal emp_cooldown_updated(current: float, max_time: float)
+signal hiding_state_changed(is_hiding: bool)
+signal fall_damage_taken(damage: int)
 
 @export var max_health: int = 100
 var current_health: int = 100
@@ -37,6 +39,13 @@ var wall_bump_cooldown: float = 0.0
 var is_third_person: bool = true
 var is_invulnerable: bool = false
 var invulnerability_timer: float = 0.0
+
+var is_hiding: bool = false
+var is_on_ladder: bool = false
+var ladder_speed: float = 3.5
+var current_ladder_node: Node3D = null
+var prev_vertical_velocity: float = 0.0
+var was_airborne_last_frame: bool = false
 
 # Articulated Limb Nodes & Walk Cycle Animation
 var leg_l: Node3D = null
@@ -153,13 +162,15 @@ func _physics_process(delta: float) -> void:
         invulnerability_timer -= delta
         is_invulnerable = (invulnerability_timer > 0.0)
 
-    if not is_on_floor():
-        velocity.y -= gravity * delta
-
-
     if is_dead:
         velocity.x = 0
         velocity.z = 0
+        move_and_slide()
+        _update_walk_animation(delta, 0.0)
+        return
+
+    if is_hiding:
+        velocity = Vector3.ZERO
         move_and_slide()
         _update_walk_animation(delta, 0.0)
         return
@@ -170,6 +181,22 @@ func _physics_process(delta: float) -> void:
         move_and_slide()
         _update_walk_animation(delta, 0.0)
         return
+
+    # Ladder movement mode
+    if is_on_ladder:
+        var input_ladder = Input.get_action_strength("move_forward") - Input.get_action_strength("move_backward")
+        velocity.x = 0.0
+        velocity.z = 0.0
+        velocity.y = input_ladder * ladder_speed
+        move_and_slide()
+        _update_walk_animation(delta, abs(input_ladder) * ladder_speed)
+        return
+
+    if not is_on_floor():
+        velocity.y -= gravity * delta
+
+    prev_vertical_velocity = velocity.y
+    was_airborne_last_frame = not is_on_floor()
 
     # Keyboard camera turning & pitching (Arrow keys)
     var turn_axis = 0.0
@@ -237,6 +264,21 @@ func _physics_process(delta: float) -> void:
 
     move_and_slide()
     _update_walk_animation(delta, speed)
+
+    # Fall damage detection
+    if was_airborne_last_frame and is_on_floor():
+        if prev_vertical_velocity < -8.2:
+            var fall_speed = abs(prev_vertical_velocity)
+            var fall_dmg = int(round((fall_speed - 7.5) * 8.0))
+            if fall_dmg > 0:
+                print("[Roxy Vance] Hard landing from height! Fall vel: ", prev_vertical_velocity, " -> Damage: ", fall_dmg)
+                take_damage(fall_dmg, "fall")
+                apply_trauma(clampf(float(fall_dmg) / 25.0, 0.4, 1.0))
+                fall_damage_taken.emit(fall_dmg)
+                if is_inside_tree() and has_node("/root/AudioManager"):
+                    get_node("/root/AudioManager").play_sfx("sfx_fall_impact")
+                if is_inside_tree() and has_node("/root/TheOverseer"):
+                    get_node("/root/TheOverseer").trigger_dialogue("fall_damage")
 
     # Out of bounds safety check (void fall)
     if global_position.y < -15.0:
@@ -344,9 +386,9 @@ func _try_interact_target(target: Object) -> bool:
         return true
     return false
 
-# CRITICAL GDD RULE:
+# GDD RULE:
 # Takes ZERO environmental damage (coolant, toxic leaks, spikes, lasers).
-# Takes damage ONLY from direct enemy attacks.
+# Takes damage from direct enemy attacks AND high-altitude falls.
 func take_damage(amount: int, source_type: String = "environmental") -> void:
     if source_type == "environmental":
         print("[Roxy Vance] Environmental hazard encountered! Impractical 90s outfit absorbs damage: 0 damage taken.")
@@ -359,13 +401,27 @@ func take_damage(amount: int, source_type: String = "environmental") -> void:
         print("[Roxy Vance] Reboot invulnerability active: direct damage ignored.")
         return
 
-    # Direct enemy attack
+    # Direct enemy attack or fall damage
     current_health = maxi(0, current_health - amount)
     health_changed.emit(current_health, max_health)
-    print("[Roxy Vance] Direct enemy hit! Health: ", current_health, "/", max_health)
+    print("[Roxy Vance] Damage taken from ", source_type, "! Health: ", current_health, "/", max_health)
 
     if current_health <= 0:
         _die()
+
+func set_hiding(hiding: bool) -> void:
+    is_hiding = hiding
+    hiding_state_changed.emit(is_hiding)
+    if is_hiding:
+        print("[Roxy Vance] Concealed in stealth locker.")
+    else:
+        print("[Roxy Vance] Stepped out of stealth locker.")
+
+func set_on_ladder(on_ladder: bool, ladder_node: Node3D = null) -> void:
+    is_on_ladder = on_ladder
+    current_ladder_node = ladder_node if on_ladder else null
+    if on_ladder:
+        velocity = Vector3.ZERO
 
 func heal(amount: int) -> void:
     if is_dead:

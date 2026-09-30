@@ -263,9 +263,24 @@ func _physics_process(delta: float) -> void:
         _update_stalk_animation(delta)
         return
 
-    # If player is in post-death reboot invulnerability, hold position
-    if "is_invulnerable" in current_target and current_target.is_invulnerable:
-        velocity = Vector3.ZERO
+    # If player is hiding in a locker or in post-death reboot invulnerability, drop aggro
+    if ("is_invulnerable" in current_target and current_target.is_invulnerable) or ("is_hiding" in current_target and current_target.is_hiding):
+        if patrol_points.size() > 0 and not is_dormant:
+            var p_target = patrol_points[current_patrol_index]
+            p_target.y = global_position.y
+            var p_dist = global_position.distance_to(p_target)
+            if p_dist < 1.8:
+                current_patrol_index = (current_patrol_index + 1) % patrol_points.size()
+            else:
+                look_at(p_target, Vector3.UP)
+                var p_dir = (p_target - global_position).normalized()
+                var p_speed = get_effective_speed() * 0.35
+                velocity.x = p_dir.x * p_speed
+                velocity.z = p_dir.z * p_speed
+                velocity.y = -9.8 * delta
+                move_and_slide()
+        else:
+            velocity = Vector3.ZERO
         _update_stalk_animation(delta)
         return
 

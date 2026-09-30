@@ -105,6 +105,17 @@ func complete_current_level() -> void:
     else:
         print("[LevelManager] All 40 available levels completed! Live-ops updates incoming.")
 
+var is_backtracking: bool = false
+
+func is_level_completed(level_idx: int) -> bool:
+    return completed_levels.has(level_idx)
+
+func backtrack_to_level(level_idx: int) -> bool:
+    is_backtracking = true
+    var res = load_level(level_idx)
+    is_backtracking = false
+    return res
+
 func get_level_info(level_idx: int) -> Dictionary:
     if level_idx >= 1 and level_idx <= level_roadmap_metadata.size():
         return level_roadmap_metadata[level_idx - 1]
