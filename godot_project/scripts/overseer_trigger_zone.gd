@@ -15,6 +15,7 @@ enum TriggerType {
 @export var speedrun_minimum_time_seconds: float = 60.0
 @export var required_puzzle: Node = null
 @export var custom_dialogue_override: String = ""
+@export var dialogue_key: String = ""
 
 var triggered: bool = false
 var sector_start_time: float = 0.0
@@ -24,15 +25,23 @@ func _ready() -> void:
     sector_start_time = Time.get_ticks_msec() / 1000.0
 
 func _on_body_entered(body: Node3D) -> void:
-    if not (body is RoxyVance):
+    if triggered:
+        return
+    if not (body is RoxyVance or body.name == "RoxyVance"):
         return
 
     var overseer = get_node_or_null("/root/TheOverseer")
     if not overseer:
         return
 
+    if not dialogue_key.is_empty():
+        triggered = true
+        overseer.trigger_dialogue(dialogue_key, custom_dialogue_override)
+        return
+
     match trigger_type:
         TriggerType.NAVMESH_BOUNDARY:
+            triggered = true
             overseer.report_navmesh_boundary_hit()
 
         TriggerType.SPEEDRUN_CHECKPOINT:

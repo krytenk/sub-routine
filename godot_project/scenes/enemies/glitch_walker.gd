@@ -200,7 +200,7 @@ func _die() -> void:
     print("[GlitchWalker] Entity de-allocated! Overloaded by EMP burst.")
     if is_inside_tree() and has_node("/root/TheOverseer"):
         get_node("/root/TheOverseer").trigger_dialogue(
-            "dimension_shift",
+            "enemy_killed",
             "Glitch Walker entity memory deallocated. Threat neutralized, Roxy."
         )
     if visual_mesh:

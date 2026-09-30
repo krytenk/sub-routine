@@ -115,4 +115,41 @@ func test_inter_sector_progression() -> bool:
     lm.free()
     return true
 
+func test_level_03_ascension_architecture() -> bool:
+    var scene = load("res://scenes/levels/level_03.tscn")
+    assert(scene != null, "FAILED: Could not load level_03.tscn")
+    var level = scene.instantiate()
+    assert(level != null, "FAILED: Could not instantiate level_03.tscn")
+
+    var spawn = level.find_child("SpawnPoint", true, false)
+    assert(spawn != null, "FAILED: SpawnPoint missing from level_03")
+
+    var stair_low = level.find_child("Staircase_Lower", true, false)
+    var stair_high = level.find_child("Staircase_Upper", true, false)
+    assert(stair_low != null, "FAILED: Staircase_Lower missing from level_03")
+    assert(stair_high != null, "FAILED: Staircase_Upper missing from level_03")
+
+    var puzzle = level.find_child("PrimaryPuzzle", true, false)
+    assert(puzzle != null, "FAILED: PrimaryPuzzle missing from level_03")
+    assert(puzzle is ParityCheckPuzzle, "FAILED: PrimaryPuzzle must be ParityCheckPuzzle")
+    assert(puzzle.puzzle_id == "SECTOR_03_REGISTER", "FAILED: Puzzle ID should be SECTOR_03_REGISTER")
+
+    var blast_door = level.find_child("BlastDoor", true, false)
+    assert(blast_door != null, "FAILED: BlastDoor missing from level_03")
+
+    var exit_area = level.find_child("ExitArea", true, false)
+    assert(exit_area != null, "FAILED: ExitArea missing from level_03")
+
+    var walker1 = level.find_child("GlitchWalker", true, false)
+    var walker2 = level.find_child("GlitchWalker_2", true, false)
+    assert(walker1 != null, "FAILED: GlitchWalker missing from level_03")
+    assert(walker2 != null, "FAILED: GlitchWalker_2 missing from level_03")
+
+    var keypad = level.find_child("SecurityKeypad", true, false)
+    assert(keypad != null, "FAILED: SecurityKeypad missing from level_03")
+
+    print("[PASS] test_level_03_ascension_architecture: Multi-flight staircases, parity puzzle, multiple stalkers, and Surface Gateway validated.")
+    level.free()
+    return true
+
 

@@ -66,9 +66,16 @@ var idle_breath_phase: float = 0.0
 @onready var interaction_ray: RayCast3D = $CameraPivot/InteractionRay
 @onready var mesh_instance: Node3D = $ModelAnchor
 
+var camera_trauma: float = 0.0
+var heartbeat_player: AudioStreamPlayer = null
+var heartbeat_cooldown: float = 0.0
+
 func _ready() -> void:
     current_health = max_health
     current_stamina = max_stamina
+    floor_snap_length = 0.35
+    floor_max_angle = deg_to_rad(45.0)
+    floor_stop_on_slope = true
     health_changed.emit(current_health, max_health)
     stamina_changed.emit(current_stamina, max_stamina)
     _setup_limbs()
@@ -77,6 +84,16 @@ func _ready() -> void:
     else:
         Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
     _apply_camera_perspective()
+    
+    heartbeat_player = AudioStreamPlayer.new()
+    heartbeat_player.name = "HeartbeatPlayer"
+    heartbeat_player.bus = "Master"
+    add_child(heartbeat_player)
+    if ResourceLoader.exists("res://assets/audio/sfx/sfx_heartbeat.wav"):
+        heartbeat_player.stream = ResourceLoader.load("res://assets/audio/sfx/sfx_heartbeat.wav")
+
+func apply_trauma(amount: float) -> void:
+    camera_trauma = clampf(camera_trauma + amount, 0.0, 1.0)
 
 func _setup_limbs() -> void:
     leg_l = find_child("Leg_L", true, false) as Node3D
@@ -227,6 +244,36 @@ func _physics_process(delta: float) -> void:
         if is_inside_tree() and has_node("/root/TheOverseer"):
             get_node("/root/TheOverseer").report_out_of_bounds(self)
 
+    # Trauma shake decay and application to camera offsets
+    if camera_trauma > 0.0:
+        camera_trauma = maxf(0.0, camera_trauma - delta * 1.8)
+        var shake_amount = camera_trauma * camera_trauma
+        if camera:
+            camera.h_offset = (randf() * 2.0 - 1.0) * 0.18 * shake_amount
+            camera.v_offset = (randf() * 2.0 - 1.0) * 0.18 * shake_amount
+    elif camera and (camera.h_offset != 0.0 or camera.v_offset != 0.0):
+        camera.h_offset = 0.0
+        camera.v_offset = 0.0
+
+    # Proximity heartbeat horror suspense
+    heartbeat_cooldown = maxf(0.0, heartbeat_cooldown - delta)
+    if heartbeat_cooldown <= 0.0 and heartbeat_player and heartbeat_player.stream and is_inside_tree():
+        var min_dist = 999.0
+        var enemies = get_tree().get_nodes_in_group("enemies")
+        for enemy in enemies:
+            if enemy is Node3D and is_instance_valid(enemy):
+                if "is_dead" in enemy and enemy.is_dead:
+                    continue
+                var d = global_position.distance_to(enemy.global_position)
+                if d < min_dist:
+                    min_dist = d
+        if min_dist < 9.0:
+            var intensity = clampf(1.0 - (min_dist / 9.0), 0.0, 1.0)
+            heartbeat_player.volume_db = lerp(-14.0, 0.0, intensity)
+            heartbeat_player.pitch_scale = lerp(0.85, 1.35, intensity)
+            heartbeat_player.play()
+            heartbeat_cooldown = lerp(1.1, 0.52, intensity)
+
     # EMP pulse recharge timer
     if emp_current_timer > 0.0:
         emp_current_timer = maxf(0.0, emp_current_timer - delta)
@@ -260,7 +307,7 @@ func fire_emp_pulse() -> void:
                         enemy.stagger(8.5)
 
         if has_node("/root/TheOverseer"):
-            get_node("/root/TheOverseer").trigger_dialogue("dimension_shift", "Electromagnetic disruption detected in Sector node. Glitch entity damaged.")
+            get_node("/root/TheOverseer").trigger_dialogue("emp_success", "Electromagnetic disruption detected in Sector node. Glitch entity stunned.")
 
 func _attempt_interaction() -> void:
     print("[Roxy Vance] Interaction triggered (E key pressed).")
@@ -326,6 +373,8 @@ func heal(amount: int) -> void:
     current_health = mini(max_health, current_health + amount)
     health_changed.emit(current_health, max_health)
     print("[Roxy Vance] Health replenished +", amount, " (Current: ", current_health, "/", max_health, ")")
+    if is_inside_tree() and has_node("/root/TheOverseer"):
+        get_node("/root/TheOverseer").trigger_dialogue("medkit_used", "Nanite medkit consumed. Patching memory corruption won't prevent the inevitable.")
 
 func _die() -> void:
     if is_dead:

@@ -19,11 +19,31 @@ const OVERSEER_LINES = {
     "invisible_wall": "Stop running into that collision hull. I didn't put a texture there for a reason.",
     "sequence_break": "Sequence violation detected. You cannot access this server node without resolving prior dependencies.",
     "dimension_shift": "Did you really think the hallway behind you was static? Non-Euclidean garbage collection in progress.",
-    "save_threat": "One more unregistered collision event and I'm wiping your player state dictionary from RAM."
+    "save_threat": "One more unregistered collision event and I'm wiping your player state dictionary from RAM.",
+    "welcome_sec2": "Welcome to the Cache Trench, Roxy. You survived the BIOS, but out here the threads are far less forgiving.",
+    "welcome_sec3": "Ascension core reached. You think climbing those stairs leads to the surface? I control every compile target in this facility.",
+    "stealth_hint": "Keep sprinting, Roxy. The Glitch Walkers have acoustic sensors. Every heavy footstep echoes straight into their tracking registers.",
+    "multi_threat": "Dual anomaly initialization. You didn't think you were dealing with just one rogue thread, did you?",
+    "jumpscare": "Did you jump? Fascinating. Your biometric latency spiked by four hundred milliseconds.",
+    "emp_success": "Electromagnetic pulse registered. That stunned its logic stack, but it won't hold forever.",
+    "enemy_killed": "Glitch Walker process killed. But the queue is infinite, Roxy.",
+    "medkit_used": "Nanite medkit consumed. Patching memory corruption won't prevent the inevitable.",
+    "breaker_power": "Power grid restored. The blast locks are opening, but so are the containment cells.",
+    "stairs_ascent": "Climbing higher won't save you from a stack overflow. The higher you ascend, the harder the system crashes.",
+    "escape_taunt": "Surface gateway detected. You actually believe there is an outside world waiting for you.",
+    "darkness_whisper": "Power brownout in this sector. You can't debug what you can't see.",
+    "puzzle_solved": "Pointer dereferenced. Corridor gate unlocked. Don't get cocky, the Glitch Walkers hear your footsteps."
 }
+
+var last_played_clip: String = ""
+var dialogue_debounce_timer: float = 0.0
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
+
+func _process(delta: float) -> void:
+    if dialogue_debounce_timer > 0.0:
+        dialogue_debounce_timer = maxf(0.0, dialogue_debounce_timer - delta)
 
 func trigger_dialogue(key: String, custom_text: String = "", vo_clip: String = "") -> void:
     var message = custom_text
@@ -39,8 +59,28 @@ func trigger_dialogue(key: String, custom_text: String = "", vo_clip: String = "
                 clip = "overseer_speedrun_warning"
             "dimension_shift":
                 clip = "overseer_dimension_shift"
-            _:
+            "puzzle_solved":
+                clip = "overseer_puzzle_solved"
+            "sequence_break":
+                clip = "overseer_sequence_break"
+            "oob", "save_threat":
                 clip = "overseer_savefile_threat"
+            _:
+                var cand = "overseer_" + key
+                if is_inside_tree() and has_node("/root/AudioManager"):
+                    var am = get_node("/root/AudioManager")
+                    if am.vo_streams.has(cand):
+                        clip = cand
+                    else:
+                        clip = "overseer_savefile_threat"
+                else:
+                    clip = cand
+
+    # Prevent dialogue overlapping or identical clip spam within 4.0 seconds
+    if clip == last_played_clip and dialogue_debounce_timer > 0.0:
+        return
+    last_played_clip = clip
+    dialogue_debounce_timer = 4.0
 
     dialogue_history.append(message)
     print("[The Overseer] " + message)
