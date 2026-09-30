@@ -84,6 +84,12 @@ func _unhandled_input(event: InputEvent) -> void:
             if img:
                 img.save_png("/tmp/godot_viewport_gameplay.png")
                 print("[Main] Screenshot saved to /tmp/godot_viewport_gameplay.png via F12")
+        elif event.keycode == KEY_F1:
+            if has_node("/root/LevelManager"):
+                get_node("/root/LevelManager").load_level(1)
+        elif event.keycode == KEY_F2:
+            if has_node("/root/LevelManager"):
+                get_node("/root/LevelManager").load_level(2)
 
 func _toggle_pause() -> void:
     var is_paused = get_tree().paused
