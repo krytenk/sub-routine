@@ -69,3 +69,42 @@ func test_cipher_dereferencing() -> bool:
 
 	term.free()
 	return true
+
+func test_new_input_resets_unlock_state() -> bool:
+	var terminal_scene = load("res://scenes/ui/subroutine_terminal.tscn")
+	var term = terminal_scene.instantiate()
+	term.current_target_cipher = "1234"
+	term.input_buffer = "1234"
+	term._on_dereference_pressed()
+	assert(term.is_unlocked == true, "FAILED: Terminal should be unlocked.")
+
+	# In room 2, typing a new character must clear the old code and reset unlock state
+	term.current_target_cipher = "5678"
+	term._append_char("5")
+	assert(term.is_unlocked == false, "FAILED: Typing new character must reset is_unlocked to false.")
+	assert(term.input_buffer == "5", "FAILED: Input buffer should only contain '5', got: " + term.input_buffer)
+
+	# Pressing clear should empty buffer
+	term._on_clear_pressed()
+	assert(term.input_buffer == "", "FAILED: Clear should empty the buffer.")
+	assert(term.is_unlocked == false, "FAILED: Terminal should remain unlocked=false.")
+
+	print("[PASS] test_new_input_resets_unlock_state: Typing in next room automatically clears previous unlocked code.")
+	term.free()
+	return true
+
+func test_terminal_reset_for_new_sector() -> bool:
+	var terminal_scene = load("res://scenes/ui/subroutine_terminal.tscn")
+	var term = terminal_scene.instantiate()
+	term.current_target_cipher = "ABCD"
+	term.input_buffer = "ABCD"
+	term.is_unlocked = true
+
+	term.reset_terminal()
+	assert(term.input_buffer == "", "FAILED: reset_terminal must empty input_buffer.")
+	assert(term.is_unlocked == false, "FAILED: reset_terminal must reset is_unlocked.")
+
+	print("[PASS] test_terminal_reset_for_new_sector: reset_terminal resets buffer and unlocks keypad.")
+	term.free()
+	return true
+

@@ -42,6 +42,22 @@ func _ready() -> void:
 				var char_val = btn.text
 				btn.pressed.connect(func(): _append_char(char_val))
 
+	# Listen for level loading to automatically reset terminal for the new sector
+	if has_node("/root/LevelManager"):
+		get_node("/root/LevelManager").level_loaded.connect(_on_level_loaded)
+
+func _on_level_loaded(_level_index: int, _level_node: Node = null) -> void:
+	reset_terminal()
+
+func reset_terminal() -> void:
+	input_buffer = ""
+	is_unlocked = false
+	if btn_dereference:
+		btn_dereference.text = "[ DEREFERENCE MEMORY POINTER ]"
+	if entered_display:
+		entered_display.remove_theme_color_override("font_color")
+	refresh_telemetry()
+
 func _input(event: InputEvent) -> void:
 	if not visible:
 		if event is InputEventKey and event.pressed and not event.echo:
@@ -73,8 +89,15 @@ func _input(event: InputEvent) -> void:
 			return
 
 func _append_char(c: String) -> void:
+	# If terminal was marked unlocked from a previous sector, typing a character resets it for the new entry!
 	if is_unlocked:
-		return
+		input_buffer = ""
+		is_unlocked = false
+		if btn_dereference:
+			btn_dereference.text = "[ DEREFERENCE MEMORY POINTER ]"
+		if entered_display:
+			entered_display.remove_theme_color_override("font_color")
+
 	if input_buffer.length() < current_target_cipher.length():
 		input_buffer += c
 		_play_beep(880.0, 0.04)
@@ -84,16 +107,24 @@ func _append_char(c: String) -> void:
 
 func _on_backspace() -> void:
 	if is_unlocked:
-		return
+		is_unlocked = false
+		if btn_dereference:
+			btn_dereference.text = "[ DEREFERENCE MEMORY POINTER ]"
+		if entered_display:
+			entered_display.remove_theme_color_override("font_color")
+
 	if input_buffer.length() > 0:
 		input_buffer = input_buffer.substr(0, input_buffer.length() - 1)
 		_play_beep(550.0, 0.04)
 		_update_buffer_display()
 
 func _on_clear_pressed() -> void:
-	if is_unlocked:
-		return
 	input_buffer = ""
+	is_unlocked = false
+	if btn_dereference:
+		btn_dereference.text = "[ DEREFERENCE MEMORY POINTER ]"
+	if entered_display:
+		entered_display.remove_theme_color_override("font_color")
 	_play_beep(440.0, 0.06)
 	_update_buffer_display()
 
@@ -125,7 +156,6 @@ func _on_dereference_pressed() -> void:
 		pointer_dereferenced.emit()
 		print("[SubroutineTerminal] Cipher matched: ", input_buffer, " -> Dereferencing corridor pointers.")
 		if is_inside_tree():
-
 			var tree = get_tree()
 			if tree:
 				tree.create_timer(0.12).timeout.connect(func(): _play_beep(1600.0, 0.18))
@@ -172,8 +202,8 @@ func show_terminal() -> void:
 	terminal_opened.emit()
 
 func refresh_telemetry() -> void:
-	var lm = get_node_or_null("/root/LevelManager")
-	var dm = get_node_or_null("/root/DifficultyManager")
+	var lm = get_node_or_null("/root/LevelManager") if is_inside_tree() else null
+	var dm = get_node_or_null("/root/DifficultyManager") if is_inside_tree() else null
 
 	var sec_idx = lm.current_level_index if lm else 1
 	var info = lm.get_level_info(sec_idx) if lm else {}
@@ -188,17 +218,37 @@ func refresh_telemetry() -> void:
 		var speed = dm.get_enemy_speed_multiplier() if dm else 1.0
 		threat_status.text = "THREAT: %s (Glitch Speed %.1fx)" % [dm.get_difficulty_name() if dm else "Standard", speed]
 
-	# Find target cipher from active scene
-	if get_tree() and get_tree().current_scene:
+	# Find target cipher and puzzle state from active scene
+	if is_inside_tree() and get_tree() and get_tree().current_scene:
 		var root = get_tree().current_scene
 		var puzzle = root.find_child("PrimaryPuzzle", true, false)
-		if puzzle and "generated_code" in puzzle and puzzle.generated_code != "":
-			current_target_cipher = puzzle.generated_code
+		if puzzle:
+			if "generated_code" in puzzle and puzzle.generated_code != "":
+				if current_target_cipher != puzzle.generated_code:
+					current_target_cipher = puzzle.generated_code
+					input_buffer = ""
+					is_unlocked = false
+			
+			if puzzle.is_completed:
+				is_unlocked = true
+			else:
+				is_unlocked = false
+
+	if is_unlocked:
+		if entered_display:
+			entered_display.text = "POINTER DEREFERENCED! CORRIDOR BLAST DOOR UNLOCKED [ OK ]"
+			entered_display.add_theme_color_override("font_color", Color(0.1, 1.0, 0.4, 1.0))
+		if btn_dereference:
+			btn_dereference.text = "[ STATUS: BLAST DOOR UNLOCKED & ARMED ]"
+	else:
+		if btn_dereference:
+			btn_dereference.text = "[ DEREFERENCE MEMORY POINTER ]"
+		if entered_display:
+			entered_display.remove_theme_color_override("font_color")
+		_update_buffer_display()
 
 	if cipher_display:
 		cipher_display.text = "TARGET MEMORY CIPHER: [ %s ]  <-- (ENTER THIS KEY INTO REGISTER)" % current_target_cipher
-
-	_update_buffer_display()
 
 	if dev_notes:
 		dev_notes.text = "[INSTRUCTION]: Enter hex characters [ %s ] using the on-screen buttons or keyboard, then press ENTER or click Dereference to open the blast door." % current_target_cipher
