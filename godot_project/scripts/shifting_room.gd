@@ -46,13 +46,16 @@ func _process(_delta: float) -> void:
     elif dot > 0.8 and not can_shift:
         can_shift = true
 
+var has_played_dialogue: bool = false
+
 func trigger_dimension_shift() -> void:
     current_state = 1 if current_state == 0 else 0
     _apply_geometry_state()
     room_dimensions_shifted.emit(current_state)
     print("[ShiftingRoom] Player turned around! Room shifted to state: ", current_state)
     
-    if has_node("/root/TheOverseer"):
+    if not has_played_dialogue and has_node("/root/TheOverseer"):
+        has_played_dialogue = true
         get_node("/root/TheOverseer").report_dimension_shift()
 
 func _apply_geometry_state() -> void:

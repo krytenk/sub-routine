@@ -19,7 +19,14 @@ var is_dead: bool = false
 @export var attack_cooldown: float = 1.2
 
 @export var is_dormant: bool = false
+@export var patrol_points: Array[Vector3] = []
 var was_initially_dormant: bool = false
+var current_patrol_index: int = 0
+var growl_timer: float = 2.5
+var footstep_timer: float = 0.0
+
+var sfx_growl: AudioStream = null
+var sfx_step: AudioStream = null
 
 var current_target: RoxyVance = null
 var current_cooldown: float = 0.0
@@ -59,10 +66,25 @@ func _ready() -> void:
     initial_spawn_position = global_position
     initial_spawn_rotation = rotation
     was_initially_dormant = is_dormant
+    _init_audio()
     _setup_limbs()
     _update_difficulty_parameters()
     if has_node("/root/DifficultyManager"):
         get_node("/root/DifficultyManager").difficulty_changed.connect(_on_difficulty_changed)
+
+func _init_audio() -> void:
+    if ResourceLoader.exists("res://assets/audio/sfx/sfx_glitch_growl.wav"):
+        sfx_growl = ResourceLoader.load("res://assets/audio/sfx/sfx_glitch_growl.wav")
+    if ResourceLoader.exists("res://assets/audio/sfx/sfx_metal_footstep.wav"):
+        sfx_step = ResourceLoader.load("res://assets/audio/sfx/sfx_metal_footstep.wav")
+
+func _play_horror_sound(stream: AudioStream, db_vol: float = -6.0) -> void:
+    if not stream or not audio_spatial or not is_inside_tree():
+        return
+    if not audio_spatial.playing:
+        audio_spatial.stream = stream
+        audio_spatial.volume_db = db_vol
+        audio_spatial.play()
 
 func _setup_limbs() -> void:
     leg_l = find_child("Leg_L", true, false) as Node3D
@@ -257,9 +279,24 @@ func _physics_process(delta: float) -> void:
             _update_stalk_animation(delta)
             return
 
-    var dist = global_position.distance_to(current_target.global_position)
+    # Footstep and growl timers for suspense and horror
+    growl_timer -= delta
+    if growl_timer <= 0.0 and not is_dormant and not is_dead and not is_stunned:
+        _play_horror_sound(sfx_growl, -6.0)
+        growl_timer = randf_range(5.0, 9.0)
 
-    if dist <= detection_range:
+    var h_spd = Vector2(velocity.x, velocity.z).length()
+    if h_spd > 0.2 and not is_dead and not is_stunned:
+        footstep_timer -= delta
+        if footstep_timer <= 0.0:
+            _play_horror_sound(sfx_step, -12.0)
+            footstep_timer = 0.65
+
+    var dist = global_position.distance_to(current_target.global_position)
+    var is_player_sprinting = (current_target.velocity.length() > 5.0)
+    var effective_detection_range = 22.0 if is_player_sprinting else detection_range
+
+    if dist <= effective_detection_range:
         var target_pos = current_target.global_position
         target_pos.y = global_position.y
         look_at(target_pos, Vector3.UP)
@@ -274,6 +311,20 @@ func _physics_process(delta: float) -> void:
             velocity = Vector3.ZERO
             if current_cooldown <= 0:
                 _perform_attack()
+    elif patrol_points.size() > 0 and not is_dormant:
+        var p_target = patrol_points[current_patrol_index]
+        p_target.y = global_position.y
+        var p_dist = global_position.distance_to(p_target)
+        if p_dist < 1.8:
+            current_patrol_index = (current_patrol_index + 1) % patrol_points.size()
+        else:
+            look_at(p_target, Vector3.UP)
+            var p_dir = (p_target - global_position).normalized()
+            var p_speed = get_effective_speed() * 0.45
+            velocity.x = p_dir.x * p_speed
+            velocity.z = p_dir.z * p_speed
+            velocity.y = -9.8 * delta
+            move_and_slide()
     else:
         velocity = Vector3.ZERO
 

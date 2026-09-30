@@ -320,6 +320,13 @@ func take_damage(amount: int, source_type: String = "environmental") -> void:
     if current_health <= 0:
         _die()
 
+func heal(amount: int) -> void:
+    if is_dead:
+        return
+    current_health = mini(max_health, current_health + amount)
+    health_changed.emit(current_health, max_health)
+    print("[Roxy Vance] Health replenished +", amount, " (Current: ", current_health, "/", max_health, ")")
+
 func _die() -> void:
     if is_dead:
         return

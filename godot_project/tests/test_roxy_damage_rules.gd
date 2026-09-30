@@ -49,3 +49,15 @@ func test_emp_pulse_mechanics() -> bool:
     print("[PASS] test_emp_pulse_mechanics: Roxy EMP stun pulse cooldown and discharge validated.")
     roxy.free()
     return true
+
+func test_health_replenishment() -> bool:
+    var roxy = RoxyVance.new()
+    roxy.current_health = 40
+    roxy.heal(30)
+    assert(roxy.current_health == 70, "FAILED: Health should be 70 after healing 30 from 40")
+    roxy.heal(50)
+    assert(roxy.current_health == 100, "FAILED: Health should not exceed max_health (100)")
+    print("[PASS] test_health_replenishment: Health replenishment restores HP correctly up to cap.")
+    roxy.free()
+    return true
+
