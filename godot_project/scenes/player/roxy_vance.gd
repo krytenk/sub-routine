@@ -78,6 +78,7 @@ var idle_breath_phase: float = 0.0
 var camera_trauma: float = 0.0
 var heartbeat_player: AudioStreamPlayer = null
 var heartbeat_cooldown: float = 0.0
+var last_safe_position: Vector3 = Vector3.ZERO
 
 func _ready() -> void:
     current_health = max_health
@@ -264,6 +265,10 @@ func _physics_process(delta: float) -> void:
 
     move_and_slide()
     _update_walk_animation(delta, speed)
+
+    # Update safe grounded position for recovery
+    if is_on_floor() and global_position.y >= -1.5:
+        last_safe_position = global_position
 
     # Fall damage detection
     if was_airborne_last_frame and is_on_floor():

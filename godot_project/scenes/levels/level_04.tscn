@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://subroutine_lvl_04_concourse"]
+[gd_scene load_steps=35 format=3 uid="uid://subroutine_lvl_04_concourse"]
 
 [ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="1_server_tex"]
 [ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="2_rust_tex"]
@@ -47,20 +47,6 @@ size = Vector3(36, 0.2, 32)
 material = SubResource("StandardMaterial3D_floor")
 size = Vector3(36, 0.2, 32)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_corridor_wall_l"]
-size = Vector3(0.4, 5, 70)
-
-[sub_resource type="BoxMesh" id="BoxMesh_corridor_wall_l"]
-material = SubResource("StandardMaterial3D_wall")
-size = Vector3(0.4, 5, 70)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_back_wall"]
-size = Vector3(6, 5, 0.4)
-
-[sub_resource type="BoxMesh" id="BoxMesh_back_wall"]
-material = SubResource("StandardMaterial3D_wall")
-size = Vector3(6, 5, 0.4)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_trigger"]
 size = Vector3(5, 3.5, 3)
 
@@ -73,6 +59,13 @@ size = Vector3(16, 0.2, 16)
 [sub_resource type="BoxMesh" id="BoxMesh_large_room_floor"]
 material = SubResource("StandardMaterial3D_floor")
 size = Vector3(16, 0.2, 16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_corridor_wall_l"]
+size = Vector3(0.4, 5, 45)
+
+[sub_resource type="BoxMesh" id="BoxMesh_corridor_wall_l"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(0.4, 5, 45)
 
 [node name="Level_04" type="Node3D"]
 
@@ -110,13 +103,13 @@ omni_range = 24.0
 
 [node name="Light_Portal_1" type="OmniLight3D" parent="Lighting"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 4.0, 28)
-light_color = Color(0.9, 0.1, 0.1, 1)
-light_energy = 2.5
+light_color = Color(0.9, 0.2, 0.15, 1)
+light_energy = 2.2
 omni_range = 12.0
 
 [node name="Light_Portal_2" type="OmniLight3D" parent="Lighting"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 4.0, 44)
-light_color = Color(0.7, 0.2, 0.9, 1)
+light_color = Color(0.7, 0.4, 0.9, 1)
 light_energy = 2.0
 omni_range = 12.0
 
@@ -148,21 +141,33 @@ shape = SubResource("BoxShape3D_corridor_floor")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -15)
 mesh = SubResource("BoxMesh_corridor_floor")
 
-[node name="CorridorWallL_Col" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.5, -15)
+[node name="CorridorBackWall_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -50)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="CorridorWallL_1_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.5, -42)
 shape = SubResource("BoxShape3D_corridor_wall_l")
 
-[node name="CorridorWallL_Mesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.5, -15)
-mesh = SubResource("BoxMesh_corridor_wall_l")
-
-[node name="CorridorWallR_Col" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.5, -15)
+[node name="CorridorWallL_2_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.5, -7.5)
 shape = SubResource("BoxShape3D_corridor_wall_l")
 
-[node name="CorridorWallR_Mesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.5, -15)
-mesh = SubResource("BoxMesh_corridor_wall_l")
+[node name="CorridorWallR_1_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.5, -30)
+shape = SubResource("BoxShape3D_corridor_wall_l")
+
+[node name="CorridorWallR_2_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.5, 4.5)
+shape = SubResource("BoxShape3D_corridor_wall_l")
+
+[node name="SpurFloor_RoomA" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, -0.1, -32)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="SpurFloor_RoomB" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, -0.1, -8)
+shape = SubResource("BoxShape3D_thin_portal")
 
 [node name="ConcourseFloorCol" type="CollisionShape3D" parent="Architecture"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 31)
@@ -172,13 +177,65 @@ shape = SubResource("BoxShape3D_concourse_floor")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 31)
 mesh = SubResource("BoxMesh_concourse_floor")
 
-[node name="CorridorBackWall_Col" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -50)
-shape = SubResource("BoxShape3D_back_wall")
+[node name="ConcourseWallS_L" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 2.5, 15)
+shape = SubResource("BoxShape3D_thin_portal")
 
-[node name="CorridorBackWall_Mesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -50)
-mesh = SubResource("BoxMesh_back_wall")
+[node name="ConcourseWallS_R" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 2.5, 15)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="ConcourseWallW_1" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 2.5, 20)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="ConcourseWallW_2" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 2.5, 39)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="SpurFloor_Portal1" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, -0.1, 28)
+shape = SubResource("BoxShape3D_large_room_floor")
+
+[node name="ConcourseWallE_1" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 2.5, 20)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="ConcourseWallE_2" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 2.5, 39)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="SpurFloor_Portal5" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, -0.1, 28)
+shape = SubResource("BoxShape3D_large_room_floor")
+
+[node name="ConcourseWallN_1" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, 2.5, 47)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="SpurFloor_Portal2" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, -0.1, 51)
+shape = SubResource("BoxShape3D_large_room_floor")
+
+[node name="ConcourseWallN_2" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.5, 47)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="SpurFloor_Portal3" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 51)
+shape = SubResource("BoxShape3D_large_room_floor")
+
+[node name="ConcourseWallN_3" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.5, 47)
+shape = SubResource("BoxShape3D_thin_portal")
+
+[node name="SpurFloor_Portal4" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, -0.1, 51)
+shape = SubResource("BoxShape3D_large_room_floor")
+
+[node name="ConcourseWallN_4" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 2.5, 47)
+shape = SubResource("BoxShape3D_thin_portal")
 
 [node name="BacktrackPortal" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -48.5)
@@ -205,12 +262,12 @@ shape = SubResource("BoxShape3D_trigger")
 [node name="Enemies" type="Node3D" parent="."]
 
 [node name="GlitchWalker_Corridor_1" parent="Enemies" instance=ExtResource("3_walker")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -30)
-patrol_points = [Vector3(0, 0.5, -38), Vector3(0, 0.5, -20)]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -20)
+patrol_points = [Vector3(0, 0.5, -25), Vector3(0, 0.5, -12)]
 
 [node name="GlitchWalker_Corridor_2" parent="Enemies" instance=ExtResource("3_walker")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -5)
-patrol_points = [Vector3(0, 0.5, -15), Vector3(0, 0.5, 10)]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+patrol_points = [Vector3(0, 0.5, -6), Vector3(0, 0.5, 12)]
 
 [node name="WireHound_Kennel" parent="Enemies" instance=ExtResource("4_hound")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 68)
@@ -218,7 +275,7 @@ patrol_points = [Vector3(-4, 0.5, 64), Vector3(4, 0.5, 64), Vector3(0, 0.5, 74)]
 
 [node name="RedHerrings" type="Node3D" parent="."]
 
-[node name="Room_A_Archives" type="Node3D" parent="RedHerrings"]
+[node name="Room_A_Archives" type="StaticBody3D" parent="RedHerrings"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -32)
 
 [node name="FloorCol" type="CollisionShape3D" parent="RedHerrings/Room_A_Archives"]
@@ -242,7 +299,7 @@ casualty_style = "slumped"
 technician_name = "Archivist T. Ross"
 log_entry = "The archive catalog got scrambled by the anomaly. I was cataloging system components before the power failed... the generator in the east wing is our only lifeline..."
 
-[node name="Room_B_Ventilation" type="Node3D" parent="RedHerrings"]
+[node name="Room_B_Ventilation" type="StaticBody3D" parent="RedHerrings"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -8)
 
 [node name="FloorCol" type="CollisionShape3D" parent="RedHerrings/Room_B_Ventilation"]
@@ -271,23 +328,23 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
 
 [node name="ChoiceRooms" type="Node3D" parent="."]
 
-[node name="Room_01_DeadEnds" type="Node3D" parent="ChoiceRooms"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, 28)
+[node name="Room_01_DeadEnds" type="StaticBody3D" parent="ChoiceRooms"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0, 28)
 
 [node name="FloorCol" type="CollisionShape3D" parent="ChoiceRooms/Room_01_DeadEnds"]
-shape = SubResource("BoxShape3D_large_room_floor")
+shape = SubResource("BoxShape3D_concourse_floor")
 
 [node name="FloorMesh" type="MeshInstance3D" parent="ChoiceRooms/Room_01_DeadEnds"]
-mesh = SubResource("BoxMesh_large_room_floor")
+mesh = SubResource("BoxMesh_concourse_floor")
 
 [node name="Casualty_LabyrinthTrap" parent="ChoiceRooms/Room_01_DeadEnds" instance=ExtResource("21_casualty")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, -4.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
 casualty_style = "curled"
 technician_name = "Survey Lead K. Becker"
-log_entry = "The five doors are a slaughterhouse. Door one seals behind you... the air scrubbers vent toxic coolant... if you can hear this, do not enter the left corridors..."
+log_entry = "The five doors are a slaughterhouse. All five paths terminate in solid bedrock... and Door one's vents cycle toxic decontamination gas. Don't linger in the 5th cell..."
 
 [node name="DeadEndTrapTrigger" type="Area3D" parent="ChoiceRooms/Room_01_DeadEnds"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 0)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("18_trap")
@@ -295,8 +352,8 @@ script = ExtResource("18_trap")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ChoiceRooms/Room_01_DeadEnds/DeadEndTrapTrigger"]
 shape = SubResource("BoxShape3D_trigger")
 
-[node name="Room_02_ArtShowcase" type="Node3D" parent="ChoiceRooms"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 58)
+[node name="Room_02_ArtShowcase" type="StaticBody3D" parent="ChoiceRooms"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 60)
 
 [node name="FloorCol" type="CollisionShape3D" parent="ChoiceRooms/Room_02_ArtShowcase"]
 shape = SubResource("BoxShape3D_large_room_floor")
@@ -325,7 +382,7 @@ one_shot = true
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ChoiceRooms/Room_02_ArtShowcase/ArtShowcaseTrigger"]
 shape = SubResource("BoxShape3D_trigger")
 
-[node name="Room_03_Kennel" type="Node3D" parent="ChoiceRooms"]
+[node name="Room_03_Kennel" type="StaticBody3D" parent="ChoiceRooms"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 68)
 
 [node name="FloorCol" type="CollisionShape3D" parent="ChoiceRooms/Room_03_Kennel"]
@@ -350,8 +407,8 @@ one_shot = true
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ChoiceRooms/Room_03_Kennel/HoundOverseerZone"]
 shape = SubResource("BoxShape3D_trigger")
 
-[node name="Room_04_Sanctuary" type="Node3D" parent="ChoiceRooms"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 58)
+[node name="Room_04_Sanctuary" type="StaticBody3D" parent="ChoiceRooms"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 60)
 
 [node name="FloorCol" type="CollisionShape3D" parent="ChoiceRooms/Room_04_Sanctuary"]
 shape = SubResource("BoxShape3D_large_room_floor")
@@ -373,8 +430,8 @@ respawn_time = 45.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.4, 2)
 respawn_time = 45.0
 
-[node name="Room_05_ElevatorShaft" type="Node3D" parent="ChoiceRooms"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 28)
+[node name="Room_05_ElevatorShaft" type="StaticBody3D" parent="ChoiceRooms"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 28)
 
 [node name="FloorCol" type="CollisionShape3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
 shape = SubResource("BoxShape3D_large_room_floor")
@@ -385,15 +442,15 @@ mesh = SubResource("BoxMesh_large_room_floor")
 [node name="ClimbableLadder" parent="ChoiceRooms/Room_05_ElevatorShaft" instance=ExtResource("6_ladder")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
 
-[node name="CorridorMedkit" parent="." instance=ExtResource("7_medkit")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.4, -28)
-respawn_time = 50.0
-
-[node name="ConcourseExit" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 48)
+[node name="ConcourseExit" type="Area3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, -4)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("20_exit")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ConcourseExit"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ChoiceRooms/Room_05_ElevatorShaft/ConcourseExit"]
 shape = SubResource("BoxShape3D_trigger")
+
+[node name="CorridorMedkit" parent="." instance=ExtResource("7_medkit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.4, -28)
+respawn_time = 50.0

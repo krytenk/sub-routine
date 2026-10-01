@@ -127,7 +127,15 @@ func report_out_of_bounds(player_node: Node3D) -> void:
     trigger_dialogue("oob")
     # Reset player to safe corridor anchor
     if player_node:
-        player_node.global_position = Vector3(0.0, 0.5, -10.0)
+        if "last_safe_position" in player_node and player_node.last_safe_position != Vector3.ZERO:
+            player_node.global_position = player_node.last_safe_position + Vector3(0.0, 0.4, 0.0)
+        else:
+            var tree = player_node.get_tree() if player_node.is_inside_tree() else null
+            var spawn = tree.root.find_child("SpawnPoint", true, false) if tree and tree.root else null
+            if spawn:
+                player_node.global_position = spawn.global_position + Vector3(0.0, 0.4, 0.0)
+            else:
+                player_node.global_position = Vector3(0.0, 0.5, -10.0)
         player_node.velocity = Vector3.ZERO
 
 func report_invisible_wall_hit() -> void:

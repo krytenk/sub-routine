@@ -98,6 +98,9 @@ func _unhandled_input(event: InputEvent) -> void:
         elif event.keycode == KEY_F3:
             if has_node("/root/LevelManager"):
                 get_node("/root/LevelManager").load_level(3)
+        elif event.keycode == KEY_F4:
+            if has_node("/root/LevelManager"):
+                get_node("/root/LevelManager").load_level(4)
 
 func _toggle_pause() -> void:
     var is_paused = get_tree().paused
