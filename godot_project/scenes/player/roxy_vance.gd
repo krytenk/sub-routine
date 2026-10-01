@@ -187,12 +187,44 @@ func _physics_process(delta: float) -> void:
 
     # Ladder movement mode
     if is_on_ladder:
-        var input_ladder = Input.get_action_strength("move_forward") - Input.get_action_strength("move_backward")
-        velocity.x = 0.0
-        velocity.z = 0.0
-        velocity.y = input_ladder * ladder_speed
+        # Jump off ladder with Spacebar
+        if Input.is_action_just_pressed("jump"):
+            set_on_ladder(false, null)
+            velocity.y = jump_velocity * 0.95
+            var jump_away = transform.basis.z
+            velocity.x = jump_away.x * 2.8
+            velocity.z = jump_away.z * 2.8
+            player_jumped.emit()
+            if is_inside_tree() and has_node("/root/AudioManager"):
+                get_node("/root/AudioManager").play_sfx("sfx_jump")
+            move_and_slide()
+            return
+
+        var input_y = Input.get_action_strength("move_forward") - Input.get_action_strength("move_backward")
+        var input_x = Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
+
+        # Dismount if stepping backwards while on the ground
+        if is_on_floor() and input_y < -0.1:
+            set_on_ladder(false, null)
+            return
+
+        velocity.y = input_y * ladder_speed
+
+        # Allow horizontal strafing and forward step-off when near landings
+        var ladder_right = transform.basis.x
+        var ladder_fwd = -transform.basis.z
+        if abs(input_x) > 0.2:
+            velocity.x = ladder_right.x * input_x * walk_speed * 0.6
+            velocity.z = ladder_right.z * input_x * walk_speed * 0.6
+        elif input_y > 0.5:
+            velocity.x = ladder_fwd.x * 1.2
+            velocity.z = ladder_fwd.z * 1.2
+        else:
+            velocity.x = 0.0
+            velocity.z = 0.0
+
         move_and_slide()
-        _update_walk_animation(delta, abs(input_ladder) * ladder_speed)
+        _update_walk_animation(delta, maxf(abs(input_y) * ladder_speed, abs(input_x) * walk_speed))
         return
 
     if not is_on_floor():

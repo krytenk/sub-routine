@@ -71,7 +71,11 @@ func _ready() -> void:
 	if is_inside_tree() and has_node("/root/LevelManager"):
 		var lm = get_node("/root/LevelManager")
 		if "installed_generator_parts" in lm:
-			installed_parts = lm.get("installed_generator_parts")
+			installed_parts.clear()
+			var raw_parts = lm.get("installed_generator_parts")
+			if raw_parts is Array:
+				for p in raw_parts:
+					installed_parts.append(str(p))
 		if "is_generator_running" in lm and lm.get("is_generator_running"):
 			_power_on(true)
 

@@ -16,6 +16,7 @@ var active_level_instance: Node = null
 var completed_levels: Array[int] = []
 var generator_parts: Array = []
 var installed_generator_parts: Array = []
+var is_generator_running: bool = false
 
 func add_generator_part(part_key: String) -> void:
     if not generator_parts.has(part_key):

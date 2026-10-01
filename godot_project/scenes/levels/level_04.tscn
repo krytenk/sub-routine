@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/facility_casualty_prop.tscn" id="21_casualty"]
 [ext_resource type="PackedScene" path="res://scenes/props/subterranean_generator.tscn" id="22_generator"]
 [ext_resource type="PackedScene" path="res://scenes/props/sparking_ceiling_wire_prop.tscn" id="23_spark_wire"]
+[ext_resource type="PackedScene" path="res://scenes/props/elevator_console_prop.tscn" id="24_console"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_texture = ExtResource("2_rust_tex")
@@ -67,23 +68,23 @@ size = Vector3(36, 0.2, 32)
 material = SubResource("StandardMaterial3D_floor")
 size = Vector3(36, 0.2, 32)
 [sub_resource type="BoxShape3D" id="BoxShape3D_gantry_floor"]
-size = Vector3(8, 0.4, 8)
+size = Vector3(8, 0.4, 7.2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_gantry_floor"]
 material = SubResource("StandardMaterial3D_gantry")
-size = Vector3(8, 0.4, 8)
+size = Vector3(8, 0.4, 7.2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_railing_EW"]
-size = Vector3(8, 1.2, 0.2)
+size = Vector3(3.2, 1.2, 0.2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_railing_EW"]
 material = SubResource("StandardMaterial3D_gantry")
-size = Vector3(8, 1.2, 0.2)
+size = Vector3(3.2, 1.2, 0.2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_railing_NS"]
-size = Vector3(0.2, 1.2, 8)
+size = Vector3(0.2, 1.2, 7.2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_railing_NS"]
 material = SubResource("StandardMaterial3D_gantry")
-size = Vector3(0.2, 1.2, 8)
+size = Vector3(0.2, 1.2, 7.2)
 [sub_resource type="BoxShape3D" id="BoxShape3D_spur_EW"]
 size = Vector3(6.5, 0.2, 6)
 
@@ -435,7 +436,7 @@ light_range = 12.0
 
 [node name="SparkWire_RoomB" parent="SparkWires" instance=ExtResource("23_spark_wire")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 3, 0, -8)
-door_label_text = "[SEC-4B] AUX POWER"
+door_label_text = "[SEC-4B] AUX TURBINE BAY"
 door_label_color = Color(0.95, 0.8, 0.35, 1)
 spark_color = Color(1, 0.8, 0.3, 1)
 light_energy_peak = 4.5
@@ -1266,42 +1267,55 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 8, 0)
 mesh = SubResource("BoxMesh_shaft_lintel")
 
 [node name="GantryCol" type="CollisionShape3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.9, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.9, -4.1)
 shape = SubResource("BoxShape3D_gantry_floor")
 
 [node name="GantryMesh" type="MeshInstance3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.9, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.9, -4.1)
 mesh = SubResource("BoxMesh_gantry_floor")
 
-[node name="GantryRailing_N_Col" type="CollisionShape3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.7, 0)
+[node name="GantryRailing_N_L_Col" type="CollisionShape3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 6.7, -0.5)
 shape = SubResource("BoxShape3D_railing_EW")
 
-[node name="GantryRailing_N_Mesh" type="MeshInstance3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.7, 0)
+[node name="GantryRailing_N_L_Mesh" type="MeshInstance3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 6.7, -0.5)
+mesh = SubResource("BoxMesh_railing_EW")
+
+[node name="GantryRailing_N_R_Col" type="CollisionShape3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 6.7, -0.5)
+shape = SubResource("BoxShape3D_railing_EW")
+
+[node name="GantryRailing_N_R_Mesh" type="MeshInstance3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 6.7, -0.5)
 mesh = SubResource("BoxMesh_railing_EW")
 
 [node name="GantryRailing_E_Col" type="CollisionShape3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 6.7, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 6.7, -4.1)
 shape = SubResource("BoxShape3D_railing_NS")
 
 [node name="GantryRailing_E_Mesh" type="MeshInstance3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 6.7, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 6.7, -4.1)
 mesh = SubResource("BoxMesh_railing_NS")
 
 [node name="GantryRailing_W_Col" type="CollisionShape3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 6.7, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 6.7, -4.1)
 shape = SubResource("BoxShape3D_railing_NS")
 
 [node name="GantryRailing_W_Mesh" type="MeshInstance3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 6.7, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 6.7, -4.1)
 mesh = SubResource("BoxMesh_railing_NS")
 
 [node name="ClimbableLadder" parent="ChoiceRooms/Room_05_ElevatorShaft" instance=ExtResource("6_ladder")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.3)
+ladder_height = 6.2
+
+[node name="ElevatorConsole" parent="ChoiceRooms/Room_05_ElevatorShaft" instance=ExtResource("24_console")]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 1.8, 6.1, -2.5)
+target_level_index = 5
 
 [node name="ConcourseExit" type="Area3D" parent="ChoiceRooms/Room_05_ElevatorShaft"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.8, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.8, -4.8)
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("20_exit")

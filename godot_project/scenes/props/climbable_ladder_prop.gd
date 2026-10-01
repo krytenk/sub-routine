@@ -13,7 +13,32 @@ var climb_sfx_timer: float = 0.0
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	_setup_geometry()
 	_build_rungs()
+
+func _setup_geometry() -> void:
+	var col = find_child("CollisionShape3D", true, false) as CollisionShape3D
+	if col and col.shape is BoxShape3D:
+		var box = col.shape.duplicate() as BoxShape3D
+		box.size = Vector3(1.4, ladder_height, 1.4)
+		col.shape = box
+		col.position.y = ladder_height * 0.5
+	var rail_l = find_child("Rail_L", true, false) as MeshInstance3D
+	if rail_l:
+		var rail_mesh = BoxMesh.new()
+		rail_mesh.size = Vector3(0.08, ladder_height, 0.08)
+		if rail_l.mesh and rail_l.mesh.material:
+			rail_mesh.material = rail_l.mesh.material
+		rail_l.mesh = rail_mesh
+		rail_l.position.y = ladder_height * 0.5
+	var rail_r = find_child("Rail_R", true, false) as MeshInstance3D
+	if rail_r:
+		var rail_mesh = BoxMesh.new()
+		rail_mesh.size = Vector3(0.08, ladder_height, 0.08)
+		if rail_r.mesh and rail_r.mesh.material:
+			rail_mesh.material = rail_r.mesh.material
+		rail_r.mesh = rail_mesh
+		rail_r.position.y = ladder_height * 0.5
 
 func _build_rungs() -> void:
 	var rung_mat = StandardMaterial3D.new()
@@ -45,7 +70,7 @@ func _on_body_entered(body: Node3D) -> void:
 		if is_inside_tree():
 			var hud = get_tree().root.find_child("HUD", true, false)
 			if hud and hud.has_method("display_overseer_message"):
-				hud.display_overseer_message("[LADDER] [W] Climb Up / [S] Climb Down", "")
+				hud.display_overseer_message("[LADDER] [W] Climb Up / [S] Climb Down / [SPACE] Jump Off", "")
 
 func _on_body_exited(body: Node3D) -> void:
 	if body == active_climber:
@@ -62,6 +87,17 @@ func _process(delta: float) -> void:
 			if climb_sfx_timer <= 0.0:
 				_play_climb_sound()
 				climb_sfx_timer = 0.38
+
+		# Top of ladder auto-step onto landing if climbing up
+		var rel_y = active_climber.global_position.y - global_position.y
+		if rel_y >= (ladder_height - 0.5):
+			var input_y = Input.get_action_strength("move_forward") - Input.get_action_strength("move_backward")
+			if input_y > 0.2:
+				var step_dir = -global_transform.basis.z
+				active_climber.velocity = step_dir * 2.5 + Vector3(0, 1.5, 0)
+				active_climber.set_on_ladder(false, null)
+				active_climber = null
+				return
 
 func _play_climb_sound() -> void:
 	if not is_inside_tree() or not ResourceLoader.exists("res://assets/audio/sfx/sfx_ladder_climb.wav"):

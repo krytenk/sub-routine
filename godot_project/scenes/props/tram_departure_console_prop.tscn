@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://tram_departure_console_01"]
+
+[ext_resource type="Script" path="res://scenes/props/tram_departure_console_prop.gd" id="1_tram"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
+size = Vector3(2.5, 2.5, 2.5)
+
+[node name="TramDepartureConsole" type="Node3D"]
+script = ExtResource("1_tram")
+
+[node name="InteractArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+shape = SubResource("BoxShape3D_interact")
