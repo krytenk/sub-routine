@@ -63,6 +63,14 @@ func _ready() -> void:
 		area.body_entered.connect(_on_body_entered)
 		area.body_exited.connect(_on_body_exited)
 
+	add_to_group("interactive_props")
+	add_to_group("generator_parts")
+	add_to_group("pickups")
+
+func interact(_player: CharacterBody3D = null) -> void:
+	print("[GeneratorPartPickup] Interaction received for: ", part_type)
+	collect()
+
 func _process(delta: float) -> void:
 	# Subtle floating bob and slow rotation
 	var t = Time.get_ticks_msec() / 1000.0

@@ -97,6 +97,44 @@ func test_generator_part_pickup() -> bool:
 	pickup.free()
 	return true
 
+func test_generator_part_interact_and_groups() -> bool:
+	var pickup = PickupScript.new()
+	pickup.part_type = "coolant"
+	pickup._ready()
+
+	# Validate groups for raycast and proximity interaction priority
+	if not pickup.is_in_group("interactive_props"):
+		push_error("Pickup missing 'interactive_props' group.")
+		pickup.free()
+		return false
+	if not pickup.is_in_group("generator_parts"):
+		push_error("Pickup missing 'generator_parts' group.")
+		pickup.free()
+		return false
+	if not pickup.is_in_group("pickups"):
+		push_error("Pickup missing 'pickups' group.")
+		pickup.free()
+		return false
+
+	var collected_box: Array[String] = [""]
+	pickup.part_collected.connect(func(pt: String): collected_box[0] = pt)
+
+	# Verify direct interact() invokes collection
+	pickup.interact(null)
+
+	if collected_box[0] != "generator_part_coolant":
+		push_error("interact() failed to trigger part collection.")
+		pickup.free()
+		return false
+	if not pickup.collected:
+		push_error("Pickup collected flag was not set by interact().")
+		pickup.free()
+		return false
+
+	print("[PASS] test_generator_part_interact_and_groups: Pickup prop groups and interact() verified.")
+	pickup.free()
+	return true
+
 func test_subterranean_generator_progressive_install() -> bool:
 	var gen = GeneratorScript.new()
 	gen.direct_inventory = ["generator_part_relay", "generator_part_coolant", "generator_part_fuse"]

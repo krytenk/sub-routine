@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://subroutine_lvl_02"]
+[gd_scene load_steps=40 format=3 uid="uid://subroutine_lvl_02"]
 
 [ext_resource type="Script" path="res://scripts/puzzles/circuit_breaker_puzzle.gd" id="1_puzzle"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/glitch_walker.tscn" id="2_walker"]
@@ -90,6 +90,13 @@ size = Vector3(6, 0.6, 6)
 [sub_resource type="BoxMesh" id="BoxMesh_substation_deck"]
 material = SubResource("StandardMaterial3D_floor")
 size = Vector3(6, 0.6, 6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_substation_table"]
+size = Vector3(2, 0.8, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_substation_table"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector3(2, 0.8, 1.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_back_lower"]
 size = Vector3(20, 2.5, 0.4)
@@ -509,7 +516,7 @@ patrol_points = [Vector3(6.5, 0.5, -9), Vector3(6.5, 0.5, 0), Vector3(2.5, 0.5, 
 [node name="Props" type="Node3D" parent="."]
 
 [node name="CRTTerminal" parent="Props" instance=ExtResource("5_crt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 6.5)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -6.5, 0.6, -2)
 
 [node name="BlastDoor" parent="Props" instance=ExtResource("7_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19)
@@ -587,8 +594,17 @@ casualty_style = "curled"
 technician_name = "Security Officer D. Chen"
 log_entry = "Breakers overloaded. Two walkers trapped us in the trench. My leg is pinned... I stashed the coolant compression cell on the substation table upstairs... don't let them hear you running..."
 
-[node name="GeneratorPart_Coolant" parent="Props" instance=ExtResource("24_gen_part")]
+[node name="SubstationTable" type="StaticBody3D" parent="Props"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.0, 7)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Props/SubstationTable"]
+shape = SubResource("BoxShape3D_substation_table")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Props/SubstationTable"]
+mesh = SubResource("BoxMesh_substation_table")
+
+[node name="GeneratorPart_Coolant" parent="Props" instance=ExtResource("24_gen_part")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.65, 7)
 part_type = "coolant"
 
 [node name="OverseerZone_Entry" type="Area3D" parent="."]

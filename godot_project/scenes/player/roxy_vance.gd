@@ -369,10 +369,29 @@ func _attempt_interaction() -> void:
             if collider.get_parent() and collider.get_parent().get_parent() and _try_interact_target(collider.get_parent().get_parent()):
                 return
 
-    # 2. Proximity fallback: check interactive objects within 8.0 meters
+    # 2. Priority check for immediate close-range pickups/components (within 3.0m)
+    # Prevents distant terminals or puzzles from intercepting nearby item pickups
+    if is_inside_tree():
+        var pickups = get_tree().get_nodes_in_group("generator_parts") + get_tree().get_nodes_in_group("pickups")
+        var best_pickup: Node = null
+        var best_pickup_dist: float = 3.0
+        for p in pickups:
+            if p is Node3D and (p.has_method("interact") or p.has_method("collect")):
+                var d = global_position.distance_to(p.global_position)
+                if d < best_pickup_dist:
+                    best_pickup_dist = d
+                    best_pickup = p
+        if best_pickup:
+            if best_pickup.has_method("interact"):
+                best_pickup.call("interact", self)
+            elif best_pickup.has_method("collect"):
+                best_pickup.call("collect")
+            return
+
+    # 3. Proximity fallback: check interactive objects within 2.5 meters (reduced from 8.0m)
     if is_inside_tree():
         var candidates = get_tree().get_nodes_in_group("terminals") + get_tree().get_nodes_in_group("interactive_props") + get_tree().get_nodes_in_group("puzzles")
-        var closest_dist: float = 8.0
+        var closest_dist: float = 2.5
         var closest_node: Node = null
         for node in candidates:
             if node is Node3D and node.has_method("interact"):
