@@ -91,11 +91,11 @@ func interact() -> void:
 		# Add to global inventory
 		if is_inside_tree() and has_node("/root/LevelManager"):
 			var lm = get_node("/root/LevelManager")
-			if not "generator_parts" in lm:
-				lm.set("generator_parts", [])
-			var parts: Array = lm.get("generator_parts")
-			if not parts.has(holds_generator_part):
-				parts.append(holds_generator_part)
+			if lm.has_method("add_generator_part"):
+				lm.add_generator_part(holds_generator_part)
+			elif "generator_parts" in lm and lm.generator_parts is Array:
+				if not lm.generator_parts.has(holds_generator_part):
+					lm.generator_parts.append(holds_generator_part)
 				
 		if hud and hud.has_method("update_objective"):
 			var clean_part = holds_generator_part.replace("generator_part_", "").capitalize()

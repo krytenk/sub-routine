@@ -25,9 +25,12 @@ func _ready() -> void:
 	# Check if already in inventory
 	if is_inside_tree() and has_node("/root/LevelManager"):
 		var lm = get_node("/root/LevelManager")
-		if "generator_parts" in lm:
-			var parts: Array = lm.get("generator_parts")
-			if parts.has("generator_part_" + part_type):
+		if lm.has_method("has_generator_part"):
+			if lm.has_generator_part("generator_part_" + part_type):
+				queue_free()
+				return
+		elif "generator_parts" in lm and lm.generator_parts is Array:
+			if lm.generator_parts.has("generator_part_" + part_type):
 				queue_free()
 				return
 				
@@ -110,19 +113,32 @@ func collect() -> void:
 		return
 	collected = true
 	var full_key = "generator_part_" + part_type
+	print("[GeneratorPartPickup] Collecting part: ", full_key)
 	part_collected.emit(full_key)
 
-	if audio_player and audio_player.stream:
-		audio_player.play()
+	# Instantly remove from interactive groups so it cannot be re-triggered
+	remove_from_group("interactive_props")
+	remove_from_group("generator_parts")
+	remove_from_group("pickups")
+
+	var area = find_child("Area3D", true, false) as Area3D
+	if area:
+		area.set_deferred("monitoring", false)
+		area.set_deferred("monitorable", false)
 
 	# Register in global LevelManager inventory
 	if is_inside_tree() and has_node("/root/LevelManager"):
 		var lm = get_node("/root/LevelManager")
-		if not "generator_parts" in lm:
-			lm.set("generator_parts", [])
-		var parts: Array = lm.get("generator_parts")
-		if not parts.has(full_key):
-			parts.append(full_key)
+		if lm.has_method("add_generator_part"):
+			lm.add_generator_part(full_key)
+		elif "generator_parts" in lm and lm.generator_parts is Array:
+			if not lm.generator_parts.has(full_key):
+				lm.generator_parts.append(full_key)
+
+	if is_inside_tree() and has_node("/root/AudioManager"):
+		get_node("/root/AudioManager").play_sfx("sfx_part_pickup")
+	elif audio_player and audio_player.stream:
+		audio_player.play()
 
 	var hud = null
 	if is_inside_tree() and get_tree() and get_tree().root:
@@ -132,11 +148,8 @@ func collect() -> void:
 
 	if prompt_label:
 		prompt_label.visible = false
-	var model = find_child("Model", true, false)
-	if model:
-		model.visible = false
+	for child in get_children():
+		if child is VisualInstance3D or child is Light3D:
+			child.visible = false
 
-	if is_inside_tree() and get_tree():
-		get_tree().create_timer(0.6).timeout.connect(queue_free)
-	else:
-		queue_free()
+	queue_free()

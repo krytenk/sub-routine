@@ -14,6 +14,16 @@ const TARGET_GAMEPLAY_MINUTES_PER_LEVEL: int = 30
 var current_level_index: int = 1
 var active_level_instance: Node = null
 var completed_levels: Array[int] = []
+var generator_parts: Array = []
+var installed_generator_parts: Array = []
+
+func add_generator_part(part_key: String) -> void:
+    if not generator_parts.has(part_key):
+        generator_parts.append(part_key)
+        print("[LevelManager] Generator part stored: ", part_key, " (Total: ", generator_parts.size(), ")")
+
+func has_generator_part(part_key: String) -> bool:
+    return generator_parts.has(part_key)
 
 # Metadata repository for all 120 live-ops levels
 var level_roadmap_metadata: Array[Dictionary] = []

@@ -135,6 +135,32 @@ func test_generator_part_interact_and_groups() -> bool:
 	pickup.free()
 	return true
 
+func test_generator_part_level_manager_inventory_storage() -> bool:
+	var pickup = PickupScript.new()
+	pickup.part_type = "coolant"
+	pickup._ready()
+
+	# Validate LevelManager integration if autoload exists
+	var lm = Engine.get_main_loop().root.get_node_or_null("LevelManager") if Engine.get_main_loop() else null
+	if lm:
+		lm.generator_parts.clear()
+		pickup.collect()
+		if not lm.has_generator_part("generator_part_coolant"):
+			push_error("LevelManager failed to store generator_part_coolant.")
+			pickup.free()
+			return false
+	else:
+		pickup.collect()
+
+	if not pickup.collected:
+		push_error("Pickup flag 'collected' should be true.")
+		pickup.free()
+		return false
+
+	print("[PASS] test_generator_part_level_manager_inventory_storage: LevelManager inventory storage verified without errors.")
+	pickup.free()
+	return true
+
 func test_subterranean_generator_progressive_install() -> bool:
 	var gen = GeneratorScript.new()
 	gen.direct_inventory = ["generator_part_relay", "generator_part_coolant", "generator_part_fuse"]

@@ -396,7 +396,7 @@ func _attempt_interaction() -> void:
     if is_inside_tree():
         var pickups = get_tree().get_nodes_in_group("generator_parts") + get_tree().get_nodes_in_group("pickups")
         var best_pickup: Node = null
-        var best_pickup_dist: float = 3.0
+        var best_pickup_dist: float = 3.6
         for p in pickups:
             if p is Node3D and (p.has_method("interact") or p.has_method("collect")):
                 var d = global_position.distance_to(p.global_position)
@@ -404,6 +404,7 @@ func _attempt_interaction() -> void:
                     best_pickup_dist = d
                     best_pickup = p
         if best_pickup:
+            print("[Roxy Vance] Collecting item via proximity: ", best_pickup.name, " (dist: ", best_pickup_dist, "m)")
             if best_pickup.has_method("interact"):
                 best_pickup.call("interact", self)
             elif best_pickup.has_method("collect"):
