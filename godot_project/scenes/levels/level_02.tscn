@@ -22,6 +22,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/staircase_prop.tscn" id="20_stairs"]
 [ext_resource type="Script" path="res://scripts/overseer_trigger_zone.gd" id="21_overseer_zone"]
 [ext_resource type="Script" path="res://scripts/sector_backtrack_trigger.gd" id="22_backtrack"]
+[ext_resource type="PackedScene" path="res://scenes/props/facility_casualty_prop.tscn" id="23_casualty"]
+[ext_resource type="PackedScene" path="res://scenes/props/generator_part_pickup.tscn" id="24_gen_part"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_texture = ExtResource("4_rust_tex")
@@ -578,6 +580,16 @@ transform = Transform3D(0.921061, 0, 0.389418, 0, 1, 0, -0.389418, 0, 0.921061, 
 
 [node name="PowerInverter_2" parent="Props" instance=ExtResource("14_inverter")]
 transform = Transform3D(0.955336, 0, -0.29552, 0, 1, 0, 0.29552, 0, 0.955336, 4.5, 0, 9)
+
+[node name="Casualty_TrenchAlcove" parent="Props" instance=ExtResource("23_casualty")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -6.5, 0, 5)
+casualty_style = "curled"
+technician_name = "Security Officer D. Chen"
+log_entry = "Breakers overloaded. Two walkers trapped us in the trench. My leg is pinned... I stashed the coolant compression cell on the substation table upstairs... don't let them hear you running..."
+
+[node name="GeneratorPart_Coolant" parent="Props" instance=ExtResource("24_gen_part")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.0, 7)
+part_type = "coolant"
 
 [node name="OverseerZone_Entry" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, -12)

@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://subroutine_facility_casualty"]
+
+[ext_resource type="Script" path="res://scenes/props/facility_casualty_prop.gd" id="1_script"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_interact"]
+size = Vector3(2.2, 1.8, 2.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_solid"]
+size = Vector3(1.2, 0.9, 1.2)
+
+[node name="FacilityCasualtyProp" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="InteractArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0.2)
+shape = SubResource("BoxShape3D_interact")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.2)
+shape = SubResource("BoxShape3D_solid")

@@ -39,7 +39,10 @@ const OVERSEER_LINES = {
     "stealth_locker": "Hiding inside a server locker? Classic survival horror trope. Just pray the garbage collector doesn't purge this container.",
     "art_showcase": "The memorial of digital decay. Every deprecated build and scrapped mechanic ends up here.",
     "dead_end_trap": "I warned you about unhandled branch execution. All five corridors terminate here... as do you.",
-    "backtrack_hint": "Retreating to previous sectors? You can scavenge respawned nanites, but the complex doesn't forget where you've been."
+    "backtrack_hint": "Retreating to previous sectors? You can scavenge respawned nanites, but the complex doesn't forget where you've been.",
+    "generator_restored": "Auxiliary power grid restored. You think activating the secondary generator helps your chances? The high-voltage hum just woke up every thread in the facility.",
+    "casualty_inspect": "Another terminal developer who tried to branch from master. Death in this sector is a permanent compilation failure, Roxy.",
+    "generator_need_parts": "The auxiliary turbine is dead in the water. Missing its transformer relay, coolant cell, and heavy fuse. Good luck finding those intact."
 }
 
 var last_played_clip: String = ""

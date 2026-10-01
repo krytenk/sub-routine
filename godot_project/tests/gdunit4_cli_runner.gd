@@ -15,7 +15,8 @@ const TEST_FILES = [
 	"test_subroutine_terminal.gd",
 	"test_sector_04_concourse.gd",
 	"test_sector_3_transition.gd",
-	"test_audio_jumpscare_flow.gd"
+	"test_audio_jumpscare_flow.gd",
+	"test_generator_and_casualties.gd"
 ]
 
 func _init() -> void:

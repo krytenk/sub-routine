@@ -20,6 +20,7 @@
 [ext_resource type="Script" path="res://scripts/props/broken_electronics_light.gd" id="18_light_script"]
 [ext_resource type="PackedScene" path="res://scenes/props/nanite_medkit_prop.tscn" id="19_medkit"]
 [ext_resource type="PackedScene" path="res://scenes/props/security_keypad_prop.tscn" id="20_keypad"]
+[ext_resource type="PackedScene" path="res://scenes/props/facility_casualty_prop.tscn" id="21_casualty"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_texture = ExtResource("6_rust_tex")
@@ -758,3 +759,10 @@ transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 9.8, 1.8, -4)
 
 [node name="PowerInverter" parent="Props" instance=ExtResource("17_inverter")]
 transform = Transform3D(0.939693, 0, -0.34202, 0, 1, 0, 0.34202, 0, 0.939693, -4, 0, -14)
+
+[node name="Casualty_StorageBay" parent="Props" instance=ExtResource("21_casualty")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 9.3, 0, -3.2)
+casualty_style = "slumped"
+technician_name = "Chief Engineer L. Kozlov"
+log_entry = "The BIOS cycle wouldn't terminate. I locked myself in Storage 04... but the walkers kept pounding on the vents. If someone finds this, check my tool pouch for the primary coil."
+holds_generator_part = "generator_part_relay"

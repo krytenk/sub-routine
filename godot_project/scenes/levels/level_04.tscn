@@ -20,6 +20,8 @@
 [ext_resource type="Script" path="res://scripts/dead_end_trap_trigger.gd" id="18_trap"]
 [ext_resource type="Script" path="res://scripts/overseer_trigger_zone.gd" id="19_overseer_zone"]
 [ext_resource type="Script" path="res://scripts/sector_exit_trigger.gd" id="20_exit"]
+[ext_resource type="PackedScene" path="res://scenes/props/facility_casualty_prop.tscn" id="21_casualty"]
+[ext_resource type="PackedScene" path="res://scenes/props/subterranean_generator.tscn" id="22_generator"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_texture = ExtResource("2_rust_tex")
@@ -234,6 +236,12 @@ transform = Transform3D(0.9, 0, 0.4, 0, 1, 0, -0.4, 0, 0.9, -3, 0, -2)
 [node name="FuseBox" parent="RedHerrings/Room_A_Archives" instance=ExtResource("13_fuse_box")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -6)
 
+[node name="Casualty_Archives" parent="RedHerrings/Room_A_Archives" instance=ExtResource("21_casualty")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -4.5, 0, 4)
+casualty_style = "slumped"
+technician_name = "Archivist T. Ross"
+log_entry = "The archive catalog got scrambled by the anomaly. I was cataloging system components before the power failed... the generator in the east wing is our only lifeline..."
+
 [node name="Room_B_Ventilation" type="Node3D" parent="RedHerrings"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -8)
 
@@ -242,6 +250,15 @@ shape = SubResource("BoxShape3D_large_room_floor")
 
 [node name="FloorMesh" type="MeshInstance3D" parent="RedHerrings/Room_B_Ventilation"]
 mesh = SubResource("BoxMesh_large_room_floor")
+
+[node name="SubterraneanGenerator" parent="RedHerrings/Room_B_Ventilation" instance=ExtResource("22_generator")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+
+[node name="Casualty_GeneratorTech" parent="RedHerrings/Room_B_Ventilation" instance=ExtResource("21_casualty")]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -4, 0, 2)
+casualty_style = "curled"
+technician_name = "Generator Tech V. Rostova"
+log_entry = "The turbine stator tripped when the facility went dark. The relay coil is back in Sector 01 storage, coolant in the Sector 02 substation, and fuse on the Sector 03 gantry... we were scattered trying to gather them..."
 
 [node name="CoolantPipe1" parent="RedHerrings/Room_B_Ventilation" instance=ExtResource("10_pipe")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
@@ -262,6 +279,12 @@ shape = SubResource("BoxShape3D_large_room_floor")
 
 [node name="FloorMesh" type="MeshInstance3D" parent="ChoiceRooms/Room_01_DeadEnds"]
 mesh = SubResource("BoxMesh_large_room_floor")
+
+[node name="Casualty_LabyrinthTrap" parent="ChoiceRooms/Room_01_DeadEnds" instance=ExtResource("21_casualty")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, -4.5)
+casualty_style = "curled"
+technician_name = "Survey Lead K. Becker"
+log_entry = "The five doors are a slaughterhouse. Door one seals behind you... the air scrubbers vent toxic coolant... if you can hear this, do not enter the left corridors..."
 
 [node name="DeadEndTrapTrigger" type="Area3D" parent="ChoiceRooms/Room_01_DeadEnds"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.5, 0)

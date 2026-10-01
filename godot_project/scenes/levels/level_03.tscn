@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/staircase_prop.tscn" id="19_stairs"]
 [ext_resource type="Script" path="res://scripts/overseer_trigger_zone.gd" id="20_overseer_zone"]
 [ext_resource type="Script" path="res://scripts/sector_backtrack_trigger.gd" id="21_backtrack"]
+[ext_resource type="PackedScene" path="res://scenes/props/facility_casualty_prop.tscn" id="22_casualty"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_texture = ExtResource("4_rust_tex")
@@ -296,6 +297,13 @@ transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 8.8, 4.5, 1)
 
 [node name="PowerInverter" parent="Props" instance=ExtResource("14_inverter")]
 transform = Transform3D(0.921061, 0, 0.389418, 0, 1, 0, -0.389418, 0, 0.921061, 4, 0, -3)
+
+[node name="Casualty_LowerGantry" parent="Props" instance=ExtResource("22_casualty")]
+transform = Transform3D(0.866025, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866025, -6.5, 0, -5)
+casualty_style = "slumped"
+technician_name = "Maintenance Specialist M. Aris"
+log_entry = "I fell from the upper gantry during the ascension drill. The fall broke my spine. The generator in sector four is the only way to power the surface lift... don't let the Overseer purge the grid."
+holds_generator_part = "generator_part_fuse"
 
 [node name="OverseerZone_Entry" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -12)
