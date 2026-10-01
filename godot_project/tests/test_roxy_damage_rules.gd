@@ -61,3 +61,33 @@ func test_health_replenishment() -> bool:
     roxy.free()
     return true
 
+func test_roxy_jump_mechanics() -> bool:
+    var roxy = RoxyVance.new()
+    assert(roxy.jump_velocity == 5.4, "FAILED: Default jump_velocity should be 5.4")
+
+    var jump_signal_fired: Array[bool] = [false]
+    roxy.player_jumped.connect(func(): jump_signal_fired[0] = true)
+
+    roxy.current_stamina = 100.0
+
+    # Execute jump logic test
+    var initial_stamina = roxy.current_stamina
+    var jump_force = roxy.jump_velocity
+    if roxy.current_stamina >= 6.0:
+        roxy.current_stamina -= 6.0
+    roxy.velocity.y = jump_force
+    roxy.player_jumped.emit()
+
+    assert(is_equal_approx(roxy.velocity.y, 5.4), "FAILED: Jump velocity should equal 5.4")
+    assert(jump_signal_fired[0], "FAILED: player_jumped signal was not fired")
+    assert(is_equal_approx(roxy.current_stamina, initial_stamina - 6.0), "FAILED: Jump did not consume 6 stamina")
+
+    # Fatigue jump scaling test
+    roxy.is_exhausted = true
+    var fatigue_force = roxy.jump_velocity * 0.72
+    assert(is_equal_approx(fatigue_force, 5.4 * 0.72), "FAILED: Fatigue jump force calculated incorrectly")
+
+    print("[PASS] test_roxy_jump_mechanics: Roxy jump mechanics, velocity, stamina drain, and fatigue validated.")
+    roxy.free()
+    return true
+

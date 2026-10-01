@@ -191,3 +191,36 @@ func test_level_horror_assets_presence() -> bool:
 
 	print("[PASS] test_level_horror_assets_presence: All 4 sector levels contain verified casualties and generator entities.")
 	return true
+
+func test_sector_02_mezzanine_and_jump_routes() -> bool:
+	var scene_res = ResourceLoader.load("res://scenes/levels/level_02.tscn") as PackedScene
+	if not scene_res:
+		push_error("Failed to load level_02.tscn")
+		return false
+	var inst = scene_res.instantiate()
+
+	var required_nodes = [
+		"SubstationMezzCol",
+		"SubstationStep1_Col",
+		"SubstationStep2_Col",
+		"CatwalkJumpCrateCol",
+		"GeneratorPart_Coolant",
+		"OmniLight3D_RampGuide"
+	]
+
+	for node_name in required_nodes:
+		var target = inst.find_child(node_name, true, false)
+		if not target:
+			push_error("Sector 02 missing required platform/jump node: " + node_name)
+			inst.free()
+			return false
+
+	var coolant = inst.find_child("GeneratorPart_Coolant", true, false) as Node3D
+	if coolant.position.y < 3.5:
+		push_error("Coolant should be positioned on the elevated mezzanine platform.")
+		inst.free()
+		return false
+
+	inst.free()
+	print("[PASS] test_sector_02_mezzanine_and_jump_routes: Sector 02 mezzanine platform, jump steps, and backtrack route verified.")
+	return true

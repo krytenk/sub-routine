@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://subroutine_lvl_02"]
+[gd_scene load_steps=81 format=3 uid="uid://subroutine_lvl_02"]
 
 [ext_resource type="Script" path="res://scripts/puzzles/circuit_breaker_puzzle.gd" id="1_puzzle"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/glitch_walker.tscn" id="2_walker"]
@@ -92,11 +92,53 @@ material = SubResource("StandardMaterial3D_floor")
 size = Vector3(6, 0.6, 6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_substation_table"]
-size = Vector3(2, 0.8, 1.2)
+size = Vector3(1.8, 0.6, 1.2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_substation_table"]
 material = SubResource("StandardMaterial3D_floor")
-size = Vector3(2, 0.8, 1.2)
+size = Vector3(1.8, 0.6, 1.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_substation_mezzanine"]
+size = Vector3(5.5, 0.2, 5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_substation_mezzanine"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector3(5.5, 0.2, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mezz_railing_s"]
+size = Vector3(5.5, 1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mezz_railing_s"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(5.5, 1, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mezz_railing_w"]
+size = Vector3(0.1, 1, 3.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mezz_railing_w"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(0.1, 1, 3.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_substation_step1"]
+size = Vector3(1.6, 1.1, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_substation_step1"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector3(1.6, 1.1, 1.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_substation_step2"]
+size = Vector3(1.6, 1.1, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_substation_step2"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector3(1.6, 1.1, 1.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_catwalk_jump_crate"]
+size = Vector3(2, 1.2, 1.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_catwalk_jump_crate"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector3(2, 1.2, 1.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_back_lower"]
 size = Vector3(20, 2.5, 0.4)
@@ -237,6 +279,15 @@ omni_attenuation = 1.1
 shadow_enabled = true
 shadow_bias = 0.08
 
+[node name="OmniLight3D_RampGuide" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 3.2, -4)
+light_color = Color(0.28, 0.9, 0.65, 1)
+light_energy = 1.8
+omni_range = 15.0
+omni_attenuation = 1.0
+shadow_enabled = true
+shadow_bias = 0.08
+
 [node name="OverheadFluorescent" type="Node3D" parent="Lighting"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.6, 0)
 script = ExtResource("15_light_script")
@@ -349,6 +400,54 @@ shape = SubResource("BoxShape3D_substation_deck")
 [node name="SubstationDeckMesh" type="MeshInstance3D" parent="Architecture"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 8)
 mesh = SubResource("BoxMesh_substation_deck")
+
+[node name="SubstationMezzCol" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 3.3, 7.5)
+shape = SubResource("BoxShape3D_substation_mezzanine")
+
+[node name="SubstationMezzMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 3.3, 7.5)
+mesh = SubResource("BoxMesh_substation_mezzanine")
+
+[node name="MezzRailingS_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 3.9, 10)
+shape = SubResource("BoxShape3D_mezz_railing_s")
+
+[node name="MezzRailingS_Mesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 3.9, 10)
+mesh = SubResource("BoxMesh_mezz_railing_s")
+
+[node name="MezzRailingW_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 3.9, 8.25)
+shape = SubResource("BoxShape3D_mezz_railing_w")
+
+[node name="MezzRailingW_Mesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 3.9, 8.25)
+mesh = SubResource("BoxMesh_mezz_railing_w")
+
+[node name="SubstationStep1_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.55, 5.2)
+shape = SubResource("BoxShape3D_substation_step1")
+
+[node name="SubstationStep1_Mesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.55, 5.2)
+mesh = SubResource("BoxMesh_substation_step1")
+
+[node name="SubstationStep2_Col" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.7, 6.6)
+shape = SubResource("BoxShape3D_substation_step2")
+
+[node name="SubstationStep2_Mesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.7, 6.6)
+mesh = SubResource("BoxMesh_substation_step2")
+
+[node name="CatwalkJumpCrateCol" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -8.3)
+shape = SubResource("BoxShape3D_catwalk_jump_crate")
+
+[node name="CatwalkJumpCrateMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -8.3)
+mesh = SubResource("BoxMesh_catwalk_jump_crate")
 
 [node name="BackWallLowerCol" type="CollisionShape3D" parent="Architecture"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -19)
@@ -595,7 +694,7 @@ technician_name = "Security Officer D. Chen"
 log_entry = "Breakers overloaded. Two walkers trapped us in the trench. My leg is pinned... I stashed the coolant compression cell on the substation table upstairs... don't let them hear you running..."
 
 [node name="SubstationTable" type="StaticBody3D" parent="Props"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.0, 7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 3.7, 7.5)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Props/SubstationTable"]
 shape = SubResource("BoxShape3D_substation_table")
@@ -604,7 +703,7 @@ shape = SubResource("BoxShape3D_substation_table")
 mesh = SubResource("BoxMesh_substation_table")
 
 [node name="GeneratorPart_Coolant" parent="Props" instance=ExtResource("24_gen_part")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.65, 7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 4.3, 7.5)
 part_type = "coolant"
 
 [node name="OverseerZone_Entry" type="Area3D" parent="."]

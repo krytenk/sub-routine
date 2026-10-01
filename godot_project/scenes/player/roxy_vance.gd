@@ -15,6 +15,7 @@ signal emp_fired(cooldown: float)
 signal emp_cooldown_updated(current: float, max_time: float)
 signal hiding_state_changed(is_hiding: bool)
 signal fall_damage_taken(damage: int)
+signal player_jumped
 
 @export var max_health: int = 100
 var current_health: int = 100
@@ -33,6 +34,7 @@ var is_dead: bool = false
 var emp_current_timer: float = 0.0
 @export var rotation_speed: float = 3.5
 @export var gravity: float = 9.8
+@export var jump_velocity: float = 5.4
 
 var mouse_sensitivity: float = 0.003
 var wall_bump_cooldown: float = 0.0
@@ -263,6 +265,10 @@ func _physics_process(delta: float) -> void:
         else:
             mesh_instance.rotation.y = lerp_angle(mesh_instance.rotation.y, 0.0, clampf(delta * 6.0, 0.0, 1.0))
 
+    # Jump handling (Spacebar)
+    if Input.is_action_just_pressed("jump"):
+        jump()
+
     move_and_slide()
     _update_walk_animation(delta, speed)
 
@@ -355,6 +361,22 @@ func fire_emp_pulse() -> void:
 
         if has_node("/root/TheOverseer"):
             get_node("/root/TheOverseer").trigger_dialogue("emp_success", "Electromagnetic disruption detected in Sector node. Glitch entity stunned.")
+
+func jump() -> bool:
+    if not is_on_floor() or is_hiding or is_dead or _is_terminal_open():
+        return false
+    var jump_force = jump_velocity
+    if is_exhausted or current_stamina < 6.0:
+        jump_force = jump_velocity * 0.72 # Fatigue jump
+    else:
+        current_stamina = maxf(0.0, current_stamina - 6.0)
+        stamina_changed.emit(current_stamina, max_stamina)
+    velocity.y = jump_force
+    player_jumped.emit()
+    print("[Roxy Vance] Jump executed! Vertical velocity: ", velocity.y)
+    if is_inside_tree() and has_node("/root/AudioManager"):
+        get_node("/root/AudioManager").play_sfx("sfx_jump")
+    return true
 
 func _attempt_interaction() -> void:
     print("[Roxy Vance] Interaction triggered (E key pressed).")
@@ -573,6 +595,19 @@ func _update_walk_animation(delta: float, target_speed: float) -> void:
             arm_l.position.y = rest_arm_l_pos.y - bob
         if arm_r:
             arm_r.position.y = rest_arm_r_pos.y - bob
+    elif not on_ground and not is_dead and not _is_terminal_open():
+        # Airborne jump/falling pose: tuck legs slightly and raise arms
+        var air_blend = clampf(delta * 7.0, 0.0, 1.0)
+        if leg_l:
+            leg_l.rotation.x = lerp_angle(leg_l.rotation.x, rest_leg_l_rot.x + deg_to_rad(20.0), air_blend)
+        if leg_r:
+            leg_r.rotation.x = lerp_angle(leg_r.rotation.x, rest_leg_r_rot.x - deg_to_rad(12.0), air_blend)
+        if arm_l:
+            arm_l.rotation.x = lerp_angle(arm_l.rotation.x, rest_arm_l_rot.x - deg_to_rad(18.0), air_blend)
+        if arm_r:
+            arm_r.rotation.x = lerp_angle(arm_r.rotation.x, rest_arm_r_rot.x - deg_to_rad(18.0), air_blend)
+        if torso:
+            torso.rotation.x = lerp_angle(torso.rotation.x, rest_torso_rot.x + deg_to_rad(4.0), air_blend)
     else:
         # Smooth interpolation back to rest pose
         var blend_speed = clampf(delta * 9.0, 0.0, 1.0)
