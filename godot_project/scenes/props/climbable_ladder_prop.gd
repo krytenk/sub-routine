@@ -13,6 +13,28 @@ var climb_sfx_timer: float = 0.0
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	_build_rungs()
+
+func _build_rungs() -> void:
+	var rung_mat = StandardMaterial3D.new()
+	rung_mat.albedo_color = Color(0.8, 0.85, 0.9, 1.0)
+	rung_mat.metallic = 0.85
+	rung_mat.roughness = 0.35
+	rung_mat.emission_enabled = true
+	rung_mat.emission = Color(0.2, 0.6, 0.8, 1.0)
+	rung_mat.emission_energy_multiplier = 0.5
+
+	var rung_mesh = BoxMesh.new()
+	rung_mesh.size = Vector3(0.68, 0.04, 0.04)
+	rung_mesh.material = rung_mat
+
+	var num_rungs = int(ladder_height * 2.0)
+	for i in range(1, num_rungs):
+		var rung = MeshInstance3D.new()
+		rung.name = "Rung_%d" % i
+		rung.mesh = rung_mesh
+		rung.position = Vector3(0.0, float(i) * 0.5, 0.0)
+		add_child(rung)
 
 func _on_body_entered(body: Node3D) -> void:
 	if body is RoxyVance or body.has_method("set_on_ladder"):

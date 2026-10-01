@@ -149,6 +149,32 @@ func test_level_04_architecture_and_5_choice_rooms() -> bool:
 	assert(lvl4.find_child("StealthLocker_1", true, false) != null, "FAILED: Missing Stealth Locker 1 in Sanctuary")
 	assert(lvl4.find_child("ClimbableLadder", true, false) != null, "FAILED: Missing Climbable Ladder in Elevator Shaft")
 
-	print("[PASS] test_level_04_architecture_and_5_choice_rooms: Level 04 Concourse & 5 choice rooms validated.")
+	# 6. Sparking Ceiling Wires & Atmospheric Threshold Shadows
+	var spark_wires = lvl4.find_child("SparkWires", true, false)
+	assert(spark_wires != null, "FAILED: Missing SparkWires node in Level 04")
+	assert(spark_wires.find_child("SparkWire_Portal1", true, false) != null, "FAILED: Missing SparkWire_Portal1")
+	assert(spark_wires.find_child("SparkWire_Portal2", true, false) != null, "FAILED: Missing SparkWire_Portal2")
+	assert(spark_wires.find_child("SparkWire_Portal3", true, false) != null, "FAILED: Missing SparkWire_Portal3")
+	assert(spark_wires.find_child("SparkWire_Portal4", true, false) != null, "FAILED: Missing SparkWire_Portal4")
+	assert(spark_wires.find_child("SparkWire_Portal5", true, false) != null, "FAILED: Missing SparkWire_Portal5")
+	assert(spark_wires.find_child("SparkWire_RoomA", true, false) != null, "FAILED: Missing SparkWire_RoomA")
+	assert(spark_wires.find_child("SparkWire_RoomB", true, false) != null, "FAILED: Missing SparkWire_RoomB")
+	assert(spark_wires.find_child("SparkWire_ElevatorInterior", true, false) != null, "FAILED: Missing SparkWire_ElevatorInterior")
+
+	# 7. Room 05 Multi-Tiered Floodlights & Safety
+	var lighting = lvl4.find_child("Lighting", true, false)
+	assert(lighting != null, "FAILED: Missing Lighting node")
+	assert(lighting.find_child("Light_Elevator_Floor", true, false) != null, "FAILED: Missing Light_Elevator_Floor")
+	assert(lighting.find_child("Light_Elevator_Ladder", true, false) != null, "FAILED: Missing Light_Elevator_Ladder")
+	assert(lighting.find_child("Light_Elevator_Gantry", true, false) != null, "FAILED: Missing Light_Elevator_Gantry")
+
+	# 8. Connecting Spur Visible Meshes
+	var arch = lvl4.find_child("Architecture", true, false)
+	assert(arch != null, "FAILED: Missing Architecture node")
+	assert(arch.find_child("SpurFloor_Portal1Mesh", true, false) != null or arch.find_child("SpurFloor_Portal1_Mesh", true, false) != null, "FAILED: Missing SpurFloor_Portal1Mesh")
+	assert(arch.find_child("SpurFloor_Portal5Mesh", true, false) != null or arch.find_child("SpurFloor_Portal5_Mesh", true, false) != null, "FAILED: Missing SpurFloor_Portal5Mesh")
+	assert(arch.find_child("ConcourseFloorMesh", true, false) != null or arch.find_child("ConcourseFloor_Mesh", true, false) != null, "FAILED: Missing ConcourseFloorMesh")
+
+	print("[PASS] test_level_04_architecture_and_5_choice_rooms: Level 04 Concourse, sparking wires & Room 5 lighting validated.")
 	lvl4.free()
 	return true

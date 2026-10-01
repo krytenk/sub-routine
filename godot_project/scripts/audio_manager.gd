@@ -220,6 +220,19 @@ func _on_ambient_finished() -> void:
     else:
         play_ambient_track(next_track)
 
+func play_sfx(sfx_name: String) -> void:
+    var clean = sfx_name.trim_suffix(".wav").trim_suffix(".ogg")
+    var path = "res://assets/audio/sfx/" + clean + ".wav"
+    if ResourceLoader.exists(path):
+        var s = ResourceLoader.load(path)
+        if s is AudioStream:
+            var p = AudioStreamPlayer.new()
+            p.bus = "Master"
+            p.stream = s
+            add_child(p)
+            p.play()
+            p.finished.connect(p.queue_free)
+
 func play_vo(clip_name: String) -> void:
     if vo_streams.has(clip_name):
         vo_player.stream = vo_streams[clip_name]
