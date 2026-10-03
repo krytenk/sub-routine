@@ -1323,6 +1323,19 @@ script = ExtResource("20_exit")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ChoiceRooms/Room_05_ElevatorShaft/ConcourseExit"]
 shape = SubResource("BoxShape3D_trigger")
 
+[node name="Casualty_ElevatorPit" parent="ChoiceRooms/Room_05_ElevatorShaft" instance=ExtResource("21_casualty")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 2.5, 0, 1.5)
+casualty_style = "curled"
+technician_name = "Hoist Specialist R. Tanaka (Vertical Transit)"
+log_entry = "The hoist cable is intact, but the motor won't engage without turbine grid power. I climbed the ladder in the dark, but the hounds were waiting at the top..."
+
+[node name="Casualty_ConcourseAlcove" parent="." instance=ExtResource("21_casualty")]
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -8.5, 0, 16)
+casualty_style = "slumped"
+technician_name = "Safety Officer D. Vance (Operations Lead)"
+log_entry = "Five doors. Door 3 had scrap hounds, Door 1 had poison gas, Door 4 had a severed shaft. I crawled back to the concourse, but the blast door locked behind me..."
+
 [node name="CorridorMedkit" parent="." instance=ExtResource("7_medkit")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.4, -28)
 respawn_time = 50.0
+

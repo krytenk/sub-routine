@@ -766,3 +766,16 @@ casualty_style = "slumped"
 technician_name = "Chief Engineer L. Kozlov"
 log_entry = "The BIOS cycle wouldn't terminate. I locked myself in Storage 04... but the walkers kept pounding on the vents. If someone finds this, check my tool pouch for the primary coil."
 holds_generator_part = "generator_part_relay"
+
+[node name="Casualty_VentilationIntake" parent="Props" instance=ExtResource("21_casualty")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -3.5, 0, 8.5)
+casualty_style = "slumped"
+technician_name = "Pipefitter S. Kowalski (Atmospheric Systems)"
+log_entry = "The ventilation dampers snapped shut when the alarm sounded. I tried to pry the grill open with a crowbar, but the metal warped... something crawled through the intake above me..."
+
+[node name="Casualty_TerminalAlcove" parent="Props" instance=ExtResource("21_casualty")]
+transform = Transform3D(-0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, -0.5, 6.5, 0, -11)
+casualty_style = "curled"
+technician_name = "Systems Operator N. Rivera (Mainframe Diagnostics)"
+log_entry = "The BIOS registers were overwritten by an external thread... I saw Roxy's profile in the active memory buffer before the terminal sparked. She was never meant to wake up."
+

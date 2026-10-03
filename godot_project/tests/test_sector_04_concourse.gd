@@ -63,7 +63,9 @@ func test_wire_hound_mechanics() -> bool:
 	assert(hound.find_child("Leg_BL", true, false) != null, "FAILED: WireHound missing Leg_BL")
 	assert(hound.find_child("Leg_BR", true, false) != null, "FAILED: WireHound missing Leg_BR")
 	assert(hound.find_child("Head", true, false) != null, "FAILED: WireHound missing Head")
+	assert(hound.find_child("Jaw", true, false) != null, "FAILED: WireHound missing Jaw")
 	assert(hound.find_child("Spine", true, false) != null, "FAILED: WireHound missing Spine")
+	assert(hound.find_child("MoltenCore", true, false) != null, "FAILED: WireHound missing MoltenCore")
 
 	# Verify speed & combat stats
 	assert(hound.base_speed >= 6.5, "FAILED: WireHound speed should be >= 6.5 m/s")

@@ -693,6 +693,19 @@ casualty_style = "curled"
 technician_name = "Security Officer D. Chen"
 log_entry = "Breakers overloaded. Two walkers trapped us in the trench. My leg is pinned... I stashed the coolant compression cell on the substation table upstairs... don't let them hear you running..."
 
+[node name="Casualty_CatwalkLanding" parent="Props" instance=ExtResource("23_casualty")]
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 5.5, 3.7, -4)
+casualty_style = "slumped"
+technician_name = "Lineman T. Burke (High-Voltage Substation)"
+log_entry = "Tried to reroute primary power through the secondary bus. The capacitor bank blew and took my arm with it... the hounds... they smell the burning insulation..."
+
+[node name="Casualty_SumpDrains" parent="Props" instance=ExtResource("23_casualty")]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -5, 0, 14)
+casualty_style = "curled"
+technician_name = "Environmental Specialist M. Zhang (Hazardous Waste)"
+log_entry = "The toxic coolant is rising in the lower trench. My hazmat seal dissolved in minutes... if you can hear this, stay on the high catwalks..."
+
+
 [node name="SubstationTable" type="StaticBody3D" parent="Props"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 3.7, 7.5)
 

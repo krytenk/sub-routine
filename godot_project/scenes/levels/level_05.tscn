@@ -304,6 +304,13 @@ casualty_style = "curled"
 technician_name = "Dr. A. Mercer (Bio-Synthetic Branch)"
 log_entry = "Containment failed. The synthetic tissue synchronized with the sub-routine kernel. I initialized the tram escape protocol... the departure override is ready on the central research terminal. Take it before the ventilation ducts give out."
 
+[node name="Casualty_TramGuard" parent="Casualties" instance=ExtResource("9_casualty")]
+transform = Transform3D(-0.866025, 0, -0.5, 0, 1, 0, 0.5, 0, -0.866025, 4.5, 0, 32)
+casualty_style = "slumped"
+technician_name = "Security Sergeant M. Hayes (Transit Security)"
+log_entry = "The evacuation tram is fueled and waiting on the rails. But the launch bay blast clamp is locked down tight by the main computer... Dr. Mercer was holding the decryption keycard in the Bio-Lab across the atrium..."
+
+
 [node name="Enemies" type="Node3D" parent="."]
 
 [node name="GlitchWalker_Overlook" parent="Enemies" instance=ExtResource("4_walker")]

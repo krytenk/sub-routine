@@ -1,49 +1,94 @@
-[gd_scene load_steps=12 format=3 uid="uid://wire_hound_01"]
+[gd_scene load_steps=22 format=3 uid="uid://wire_hound_01"]
 
 [ext_resource type="Script" path="res://scenes/enemies/wire_hound.gd" id="1_hound"]
 [ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="2_rust"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hound"]
-size = Vector3(0.8, 0.7, 1.4)
+size = Vector3(0.8, 0.75, 1.4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_scrap"]
 albedo_texture = ExtResource("2_rust")
-roughness = 0.65
-metallic = 0.85
+roughness = 0.6
+metallic = 0.88
 texture_filter = 0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_teeth"]
+albedo_color = Color(0.85, 0.85, 0.9, 1)
+roughness = 0.2
+metallic = 0.95
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_led"]
-albedo_color = Color(1, 0.25, 0.1, 1)
+albedo_color = Color(1, 0.2, 0.05, 1)
 emission_enabled = true
-emission = Color(1, 0.3, 0.1, 1)
+emission = Color(1, 0.25, 0.05, 1)
+emission_energy_multiplier = 5.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_core"]
+albedo_color = Color(1, 0.35, 0.1, 1)
+emission_enabled = true
+emission = Color(1, 0.3, 0.05, 1)
 emission_energy_multiplier = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_copper"]
+albedo_color = Color(0.85, 0.45, 0.15, 1)
+roughness = 0.35
+metallic = 0.75
 
 [sub_resource type="BoxMesh" id="BoxMesh_spine"]
 material = SubResource("StandardMaterial3D_scrap")
-size = Vector3(0.42, 0.32, 0.8)
+size = Vector3(0.44, 0.32, 0.85)
+
+[sub_resource type="PrismMesh" id="PrismMesh_spine_blade"]
+material = SubResource("StandardMaterial3D_scrap")
+size = Vector3(0.04, 0.24, 0.22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rib"]
+material = SubResource("StandardMaterial3D_scrap")
+size = Vector3(0.04, 0.22, 0.05)
+
+[sub_resource type="SphereMesh" id="SphereMesh_core"]
+material = SubResource("StandardMaterial3D_core")
+radius = 0.08
+height = 0.16
 
 [sub_resource type="BoxMesh" id="BoxMesh_head"]
 material = SubResource("StandardMaterial3D_scrap")
-size = Vector3(0.3, 0.26, 0.38)
+size = Vector3(0.28, 0.2, 0.36)
 
-[sub_resource type="SphereMesh" id="SphereMesh_eye"]
+[sub_resource type="BoxMesh" id="BoxMesh_jaw"]
+material = SubResource("StandardMaterial3D_scrap")
+size = Vector3(0.24, 0.08, 0.3)
+
+[sub_resource type="PrismMesh" id="PrismMesh_fang"]
+material = SubResource("StandardMaterial3D_teeth")
+size = Vector3(0.03, 0.08, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eye_slit"]
 material = SubResource("StandardMaterial3D_led")
-radius = 0.04
-height = 0.08
+size = Vector3(0.07, 0.025, 0.04)
+
+[sub_resource type="SphereMesh" id="SphereMesh_micro_eye"]
+material = SubResource("StandardMaterial3D_led")
+radius = 0.02
+height = 0.04
 
 [sub_resource type="BoxMesh" id="BoxMesh_leg"]
 material = SubResource("StandardMaterial3D_scrap")
-size = Vector3(0.08, 0.45, 0.08)
+size = Vector3(0.09, 0.45, 0.09)
 
 [sub_resource type="BoxMesh" id="BoxMesh_claw"]
-material = SubResource("StandardMaterial3D_scrap")
-size = Vector3(0.12, 0.06, 0.14)
+material = SubResource("StandardMaterial3D_teeth")
+size = Vector3(0.12, 0.05, 0.2)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_tail"]
 material = SubResource("StandardMaterial3D_scrap")
-top_radius = 0.02
+top_radius = 0.015
 bottom_radius = 0.04
-height = 0.6
+height = 0.65
+
+[sub_resource type="PrismMesh" id="PrismMesh_barb"]
+material = SubResource("StandardMaterial3D_teeth")
+size = Vector3(0.04, 0.15, 0.08)
 
 [node name="WireHound" type="CharacterBody3D"]
 collision_layer = 4
@@ -62,30 +107,119 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 [node name="SpineMesh" type="MeshInstance3D" parent="VisualRoot/Spine"]
 mesh = SubResource("BoxMesh_spine")
 
+[node name="SpineBlade_1" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, -0.34202, 0, 0.34202, 0.939693, 0, 0.26, 0.28)
+mesh = SubResource("PrismMesh_spine_blade")
+
+[node name="SpineBlade_2" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, -0.34202, 0, 0.34202, 0.939693, 0, 0.28, 0.08)
+mesh = SubResource("PrismMesh_spine_blade")
+
+[node name="SpineBlade_3" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, -0.34202, 0, 0.34202, 0.939693, 0, 0.26, -0.12)
+mesh = SubResource("PrismMesh_spine_blade")
+
+[node name="SpineBlade_4" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, -0.34202, 0, 0.34202, 0.939693, 0, 0.22, -0.32)
+mesh = SubResource("PrismMesh_spine_blade")
+
+[node name="Rib_L1" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -0.22, -0.08, 0.2)
+mesh = SubResource("BoxMesh_rib")
+
+[node name="Rib_L2" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -0.22, -0.08, 0.0)
+mesh = SubResource("BoxMesh_rib")
+
+[node name="Rib_L3" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -0.22, -0.08, -0.2)
+mesh = SubResource("BoxMesh_rib")
+
+[node name="Rib_R1" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 0.22, -0.08, 0.2)
+mesh = SubResource("BoxMesh_rib")
+
+[node name="Rib_R2" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 0.22, -0.08, 0.0)
+mesh = SubResource("BoxMesh_rib")
+
+[node name="Rib_R3" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 0.22, -0.08, -0.2)
+mesh = SubResource("BoxMesh_rib")
+
+[node name="MoltenCore" type="MeshInstance3D" parent="VisualRoot/Spine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.04, 0.05)
+mesh = SubResource("SphereMesh_core")
+
+[node name="CoreLight" type="OmniLight3D" parent="VisualRoot/Spine/MoltenCore"]
+light_color = Color(1, 0.35, 0.08, 1)
+light_energy = 1.6
+omni_range = 3.2
+omni_attenuation = 1.8
+
 [node name="Head" type="Node3D" parent="VisualRoot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, 0.48)
 
 [node name="HeadMesh" type="MeshInstance3D" parent="VisualRoot/Head"]
-transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0.1)
+transform = Transform3D(1, 0, 0, 0, 0.984808, -0.173648, 0, 0.173648, 0.984808, 0, 0.02, 0.1)
 mesh = SubResource("BoxMesh_head")
 
+[node name="UpperFang_L1" type="MeshInstance3D" parent="VisualRoot/Head"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, -0.1, -0.08, 0.26)
+mesh = SubResource("PrismMesh_fang")
+
+[node name="UpperFang_R1" type="MeshInstance3D" parent="VisualRoot/Head"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0.1, -0.08, 0.26)
+mesh = SubResource("PrismMesh_fang")
+
+[node name="UpperFang_L2" type="MeshInstance3D" parent="VisualRoot/Head"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, -0.06, -0.08, 0.22)
+mesh = SubResource("PrismMesh_fang")
+
+[node name="UpperFang_R2" type="MeshInstance3D" parent="VisualRoot/Head"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0.06, -0.08, 0.22)
+mesh = SubResource("PrismMesh_fang")
+
+[node name="Jaw" type="Node3D" parent="VisualRoot/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 0.06)
+
+[node name="JawMesh" type="MeshInstance3D" parent="VisualRoot/Head/Jaw"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.12)
+mesh = SubResource("BoxMesh_jaw")
+
+[node name="LowerFang_L" type="MeshInstance3D" parent="VisualRoot/Head/Jaw"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09, 0.06, 0.22)
+mesh = SubResource("PrismMesh_fang")
+
+[node name="LowerFang_R" type="MeshInstance3D" parent="VisualRoot/Head/Jaw"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09, 0.06, 0.22)
+mesh = SubResource("PrismMesh_fang")
+
 [node name="Eye_L" type="MeshInstance3D" parent="VisualRoot/Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.06, 0.24)
-mesh = SubResource("SphereMesh_eye")
+transform = Transform3D(0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0, 1, -0.1, 0.07, 0.24)
+mesh = SubResource("BoxMesh_eye_slit")
 
 [node name="EyeLight_L" type="OmniLight3D" parent="VisualRoot/Head/Eye_L"]
-light_color = Color(1, 0.35, 0.1, 1)
-light_energy = 1.5
-omni_range = 2.5
+light_color = Color(1, 0.25, 0.05, 1)
+light_energy = 2.0
+omni_range = 3.5
 
 [node name="Eye_R" type="MeshInstance3D" parent="VisualRoot/Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.06, 0.24)
-mesh = SubResource("SphereMesh_eye")
+transform = Transform3D(0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0, 1, 0.1, 0.07, 0.24)
+mesh = SubResource("BoxMesh_eye_slit")
 
 [node name="EyeLight_R" type="OmniLight3D" parent="VisualRoot/Head/Eye_R"]
-light_color = Color(1, 0.35, 0.1, 1)
-light_energy = 1.5
-omni_range = 2.5
+light_color = Color(1, 0.25, 0.05, 1)
+light_energy = 2.0
+omni_range = 3.5
+
+[node name="AuxEye_L" type="MeshInstance3D" parent="VisualRoot/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06, 0.12, 0.2)
+mesh = SubResource("SphereMesh_micro_eye")
+
+[node name="AuxEye_R" type="MeshInstance3D" parent="VisualRoot/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0.12, 0.2)
+mesh = SubResource("SphereMesh_micro_eye")
 
 [node name="Leg_FL" type="Node3D" parent="VisualRoot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, 0.45, 0.3)
@@ -95,7 +229,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22, 0)
 mesh = SubResource("BoxMesh_leg")
 
 [node name="ClawMesh" type="MeshInstance3D" parent="VisualRoot/Leg_FL"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.42, 0.04)
+transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, -0.42, 0.06)
 mesh = SubResource("BoxMesh_claw")
 
 [node name="Leg_FR" type="Node3D" parent="VisualRoot"]
@@ -106,7 +240,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22, 0)
 mesh = SubResource("BoxMesh_leg")
 
 [node name="ClawMesh" type="MeshInstance3D" parent="VisualRoot/Leg_FR"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.42, 0.04)
+transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, -0.42, 0.06)
 mesh = SubResource("BoxMesh_claw")
 
 [node name="Leg_BL" type="Node3D" parent="VisualRoot"]
@@ -117,7 +251,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22, 0)
 mesh = SubResource("BoxMesh_leg")
 
 [node name="ClawMesh" type="MeshInstance3D" parent="VisualRoot/Leg_BL"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.42, 0.04)
+transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, -0.42, 0.06)
 mesh = SubResource("BoxMesh_claw")
 
 [node name="Leg_BR" type="Node3D" parent="VisualRoot"]
@@ -128,7 +262,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22, 0)
 mesh = SubResource("BoxMesh_leg")
 
 [node name="ClawMesh" type="MeshInstance3D" parent="VisualRoot/Leg_BR"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.42, 0.04)
+transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, -0.42, 0.06)
 mesh = SubResource("BoxMesh_claw")
 
 [node name="Tail" type="Node3D" parent="VisualRoot"]
@@ -137,3 +271,7 @@ transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0.45, -
 [node name="TailMesh" type="MeshInstance3D" parent="VisualRoot/Tail"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 mesh = SubResource("CylinderMesh_tail")
+
+[node name="TailBarb" type="MeshInstance3D" parent="VisualRoot/Tail"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0.56, 0.05)
+mesh = SubResource("PrismMesh_barb")

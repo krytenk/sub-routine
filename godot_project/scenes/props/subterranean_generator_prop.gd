@@ -169,16 +169,24 @@ func interact() -> void:
 			_power_on(false)
 	else:
 		# Player doesn't have the required missing parts
-		var missing_names: Array[String] = []
+		var part_locations = {
+			"generator_part_relay": "• Relay Coil: Sector 01 (Storage Bay 04 - Kozlov)",
+			"generator_part_coolant": "• Coolant Cell: Sector 02 (Substation Mezzanine Table)",
+			"generator_part_fuse": "• Heavy Fuse: Sector 03 (Lower Gantry - Aris)"
+		}
+		var missing_lines: Array[String] = []
 		for part in REQUIRED_PARTS:
 			if not installed_parts.has(part):
-				missing_names.append(part.replace("generator_part_", "").capitalize())
+				if part_locations.has(part):
+					missing_lines.append(part_locations[part])
+				else:
+					missing_lines.append("• " + part.replace("generator_part_", "").capitalize())
 
 		var hud = null
 		if is_inside_tree() and get_tree() and get_tree().root:
 			hud = get_tree().root.find_child("HUD", true, false)
 		if hud and hud.has_method("display_overseer_message"):
-			var msg = "[ AUXILIARY TURBINE: OFFLINE ]\nRequires %d more component(s):\n%s" % [missing_names.size(), ", ".join(missing_names)]
+			var msg = "[ AUXILIARY TURBINE: OFFLINE (%d/3 INSTALLED) ]\nRestoring power energizes the Sector 04 Freight Elevator!\nMissing Components:\n%s" % [installed_parts.size(), "\n".join(missing_lines)]
 			hud.display_overseer_message(msg, "overseer_generator_need_parts")
 		if is_inside_tree() and has_node("/root/TheOverseer"):
 			get_node("/root/TheOverseer").trigger_dialogue("generator_need_parts")
@@ -203,9 +211,12 @@ func _power_on(silent: bool = false) -> void:
 			var player = get_tree().root.find_child("RoxyVance", true, false)
 			if player and player.has_method("apply_trauma"):
 				player.apply_trauma(0.45)
+			var hud = get_tree().root.find_child("HUD", true, false)
+			if hud and hud.has_method("update_objective"):
+				hud.update_objective("Power Restored! Sector 04 Freight Elevator is energized.")
 
 		if is_inside_tree() and has_node("/root/TheOverseer"):
-			get_node("/root/TheOverseer").trigger_dialogue("generator_restored")
+			get_node("/root/TheOverseer").trigger_dialogue("generator_restored", "Auxiliary turbine spooling to maximum load! Primary power restored. The Sector 04 freight hoist is now active.")
 
 	# Unlock blast door if connected
 	if target_door and target_door.has_method("unlock_door"):

@@ -12,6 +12,8 @@ signal part_collected(part_type: String)
 var collected: bool = false
 var audio_player: AudioStreamPlayer = null
 var prompt_label: Label3D = null
+var part_light: OmniLight3D = null
+var base_light_energy: float = 0.85
 var is_in_range: bool = false
 var start_y: float = 0.0
 
@@ -61,6 +63,8 @@ func _ready() -> void:
 	prompt_label.visible = false
 	add_child(prompt_label)
 
+	_build_part_lighting()
+
 	var area = find_child("Area3D", true, false) as Area3D
 	if area:
 		area.body_entered.connect(_on_body_entered)
@@ -69,6 +73,44 @@ func _ready() -> void:
 	add_to_group("interactive_props")
 	add_to_group("generator_parts")
 	add_to_group("pickups")
+
+func _build_part_lighting() -> void:
+	var col = Color(0.2, 0.85, 1.0, 1.0) # Coolant azure
+	match part_type:
+		"relay":
+			col = Color(1.0, 0.65, 0.2, 1.0) # Induction coil amber
+		"coolant":
+			col = Color(0.2, 0.85, 1.0, 1.0) # Cryo cyan
+		"fuse":
+			col = Color(0.4, 0.75, 1.0, 1.0) # High-voltage electric blue
+
+	# Soft ambient equipment glow
+	part_light = OmniLight3D.new()
+	part_light.name = "PartLight"
+	part_light.light_color = col
+	part_light.light_energy = base_light_energy
+	part_light.omni_range = 4.6
+	part_light.omni_attenuation = 1.7
+	part_light.position = Vector3(0.0, 0.25, 0.0)
+	add_child(part_light)
+
+	# Blinking status micro-LED on the component chassis
+	var led_mesh = SphereMesh.new()
+	led_mesh.radius = 0.02
+	led_mesh.height = 0.04
+
+	var led_mat = StandardMaterial3D.new()
+	led_mat.albedo_color = col
+	led_mat.emission_enabled = true
+	led_mat.emission = col
+	led_mat.emission_energy_multiplier = 3.5
+
+	var led_inst = MeshInstance3D.new()
+	led_inst.name = "StatusLED"
+	led_inst.mesh = led_mesh
+	led_inst.material_override = led_mat
+	led_inst.position = Vector3(0.08, 0.18, 0.08)
+	add_child(led_inst)
 
 func interact(_player: CharacterBody3D = null) -> void:
 	print("[GeneratorPartPickup] Interaction received for: ", part_type)
@@ -79,6 +121,9 @@ func _process(delta: float) -> void:
 	var t = Time.get_ticks_msec() / 1000.0
 	position.y = start_y + sin(t * 2.2) * 0.05
 	rotate_y(delta * 1.2)
+	
+	if part_light:
+		part_light.light_energy = base_light_energy + sin(t * 3.2) * 0.18
 
 func _get_part_display_name() -> String:
 	match part_type:

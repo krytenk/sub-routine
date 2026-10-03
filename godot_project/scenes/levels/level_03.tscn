@@ -305,6 +305,19 @@ technician_name = "Maintenance Specialist M. Aris"
 log_entry = "I fell from the upper gantry during the ascension drill. The fall broke my spine. The generator in sector four is the only way to power the surface lift... don't let the Overseer purge the grid."
 holds_generator_part = "generator_part_fuse"
 
+[node name="Casualty_MidStairLanding" parent="Props" instance=ExtResource("22_casualty")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1.8, 3.5, 3.2)
+casualty_style = "slumped"
+technician_name = "Structural Inspector E. Vance (Structural Safety)"
+log_entry = "The ascension stairs are a trap. The stalkers watch from the darkness above. I ran until my lungs burned... my knees gave out on the intermediate landing..."
+
+[node name="Casualty_HighPerch" parent="Props" instance=ExtResource("22_casualty")]
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -2.5, 7.5, 11.5)
+casualty_style = "curled"
+technician_name = "Surveyor K. Lowell (Cartographic Mapping)"
+log_entry = "Looking down from here, you can see the entire chasm pulsing with corruption. There is no surface... it's just more layers of silicon and bone..."
+
+
 [node name="OverseerZone_Entry" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -12)
 collision_layer = 0

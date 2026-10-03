@@ -26,7 +26,17 @@ func test_casualty_initialization_and_lore() -> bool:
 		casualty.free()
 		return false
 
-	print("[PASS] test_casualty_initialization_and_lore: Deceased personnel initialized with badge metadata.")
+	if not casualty.find_child("CasualtyAmbientLight", true, false):
+		push_error("Casualty missing diegetic CasualtyAmbientLight.")
+		casualty.free()
+		return false
+
+	if not casualty.find_child("DroppedDatapad", true, false):
+		push_error("Casualty missing DroppedDatapad.")
+		casualty.free()
+		return false
+
+	print("[PASS] test_casualty_initialization_and_lore: Deceased personnel initialized with badge metadata and ambient lighting.")
 	casualty.free()
 	return true
 
@@ -113,6 +123,10 @@ func test_generator_part_interact_and_groups() -> bool:
 		return false
 	if not pickup.is_in_group("pickups"):
 		push_error("Pickup missing 'pickups' group.")
+		pickup.free()
+		return false
+	if not pickup.find_child("PartLight", true, false):
+		push_error("Pickup missing diegetic PartLight.")
 		pickup.free()
 		return false
 

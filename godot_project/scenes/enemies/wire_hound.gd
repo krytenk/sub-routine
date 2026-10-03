@@ -29,18 +29,24 @@ var leg_fr: Node3D = null
 var leg_bl: Node3D = null
 var leg_br: Node3D = null
 var head_node: Node3D = null
+var jaw_node: Node3D = null
 var spine_node: Node3D = null
 var tail_node: Node3D = null
 var visual_root: Node3D = null
+var core_light: OmniLight3D = null
+var eye_light_l: OmniLight3D = null
+var eye_light_r: OmniLight3D = null
 
 var rest_leg_fl_rot: Vector3 = Vector3.ZERO
 var rest_leg_fr_rot: Vector3 = Vector3.ZERO
 var rest_leg_bl_rot: Vector3 = Vector3.ZERO
 var rest_leg_br_rot: Vector3 = Vector3.ZERO
 var rest_head_rot: Vector3 = Vector3.ZERO
+var rest_jaw_rot: Vector3 = Vector3.ZERO
 
 var trot_phase: float = 0.0
 var bark_timer: float = 3.0
+var growl_timer: float = 2.0
 var trot_sound_timer: float = 0.0
 
 @export var patrol_points: Array[Vector3] = []
@@ -48,6 +54,7 @@ var current_patrol_index: int = 0
 
 # Audio Players
 var audio_bark: AudioStreamPlayer3D = null
+var audio_growl: AudioStreamPlayer3D = null
 var audio_trot: AudioStreamPlayer3D = null
 var audio_attack: AudioStreamPlayer3D = null
 
@@ -68,14 +75,19 @@ func _setup_limbs() -> void:
 	leg_bl = find_child("Leg_BL", true, false) as Node3D
 	leg_br = find_child("Leg_BR", true, false) as Node3D
 	head_node = find_child("Head", true, false) as Node3D
+	jaw_node = find_child("Jaw", true, false) as Node3D
 	spine_node = find_child("Spine", true, false) as Node3D
 	tail_node = find_child("Tail", true, false) as Node3D
+	core_light = find_child("CoreLight", true, false) as OmniLight3D
+	eye_light_l = find_child("EyeLight_L", true, false) as OmniLight3D
+	eye_light_r = find_child("EyeLight_R", true, false) as OmniLight3D
 
 	if leg_fl: rest_leg_fl_rot = leg_fl.rotation
 	if leg_fr: rest_leg_fr_rot = leg_fr.rotation
 	if leg_bl: rest_leg_bl_rot = leg_bl.rotation
 	if leg_br: rest_leg_br_rot = leg_br.rotation
 	if head_node: rest_head_rot = head_node.rotation
+	if jaw_node: rest_jaw_rot = jaw_node.rotation
 
 func _setup_audio() -> void:
 	audio_bark = AudioStreamPlayer3D.new()
@@ -85,6 +97,16 @@ func _setup_audio() -> void:
 	add_child(audio_bark)
 	if ResourceLoader.exists("res://assets/audio/sfx/sfx_hound_bark.wav"):
 		audio_bark.stream = ResourceLoader.load("res://assets/audio/sfx/sfx_hound_bark.wav")
+
+	audio_growl = AudioStreamPlayer3D.new()
+	audio_growl.name = "GrowlAudio"
+	audio_growl.max_distance = 22.0
+	audio_growl.volume_db = -3.0
+	audio_growl.pitch_scale = 0.6
+	audio_growl.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+	add_child(audio_growl)
+	if ResourceLoader.exists("res://assets/audio/sfx/sfx_hound_bark.wav"):
+		audio_growl.stream = ResourceLoader.load("res://assets/audio/sfx/sfx_hound_bark.wav")
 
 	audio_trot = AudioStreamPlayer3D.new()
 	audio_trot.name = "TrotAudio"
@@ -135,6 +157,11 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector3.ZERO
 		if visual_root:
 			visual_root.position = Vector3(randf_range(-0.04, 0.04), 0, randf_range(-0.04, 0.04))
+		if jaw_node:
+			jaw_node.rotation.x = deg_to_rad(24.0)
+		if core_light: core_light.light_energy = randf_range(0.2, 0.5)
+		if eye_light_l: eye_light_l.light_energy = randf_range(0.1, 0.4)
+		if eye_light_r: eye_light_r.light_energy = randf_range(0.1, 0.4)
 		if stun_timer <= 0.0:
 			is_stunned = false
 			if visual_root:
@@ -171,6 +198,15 @@ func _physics_process(delta: float) -> void:
 			var target_pos = current_target.global_position
 			target_pos.y = global_position.y
 			look_at(target_pos, Vector3.UP)
+
+			# Menacing predator growl in proximity
+			if dist <= 14.0:
+				growl_timer -= delta
+				if growl_timer <= 0.0:
+					if audio_growl and audio_growl.stream:
+						audio_growl.pitch_scale = randf_range(0.55, 0.68)
+						audio_growl.play()
+					growl_timer = randf_range(3.5, 6.5)
 
 			if dist > attack_range:
 				var dir = (target_pos - global_position).normalized()
@@ -220,7 +256,22 @@ func _perform_hound_attack() -> void:
 	current_cooldown = attack_cooldown
 	print("[WireHound] Pouncing bite attack on Roxy Vance for ", base_damage, " damage!")
 	if audio_attack and audio_attack.stream:
+		audio_attack.pitch_scale = randf_range(0.85, 1.1)
 		audio_attack.play()
+
+	# Snapping jaw snarl animation
+	if jaw_node:
+		var tw = create_tween()
+		if tw:
+			tw.tween_property(jaw_node, "rotation:x", deg_to_rad(38.0), 0.07)
+			tw.tween_property(jaw_node, "rotation:x", rest_jaw_rot.x - deg_to_rad(6.0), 0.08)
+			tw.tween_property(jaw_node, "rotation:x", rest_jaw_rot.x, 0.1)
+
+	# Flare optic and core lights during strike
+	if eye_light_l: eye_light_l.light_energy = 4.5
+	if eye_light_r: eye_light_r.light_energy = 4.5
+	if core_light: core_light.light_energy = 3.6
+
 	hound_attacked.emit(base_damage)
 	if current_target and current_target.has_method("take_damage"):
 		current_target.take_damage(base_damage, "enemy")
@@ -242,8 +293,15 @@ func _update_trot_animation(delta: float, current_speed: float) -> void:
 			spine_node.position.y = 0.45 + abs(sin(trot_phase)) * 0.06
 		if head_node:
 			head_node.rotation.x = rest_head_rot.x + sin(trot_phase * 2.0) * deg_to_rad(8.0)
+		if jaw_node:
+			jaw_node.rotation.x = rest_jaw_rot.x + abs(sin(trot_phase * 2.2)) * deg_to_rad(14.0)
 		if tail_node:
 			tail_node.rotation.y = sin(trot_phase * 1.5) * deg_to_rad(22.0)
+
+		# Core & eye thrumming
+		if core_light: core_light.light_energy = 1.6 + sin(trot_phase * 3.0) * 0.45
+		if eye_light_l: eye_light_l.light_energy = 2.0 + sin(trot_phase * 4.0) * 0.35
+		if eye_light_r: eye_light_r.light_energy = 2.0 + sin(trot_phase * 4.0) * 0.35
 	else:
 		var blend = clampf(delta * 8.0, 0.0, 1.0)
 		if leg_fl: leg_fl.rotation.x = lerp_angle(leg_fl.rotation.x, rest_leg_fl_rot.x, blend)
@@ -251,3 +309,7 @@ func _update_trot_animation(delta: float, current_speed: float) -> void:
 		if leg_bl: leg_bl.rotation.x = lerp_angle(leg_bl.rotation.x, rest_leg_bl_rot.x, blend)
 		if leg_br: leg_br.rotation.x = lerp_angle(leg_br.rotation.x, rest_leg_br_rot.x, blend)
 		if head_node: head_node.rotation.x = lerp_angle(head_node.rotation.x, rest_head_rot.x, blend)
+		if jaw_node: jaw_node.rotation.x = lerp_angle(jaw_node.rotation.x, rest_jaw_rot.x, blend)
+		if core_light: core_light.light_energy = lerpf(core_light.light_energy, 1.2, blend)
+		if eye_light_l: eye_light_l.light_energy = lerpf(eye_light_l.light_energy, 1.5, blend)
+		if eye_light_r: eye_light_r.light_energy = lerpf(eye_light_r.light_energy, 1.5, blend)
