@@ -81,6 +81,8 @@ var camera_trauma: float = 0.0
 var heartbeat_player: AudioStreamPlayer = null
 var heartbeat_cooldown: float = 0.0
 var last_safe_position: Vector3 = Vector3.ZERO
+var stuck_duration: float = 0.0
+var stuck_reference_pos: Vector3 = Vector3.ZERO
 
 func _ready() -> void:
     current_health = max_health
@@ -148,6 +150,46 @@ func _input(event: InputEvent) -> void:
             toggle_camera_perspective()
             get_viewport().set_input_as_handled()
             return
+        # Emergency unstuck hotkey with 'U' or 'F1'
+        if (event.keycode == KEY_U or event.keycode == KEY_F1) and not _is_terminal_open():
+            execute_unstuck()
+            get_viewport().set_input_as_handled()
+            return
+
+func execute_unstuck() -> void:
+    velocity = Vector3.ZERO
+    var target_pos = last_safe_position + Vector3(0.0, 0.4, 0.0)
+
+    # If last safe position is uninitialized or too close to current position, search for a level spawn point
+    if target_pos.distance_to(global_position) < 0.6 or last_safe_position == Vector3.ZERO:
+        var tree = get_tree()
+        var found_spawn = false
+        if tree and tree.current_scene:
+            var spawn = tree.current_scene.find_child("SpawnPoint", true, false)
+            if not spawn:
+                var container = tree.current_scene.find_child("LevelContainer", true, false)
+                if container and container.get_child_count() > 0:
+                    spawn = container.get_child(0).find_child("SpawnPoint", true, false)
+            if spawn:
+                target_pos = spawn.global_position + Vector3(0.0, 0.35, 0.0)
+                found_spawn = true
+        if not found_spawn:
+            # Fallback: leap backward and upward into open air
+            target_pos = global_position + Vector3(0.0, 1.2, 0.0) + transform.basis.z * 1.5
+
+    global_position = target_pos
+    move_and_slide()
+    print("[Roxy Vance] Emergency unstuck protocol executed. Teleported to: ", global_position)
+
+    var hud = null
+    if is_inside_tree() and get_tree() and get_tree().root:
+        hud = get_tree().root.find_child("HUD", true, false)
+    if hud and hud.has_method("display_overseer_message"):
+        hud.display_overseer_message("[ UNSTUCK RECOVERY PROTOCOL ]\nThread coordinates corrected. Geometry pinch cleared.", "")
+    if is_inside_tree() and has_node("/root/AudioManager"):
+        get_node("/root/AudioManager").play_sfx("sfx_jump")
+    if is_inside_tree() and has_node("/root/TheOverseer"):
+        get_node("/root/TheOverseer").trigger_dialogue("unstuck_recovered", "Thread deadlock resolved. Resuming runtime traversal.")
 
 func _unhandled_input(event: InputEvent) -> void:
     if _is_terminal_open():
@@ -307,6 +349,22 @@ func _physics_process(delta: float) -> void:
     # Update safe grounded position for recovery
     if is_on_floor() and global_position.y >= -1.5:
         last_safe_position = global_position
+
+    # Auto-unstuck detection: if attempting to move for > 2.0s without displacement and pinched on geometry
+    if is_moving:
+        stuck_duration += delta
+        if stuck_duration >= 2.0:
+            var dist_moved = global_position.distance_to(stuck_reference_pos)
+            if dist_moved < 0.2 and (is_on_wall() or is_on_ceiling()):
+                print("[Roxy Vance] Persistent collision pinch detected. Executing automatic unstuck.")
+                stuck_duration = 0.0
+                execute_unstuck()
+            else:
+                stuck_duration = 0.0
+                stuck_reference_pos = global_position
+    else:
+        stuck_duration = 0.0
+        stuck_reference_pos = global_position
 
     # Fall damage detection
     if was_airborne_last_frame and is_on_floor():

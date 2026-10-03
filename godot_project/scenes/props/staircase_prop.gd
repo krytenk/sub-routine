@@ -67,3 +67,21 @@ func _build_visual_steps() -> void:
         strip.material_override = hazard_mat
         strip.position = Vector3(0.0, y_pos + (step_rise * 0.5) + 0.015, z_pos - (step_run * 0.5) + 0.04)
         steps_root.add_child(strip)
+
+    # Visual side stringer plates
+    var stringer_mesh = BoxMesh.new()
+    stringer_mesh.size = Vector3(0.08, 0.45, stair_run * 1.15)
+
+    var stringer_left = MeshInstance3D.new()
+    stringer_left.mesh = stringer_mesh
+    stringer_left.material_override = step_mat
+    stringer_left.position = Vector3(-stair_width * 0.5 - 0.04, stair_rise * 0.5, stair_run * 0.5)
+    stringer_left.rotation.x = atan2(stair_rise, stair_run)
+    steps_root.add_child(stringer_left)
+
+    var stringer_right = MeshInstance3D.new()
+    stringer_right.mesh = stringer_mesh
+    stringer_right.material_override = step_mat
+    stringer_right.position = Vector3(stair_width * 0.5 + 0.04, stair_rise * 0.5, stair_run * 0.5)
+    stringer_right.rotation.x = atan2(stair_rise, stair_run)
+    steps_root.add_child(stringer_right)

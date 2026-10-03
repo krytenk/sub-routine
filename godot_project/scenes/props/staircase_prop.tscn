@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://subroutine_staircase_prop"]
+[gd_scene load_steps=13 format=3 uid="uid://subroutine_staircase_prop"]
 
 [ext_resource type="Script" path="res://scenes/props/staircase_prop.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="2_wall_tex"]
@@ -14,6 +14,19 @@ size = Vector3(2.6, 0.2, 6.95)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_top_landing"]
 size = Vector3(2.6, 0.2, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bottom_landing"]
+size = Vector3(2.6, 0.2, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_under_stair"]
+size = Vector3(2.7, 1.8, 3.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_side_skirt"]
+size = Vector3(0.2, 2.5, 6.6)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_post"]
+height = 1.4
+radius = 0.15
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_railing"]
 size = Vector3(0.1, 1.2, 7.0)
@@ -36,6 +49,30 @@ shape = SubResource("BoxShape3D_ramp")
 [node name="TopLandingCol" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 6.3)
 shape = SubResource("BoxShape3D_top_landing")
+
+[node name="BottomLandingCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.3)
+shape = SubResource("BoxShape3D_bottom_landing")
+
+[node name="UnderStairBlockerCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 1.7)
+shape = SubResource("BoxShape3D_under_stair")
+
+[node name="SideSkirtLeftCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35, 1.25, 3.1)
+shape = SubResource("BoxShape3D_side_skirt")
+
+[node name="SideSkirtRightCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 1.25, 3.1)
+shape = SubResource("BoxShape3D_side_skirt")
+
+[node name="BottomPostLeftCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35, 0.7, -0.1)
+shape = SubResource("CylinderShape3D_post")
+
+[node name="BottomPostRightCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 0.7, -0.1)
+shape = SubResource("CylinderShape3D_post")
 
 [node name="RailingLeftCol" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.863779, 0.50387, 0, -0.50387, 0.863779, -1.35, 2.3, 3)
