@@ -151,11 +151,17 @@ func _set_crt_glitch(val: float) -> void:
 	if crt_glitch_rect and crt_glitch_rect.material is ShaderMaterial:
 		(crt_glitch_rect.material as ShaderMaterial).set_shader_parameter("glitch_intensity", val)
 
-func _on_player_emp_cooldown_updated(current: float, _max_val: float) -> void:
+func _on_player_emp_cooldown_updated(current: float, max_val: float) -> void:
 	if emp_label:
+		var mk_text = "MK I"
+		if max_val <= 4.0:
+			mk_text = "MK III"
+		elif max_val <= 6.0:
+			mk_text = "MK II"
+		
 		if current <= 0.0:
-			emp_label.text = "[F] EMP STUN PULSE: READY"
+			emp_label.text = "[F] EMP PULSE (%s): READY" % mk_text
 			emp_label.add_theme_color_override("font_color", Color(0.2, 0.85, 1.0, 1.0))
 		else:
-			emp_label.text = "[F] EMP RECHARGING: %.1fs" % current
+			emp_label.text = "[F] EMP (%s) RECHARGE: %.1fs" % [mk_text, current]
 			emp_label.add_theme_color_override("font_color", Color(0.9, 0.5, 0.2, 1.0))

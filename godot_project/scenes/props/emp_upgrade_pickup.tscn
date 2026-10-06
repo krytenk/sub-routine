@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://subroutine_emp_upgrade_pickup"]
+
+[ext_resource type="Script" path="res://scenes/props/emp_upgrade_pickup.gd" id="1_emp_script"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pickup"]
+radius = 2.4
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_col"]
+height = 0.8
+radius = 0.35
+
+[node name="EmpUpgradePickup" type="Node3D" groups=["emp_upgrades", "interactive_props", "pickups"]]
+script = ExtResource("1_emp_script")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_pickup")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 5
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("CylinderShape3D_col")

@@ -17,6 +17,7 @@ var completed_levels: Array[int] = []
 var generator_parts: Array = []
 var installed_generator_parts: Array = []
 var is_generator_running: bool = false
+var emp_upgrade_level: int = 1
 
 func add_generator_part(part_key: String) -> void:
     if not generator_parts.has(part_key):
@@ -25,6 +26,11 @@ func add_generator_part(part_key: String) -> void:
 
 func has_generator_part(part_key: String) -> bool:
     return generator_parts.has(part_key)
+
+func upgrade_emp() -> int:
+    emp_upgrade_level = mini(3, emp_upgrade_level + 1)
+    print("[LevelManager] EMP upgrade level updated: MK ", emp_upgrade_level)
+    return emp_upgrade_level
 
 # Metadata repository for all 120 live-ops levels
 var level_roadmap_metadata: Array[Dictionary] = []

@@ -1,111 +1,364 @@
-[gd_scene load_steps=12 format=3 uid="uid://subroutine_lvl_06"]
+[gd_scene load_steps=36 format=3 uid="uid://subroutine_lvl_06_server_vault"]
 
-[ext_resource type="Script" path="res://scripts/puzzles/parity_check_puzzle.gd" id="1_puzzle"]
-[ext_resource type="Script" path="res://scripts/non_euclidean_corridor.gd" id="2_noneuc"]
-[ext_resource type="Script" path="res://scripts/shifting_room.gd" id="3_shift"]
-[ext_resource type="PackedScene" uid="uid://b7glitchwalker01" path="res://scenes/enemies/glitch_walker.tscn" id="4_walker"]
-[ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="5_server_tex"]
-[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="6_rust_tex"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
-size = Vector3(16, 0.2, 32)
+[ext_resource type="Script" path="res://scripts/level_06.gd" id="1_level_script"]
+[ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="2_server_tex"]
+[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="3_rust_tex"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/cyber_husk.tscn" id="4_cyber_husk"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/glitch_walker.tscn" id="5_walker"]
+[ext_resource type="PackedScene" path="res://scenes/props/emp_upgrade_pickup.tscn" id="6_emp_upgrade"]
+[ext_resource type="PackedScene" path="res://scenes/props/stealth_locker_prop.tscn" id="7_locker"]
+[ext_resource type="PackedScene" path="res://scenes/props/nanite_medkit_prop.tscn" id="8_medkit"]
+[ext_resource type="PackedScene" path="res://scenes/props/crt_terminal_prop.tscn" id="9_crt"]
+[ext_resource type="PackedScene" path="res://scenes/props/sparking_ceiling_wire_prop.tscn" id="10_spark_wire"]
+[ext_resource type="PackedScene" path="res://scenes/props/facility_casualty_prop.tscn" id="11_casualty"]
+[ext_resource type="PackedScene" path="res://scenes/props/cable_nest_prop.tscn" id="12_cable"]
+[ext_resource type="PackedScene" path="res://scenes/props/broken_server_rack_prop.tscn" id="13_broken_rack"]
+[ext_resource type="PackedScene" path="res://scenes/props/sparking_fuse_box_prop.tscn" id="14_fuse_box"]
+[ext_resource type="PackedScene" path="res://scenes/props/coolant_pipe_prop.tscn" id="15_pipe"]
+[ext_resource type="Script" path="res://scripts/sector_backtrack_trigger.gd" id="16_backtrack"]
+[ext_resource type="Script" path="res://scripts/sector_exit_trigger.gd" id="17_exit"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
-albedo_texture = ExtResource("6_rust_tex")
-uv1_scale = Vector3(4, 8, 1)
+albedo_texture = ExtResource("3_rust_tex")
+uv1_scale = Vector3(8, 12, 1)
 texture_filter = 0
 
-[sub_resource type="BoxMesh" id="BoxMesh_floor"]
-material = SubResource("StandardMaterial3D_floor")
-size = Vector3(16, 0.2, 32)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_wall"]
-size = Vector3(0.4, 4, 32)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
-albedo_texture = ExtResource("5_server_tex")
+albedo_texture = ExtResource("2_server_tex")
 uv1_scale = Vector3(8, 2, 1)
 texture_filter = 0
 
-[sub_resource type="BoxMesh" id="BoxMesh_wall"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cage_mesh"]
+albedo_color = Color(0.18, 0.2, 0.22, 1.0)
+metallic = 0.9
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_exit_door"]
+albedo_color = Color(0.25, 0.08, 0.08, 1.0)
+metallic = 0.95
+roughness = 0.25
+emission_enabled = true
+emission = Color(0.8, 0.1, 0.1, 1.0)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_corridor_floor"]
+size = Vector3(8, 0.2, 14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_corridor_floor"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector3(8, 0.2, 14)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_main_floor"]
+size = Vector3(32, 0.2, 34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_main_floor"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector3(32, 0.2, 34)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_transit_floor"]
+size = Vector3(8, 0.2, 12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_transit_floor"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector3(8, 0.2, 12)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_corridor_14"]
+size = Vector3(0.4, 5, 14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_corridor_14"]
 material = SubResource("StandardMaterial3D_wall")
-size = Vector3(0.4, 4, 32)
+size = Vector3(0.4, 5, 14)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_main_34"]
+size = Vector3(0.4, 5, 34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_main_34"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(0.4, 5, 34)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_main_end_12"]
+size = Vector3(12, 5, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_main_end_12"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(12, 5, 0.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_trigger"]
-size = Vector3(6, 3, 2)
+size = Vector3(4, 3, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_exit_door"]
+material = SubResource("StandardMaterial3D_exit_door")
+size = Vector3(3.8, 3.6, 0.3)
 
 [node name="Level_06" type="Node3D"]
+script = ExtResource("1_level_script")
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -12)
+
+[node name="BacktrackSpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.5, 26)
+
+[node name="BacktrackPortal" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -15)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("16_backtrack")
+target_level_index = 5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BacktrackPortal"]
+shape = SubResource("BoxShape3D_trigger")
 
 [node name="Lighting" type="Node3D" parent="."]
 
-[node name="OmniLight3D_1" type="OmniLight3D" parent="Lighting"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -6)
-light_color = Color(0.2, 0.7, 0.4, 1)
-light_energy = 2.5
+[node name="Light_Arrival" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, -10)
+light_color = Color(0.2, 0.8, 0.6, 1)
+light_energy = 2.2
+omni_range = 12.0
+
+[node name="Light_Vault_Center" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0, 8)
+light_color = Color(0.25, 0.7, 0.5, 1)
+light_energy = 2.6
+omni_range = 22.0
+
+[node name="Light_SecurityCage" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.2, 14)
+light_color = Color(0.2, 0.9, 1.0, 1)
+light_energy = 3.2
 omni_range = 14.0
 
-[node name="OmniLight3D_2" type="OmniLight3D" parent="Lighting"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 8)
-light_color = Color(0.2, 0.7, 0.4, 1)
+[node name="Light_EastAisle" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 3.2, 10)
+light_color = Color(0.9, 0.45, 0.15, 1)
 light_energy = 2.0
 omni_range = 14.0
 
+[node name="Light_ExitTransit" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 28)
+light_color = Color(1.0, 0.25, 0.2, 1)
+light_energy = 2.5
+omni_range = 12.0
+
+[node name="SparkWires" type="Node3D" parent="."]
+
+[node name="SparkWire_Arrival" parent="SparkWires" instance=ExtResource("10_spark_wire")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
+door_label_text = "[DEEP SERVER VAULT] PRIMARY AISLE"
+door_label_color = Color(0.2, 0.9, 0.65, 1)
+spark_color = Color(0.3, 0.9, 0.7, 1)
+light_energy_peak = 5.0
+light_energy_base = 0.7
+light_range = 12.0
+
+[node name="SparkWire_Exit" parent="SparkWires" instance=ExtResource("10_spark_wire")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 24)
+door_label_text = "[BULKHEAD] SECTOR 07 TRANSIT GATE"
+door_label_color = Color(1.0, 0.35, 0.2, 1)
+spark_color = Color(1.0, 0.4, 0.2, 1)
+light_energy_peak = 5.4
+light_energy_base = 0.8
+light_range = 13.0
+
 [node name="Architecture" type="StaticBody3D" parent="."]
 
-[node name="FloorCollision" type="CollisionShape3D" parent="Architecture"]
-shape = SubResource("BoxShape3D_floor")
+[node name="CorridorFloorCol" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11)
+shape = SubResource("BoxShape3D_corridor_floor")
 
-[node name="FloorMesh" type="MeshInstance3D" parent="Architecture"]
-mesh = SubResource("BoxMesh_floor")
+[node name="CorridorFloorMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11)
+mesh = SubResource("BoxMesh_corridor_floor")
 
-[node name="LeftWallCol" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2, 0)
-shape = SubResource("BoxShape3D_wall")
+[node name="MainVaultFloorCol" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
+shape = SubResource("BoxShape3D_main_floor")
 
-[node name="LeftWallMesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2, 0)
-mesh = SubResource("BoxMesh_wall")
+[node name="MainVaultFloorMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
+mesh = SubResource("BoxMesh_main_floor")
 
-[node name="RightWallCol" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2, 0)
-shape = SubResource("BoxShape3D_wall")
+[node name="TransitFloorCol" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 31)
+shape = SubResource("BoxShape3D_transit_floor")
 
-[node name="RightWallMesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2, 0)
-mesh = SubResource("BoxMesh_wall")
+[node name="TransitFloorMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 31)
+mesh = SubResource("BoxMesh_transit_floor")
 
-[node name="NonEuclideanCorridor" type="Area3D" parent="." node_paths=PackedStringArray("entry_anchor", "puzzle_target")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 14)
-collision_layer = 0
-collision_mask = 2
-script = ExtResource("2_noneuc")
-entry_anchor = NodePath("EntryAnchor")
-puzzle_target = NodePath("../Puzzles/PrimaryPuzzle")
+[node name="CorridorWallL" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, -11)
+shape = SubResource("BoxShape3D_wall_corridor_14")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NonEuclideanCorridor"]
-shape = SubResource("BoxShape3D_trigger")
+[node name="CorridorWallLMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, -11)
+mesh = SubResource("BoxMesh_wall_corridor_14")
 
-[node name="EntryAnchor" type="Marker3D" parent="NonEuclideanCorridor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -26)
+[node name="CorridorWallR" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, -11)
+shape = SubResource("BoxShape3D_wall_corridor_14")
 
-[node name="ShiftingRoom" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-collision_layer = 0
-collision_mask = 2
-script = ExtResource("3_shift")
+[node name="CorridorWallRMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, -11)
+mesh = SubResource("BoxMesh_wall_corridor_14")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ShiftingRoom"]
-shape = SubResource("BoxShape3D_trigger")
+[node name="MainVaultWallL" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.5, 11)
+shape = SubResource("BoxShape3D_wall_main_34")
 
-[node name="Puzzles" type="Node3D" parent="."]
+[node name="MainVaultWallLMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 2.5, 11)
+mesh = SubResource("BoxMesh_wall_main_34")
 
-[node name="PrimaryPuzzle" type="Node3D" parent="Puzzles"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, -8)
-script = ExtResource("1_puzzle")
-puzzle_id = "SECTOR_06_REGISTER"
-puzzle_name = "Memory Parity Check 06"
+[node name="MainVaultWallR" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.5, 11)
+shape = SubResource("BoxShape3D_wall_main_34")
+
+[node name="MainVaultWallRMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.5, 11)
+mesh = SubResource("BoxMesh_wall_main_34")
+
+[node name="SouthWallL" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.5, -6)
+shape = SubResource("BoxShape3D_wall_main_end_12")
+
+[node name="SouthWallLMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.5, -6)
+mesh = SubResource("BoxMesh_wall_main_end_12")
+
+[node name="SouthWallR" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, -6)
+shape = SubResource("BoxShape3D_wall_main_end_12")
+
+[node name="SouthWallRMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, -6)
+mesh = SubResource("BoxMesh_wall_main_end_12")
+
+[node name="NorthWallL" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.5, 28)
+shape = SubResource("BoxShape3D_wall_main_end_12")
+
+[node name="NorthWallLMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.5, 28)
+mesh = SubResource("BoxMesh_wall_main_end_12")
+
+[node name="NorthWallR" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 28)
+shape = SubResource("BoxShape3D_wall_main_end_12")
+
+[node name="NorthWallRMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 28)
+mesh = SubResource("BoxMesh_wall_main_end_12")
+
+[node name="TransitWallL" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, 33)
+shape = SubResource("BoxShape3D_wall_corridor_14")
+
+[node name="TransitWallLMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2.5, 33)
+mesh = SubResource("BoxMesh_wall_corridor_14")
+
+[node name="TransitWallR" type="CollisionShape3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, 33)
+shape = SubResource("BoxShape3D_wall_corridor_14")
+
+[node name="TransitWallRMesh" type="MeshInstance3D" parent="Architecture"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, 33)
+mesh = SubResource("BoxMesh_wall_corridor_14")
+
+[node name="Casualties" type="Node3D" parent="."]
+
+[node name="Casualty_SystemsArchitect" parent="Casualties" instance=ExtResource("11_casualty")]
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -5, 0, 12)
+casualty_style = "slumped"
+technician_name = "Chief Systems Architect V. Orlov"
+log_entry = "The neural graft procedure went critical... the morgue sub-routines started rebooting biological hosts with scrap servos. I locked the dielectric capacitor core in the security cage, but they have me cornered. If you can scavenge it, your EMP will cycle twice as fast."
+
+[node name="Casualty_CryoTech" parent="Casualties" instance=ExtResource("11_casualty")]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 12, 0, 16)
+casualty_style = "curled"
+technician_name = "Cryo Specialist K. Liang"
+log_entry = "The coolant line ruptured. If you hear dragging footsteps and hydraulic clicks in the server aisles, run. The Husks don't feel pain, but an EMP shockwave causes an immediate servo seizure."
 
 [node name="Enemies" type="Node3D" parent="."]
 
-[node name="GlitchWalker" parent="Enemies" instance=ExtResource("4_walker")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 6)
+[node name="CyberHusk_Aisle" parent="Enemies" instance=ExtResource("4_cyber_husk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.5, 6)
+patrol_points = [Vector3(-6, 0.5, 2), Vector3(-6, 0.5, 14)]
+
+[node name="CyberHusk_EastWing" parent="Enemies" instance=ExtResource("4_cyber_husk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.5, 14)
+patrol_points = [Vector3(8, 0.5, 4), Vector3(8, 0.5, 18)]
+
+[node name="GlitchWalker_Center" parent="Enemies" instance=ExtResource("5_walker")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 18)
+patrol_points = [Vector3(-8, 0.5, 18), Vector3(8, 0.5, 18)]
+
+[node name="StealthLockers" type="Node3D" parent="."]
+
+[node name="StealthLocker_Aisle" parent="StealthLockers" instance=ExtResource("7_locker")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -15, 0, 2)
+
+[node name="StealthLocker_East" parent="StealthLockers" instance=ExtResource("7_locker")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 15, 0, 10)
+
+[node name="NaniteMedkits" type="Node3D" parent="."]
+
+[node name="Medkit_Vault1" parent="NaniteMedkits" instance=ExtResource("8_medkit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.4, 2)
+respawn_time = 45.0
+
+[node name="Medkit_Vault2" parent="NaniteMedkits" instance=ExtResource("8_medkit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.4, 22)
+respawn_time = 45.0
+
+[node name="ServerEquipment" type="Node3D" parent="."]
+
+[node name="BrokenRack1" parent="ServerEquipment" instance=ExtResource("13_broken_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 2)
+
+[node name="BrokenRack2" parent="ServerEquipment" instance=ExtResource("13_broken_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 8)
+
+[node name="BrokenRack3" parent="ServerEquipment" instance=ExtResource("13_broken_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 2)
+
+[node name="BrokenRack4" parent="ServerEquipment" instance=ExtResource("13_broken_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 8)
+
+[node name="CableNest1" parent="ServerEquipment" instance=ExtResource("12_cable")]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, -6, 0, 16)
+
+[node name="CoolantPipe1" parent="ServerEquipment" instance=ExtResource("15_pipe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 14)
+
+[node name="FuseBox1" parent="ServerEquipment" instance=ExtResource("14_fuse_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, 1.5, 6)
+
+[node name="SecurityCage" type="Node3D" parent="."]
+
+[node name="EmpUpgradePickup" parent="SecurityCage" instance=ExtResource("6_emp_upgrade")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.4, 14)
+upgrade_level_target = 2
+upgrade_id = "emp_capacitor_mk2"
+
+[node name="VaultTerminal" type="Node3D" parent="."]
+
+[node name="VaultCompilationTerminal" parent="VaultTerminal" instance=ExtResource("9_crt")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1, 0.5, 13)
+
+[node name="TransitExitGate" type="Node3D" parent="."]
+
+[node name="ExitBulkheadDoor" type="MeshInstance3D" parent="TransitExitGate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 28)
+mesh = SubResource("BoxMesh_exit_door")
+
+[node name="Sector07ExitTrigger" type="Area3D" parent="TransitExitGate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 32)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("17_exit")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransitExitGate/Sector07ExitTrigger"]
+shape = SubResource("BoxShape3D_trigger")

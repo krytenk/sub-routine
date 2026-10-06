@@ -1,0 +1,177 @@
+[gd_scene load_steps=22 format=3 uid="uid://cyber_husk_01"]
+
+[ext_resource type="Script" path="res://scenes/enemies/cyber_husk.gd" id="1_husk"]
+[ext_resource type="Texture2D" path="res://assets/textures/decaying_flesh.jpg" id="2_flesh"]
+[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="3_rust"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_husk"]
+radius = 0.45
+height = 1.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_flesh"]
+albedo_texture = ExtResource("2_flesh")
+roughness = 0.85
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cyber"]
+albedo_texture = ExtResource("3_rust")
+roughness = 0.4
+metallic = 0.92
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ocular"]
+albedo_color = Color(1, 0.15, 0.05, 1)
+emission_enabled = true
+emission = Color(1, 0.2, 0.05, 1)
+emission_energy_multiplier = 6.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pincer"]
+albedo_color = Color(0.85, 0.85, 0.9, 1)
+roughness = 0.18
+metallic = 0.96
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+material = SubResource("StandardMaterial3D_flesh")
+size = Vector3(0.5, 0.65, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_spine_exo"]
+material = SubResource("StandardMaterial3D_cyber")
+size = Vector3(0.14, 0.62, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_skull"]
+material = SubResource("StandardMaterial3D_flesh")
+size = Vector3(0.26, 0.3, 0.28)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ocular"]
+material = SubResource("StandardMaterial3D_ocular")
+radius = 0.035
+height = 0.07
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm_org"]
+material = SubResource("StandardMaterial3D_flesh")
+size = Vector3(0.11, 0.55, 0.11)
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm_cyber"]
+material = SubResource("StandardMaterial3D_cyber")
+size = Vector3(0.15, 0.45, 0.15)
+
+[sub_resource type="PrismMesh" id="PrismMesh_pincer"]
+material = SubResource("StandardMaterial3D_pincer")
+size = Vector3(0.06, 0.28, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_prosthetic_thigh"]
+material = SubResource("StandardMaterial3D_cyber")
+size = Vector3(0.13, 0.42, 0.13)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_prosthetic_shin"]
+material = SubResource("StandardMaterial3D_cyber")
+top_radius = 0.04
+bottom_radius = 0.05
+height = 0.46
+
+[sub_resource type="BoxMesh" id="BoxMesh_prosthetic_foot"]
+material = SubResource("StandardMaterial3D_cyber")
+size = Vector3(0.14, 0.08, 0.26)
+
+[sub_resource type="BoxMesh" id="BoxMesh_leg_org"]
+material = SubResource("StandardMaterial3D_flesh")
+size = Vector3(0.13, 0.56, 0.13)
+
+[sub_resource type="BoxMesh" id="BoxMesh_foot_org"]
+material = SubResource("StandardMaterial3D_flesh")
+size = Vector3(0.14, 0.08, 0.24)
+
+[node name="CyberHusk" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_husk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
+shape = SubResource("CapsuleShape3D_husk")
+
+[node name="VisualRoot" type="Node3D" parent="."]
+
+[node name="Torso" type="Node3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+
+[node name="TorsoMesh" type="MeshInstance3D" parent="VisualRoot/Torso"]
+mesh = SubResource("BoxMesh_torso")
+
+[node name="SpinalExo" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.16)
+mesh = SubResource("BoxMesh_spine_exo")
+
+[node name="Sparks" type="CPUParticles3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -0.18)
+emitting = false
+amount = 16
+lifetime = 0.35
+explosiveness = 0.8
+direction = Vector3(0, 1, -1)
+spread = 45.0
+initial_velocity_min = 1.5
+initial_velocity_max = 4.0
+
+[node name="Head" type="Node3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0.04)
+
+[node name="SkullMesh" type="MeshInstance3D" parent="VisualRoot/Head"]
+mesh = SubResource("BoxMesh_skull")
+
+[node name="OcularMesh" type="MeshInstance3D" parent="VisualRoot/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.04, 0.14)
+mesh = SubResource("SphereMesh_ocular")
+
+[node name="OcularLight" type="OmniLight3D" parent="VisualRoot/Head/OcularMesh"]
+light_color = Color(1, 0.2, 0.05, 1)
+light_energy = 2.0
+omni_range = 4.2
+
+[node name="Arm_L" type="Node3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 1.15, 0)
+
+[node name="LimbMesh" type="MeshInstance3D" parent="VisualRoot/Arm_L"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22, 0)
+mesh = SubResource("BoxMesh_arm_org")
+
+[node name="Arm_R" type="Node3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 1.15, 0)
+
+[node name="LimbMesh" type="MeshInstance3D" parent="VisualRoot/Arm_R"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+mesh = SubResource("BoxMesh_arm_cyber")
+
+[node name="PincerBlade_1" type="MeshInstance3D" parent="VisualRoot/Arm_R"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, -0.48, 0.05)
+mesh = SubResource("PrismMesh_pincer")
+
+[node name="PincerBlade_2" type="MeshInstance3D" parent="VisualRoot/Arm_R"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, -0.48, -0.05)
+mesh = SubResource("PrismMesh_pincer")
+
+[node name="Leg_L" type="Node3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.58, 0)
+
+[node name="ProstheticThigh" type="MeshInstance3D" parent="VisualRoot/Leg_L"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
+mesh = SubResource("BoxMesh_prosthetic_thigh")
+
+[node name="ProstheticShin" type="MeshInstance3D" parent="VisualRoot/Leg_L"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.38, 0)
+mesh = SubResource("CylinderMesh_prosthetic_shin")
+
+[node name="ProstheticFoot" type="MeshInstance3D" parent="VisualRoot/Leg_L"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.56, 0.06)
+mesh = SubResource("BoxMesh_prosthetic_foot")
+
+[node name="Leg_R" type="Node3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.58, 0)
+
+[node name="LimbMesh" type="MeshInstance3D" parent="VisualRoot/Leg_R"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+mesh = SubResource("BoxMesh_leg_org")
+
+[node name="FootMesh" type="MeshInstance3D" parent="VisualRoot/Leg_R"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.54, 0.05)
+mesh = SubResource("BoxMesh_foot_org")

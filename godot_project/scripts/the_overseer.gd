@@ -42,7 +42,11 @@ const OVERSEER_LINES = {
     "backtrack_hint": "Retreating to previous sectors? You can scavenge respawned nanites, but the complex doesn't forget where you've been.",
     "generator_restored": "Auxiliary power grid restored. You think activating the secondary generator helps your chances? The high-voltage hum just woke up every thread in the facility.",
     "casualty_inspect": "Another terminal developer who tried to branch from master. Death in this sector is a permanent compilation failure, Roxy.",
-    "generator_need_parts": "The auxiliary turbine is dead in the water. Missing its transformer relay, coolant cell, and heavy fuse. Good luck finding those intact."
+    "generator_need_parts": "The auxiliary turbine is dead in the water. Missing its transformer relay, coolant cell, and heavy fuse. Good luck finding those intact.",
+    "cyberhusk_alert": "Necrotic tissue grafted with scrap servos. The automated morgue failed decades ago, Roxy. Now they walk.",
+    "emp_upgraded": "Capacitor dielectric core integrated. Your discharge coil recycles faster, but higher amperage draws higher attention.",
+    "server_vault": "Sector Six. The Deep Server Vault. Petabytes of corrupted data, preserved in liquid nitrogen and regret.",
+    "sub_basement_horror": "Do you hear the coolant pipes rattling? That's not steam pressure. Something is dragging itself through the server aisles."
 }
 
 var last_played_clip: String = ""

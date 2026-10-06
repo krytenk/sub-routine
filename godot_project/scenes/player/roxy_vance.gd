@@ -13,6 +13,7 @@ signal out_of_bounds_triggered
 signal player_exhausted(is_exhausted: bool)
 signal emp_fired(cooldown: float)
 signal emp_cooldown_updated(current: float, max_time: float)
+signal emp_upgraded(new_level: int)
 signal hiding_state_changed(is_hiding: bool)
 signal fall_damage_taken(damage: int)
 signal player_jumped
@@ -32,6 +33,9 @@ var is_dead: bool = false
 
 @export var emp_cooldown: float = 8.0
 var emp_current_timer: float = 0.0
+var emp_upgrade_level: int = 1
+var emp_pulse_radius: float = 8.0
+var emp_pulse_damage: int = 60
 @export var rotation_speed: float = 3.5
 @export var gravity: float = 9.8
 @export var jump_velocity: float = 5.4
@@ -105,6 +109,11 @@ func _ready() -> void:
     add_child(heartbeat_player)
     if ResourceLoader.exists("res://assets/audio/sfx/sfx_heartbeat.wav"):
         heartbeat_player.stream = ResourceLoader.load("res://assets/audio/sfx/sfx_heartbeat.wav")
+
+    if is_inside_tree() and has_node("/root/LevelManager"):
+        var lm = get_node("/root/LevelManager")
+        if "emp_upgrade_level" in lm and lm.emp_upgrade_level > 1:
+            set_emp_upgrade_level(lm.emp_upgrade_level)
 
 func apply_trauma(amount: float) -> void:
     camera_trauma = clampf(camera_trauma + amount, 0.0, 1.0)
@@ -430,22 +439,56 @@ func _physics_process(delta: float) -> void:
     if Input.is_action_just_pressed("interact"):
         _attempt_interaction()
 
+func set_emp_upgrade_level(level: int) -> void:
+    emp_upgrade_level = clampi(level, 1, 3)
+    match emp_upgrade_level:
+        1:
+            emp_cooldown = 8.0
+            emp_pulse_radius = 8.0
+            emp_pulse_damage = 60
+        2:
+            emp_cooldown = 5.5
+            emp_pulse_radius = 11.0
+            emp_pulse_damage = 85
+        3:
+            emp_cooldown = 3.5
+            emp_pulse_radius = 14.5
+            emp_pulse_damage = 120
+    emp_cooldown_updated.emit(emp_current_timer, emp_cooldown)
+
+func upgrade_emp(target_level: int = -1) -> int:
+    if target_level > 0:
+        set_emp_upgrade_level(target_level)
+    else:
+        set_emp_upgrade_level(emp_upgrade_level + 1)
+    
+    if is_inside_tree() and has_node("/root/LevelManager"):
+        get_node("/root/LevelManager").emp_upgrade_level = emp_upgrade_level
+    
+    emp_upgraded.emit(emp_upgrade_level)
+    print("[Roxy Vance] EMP Discharger UPGRADED to MK ", emp_upgrade_level, "! Cooldown: ", emp_cooldown, "s, Radius: ", emp_pulse_radius, "m, Dmg: ", emp_pulse_damage)
+    
+    if is_inside_tree() and has_node("/root/TheOverseer"):
+        get_node("/root/TheOverseer").trigger_dialogue("emp_upgraded")
+    
+    return emp_upgrade_level
+
 func fire_emp_pulse() -> void:
     if is_dead or emp_current_timer > 0.0:
         return
     emp_current_timer = emp_cooldown
     emp_fired.emit(emp_cooldown)
     emp_cooldown_updated.emit(emp_current_timer, emp_cooldown)
-    print("[Roxy Vance] EMP Pulse Discharged! 8.0m radius shockwave radiated.")
+    print("[Roxy Vance] EMP Pulse Discharged! (MK ", emp_upgrade_level, ") ", emp_pulse_radius, "m radius shockwave radiated.")
 
     if is_inside_tree():
         var enemies = get_tree().get_nodes_in_group("enemies")
         for enemy in enemies:
             if enemy is Node3D:
                 var dist = global_position.distance_to(enemy.global_position)
-                if dist <= 8.0:
+                if dist <= emp_pulse_radius:
                     if enemy.has_method("take_damage"):
-                        enemy.take_damage(60, "emp")
+                        enemy.take_damage(emp_pulse_damage, "emp")
                     elif enemy.has_method("stagger"):
                         enemy.stagger(8.5)
 

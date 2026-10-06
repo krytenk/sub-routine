@@ -133,7 +133,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		interact()
 
-func interact() -> void:
+func interact(_player: CharacterBody3D = null) -> void:
 	inspected.emit(casualty_id)
 	
 	# Show lore dialog on HUD
