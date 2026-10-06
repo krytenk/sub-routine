@@ -14,6 +14,7 @@ signal player_exhausted(is_exhausted: bool)
 signal emp_fired(cooldown: float)
 signal emp_cooldown_updated(current: float, max_time: float)
 signal emp_upgraded(new_level: int)
+signal crouch_state_changed(is_crouching: bool)
 signal hiding_state_changed(is_hiding: bool)
 signal fall_damage_taken(damage: int)
 signal player_jumped
@@ -29,6 +30,10 @@ var is_exhausted: bool = false
 
 @export var walk_speed: float = 4.5
 @export var sprint_speed: float = 7.0
+@export var crouch_speed: float = 2.2
+var is_crouching: bool = false
+var is_in_duct: bool = false
+var has_superweapon: bool = false
 var is_dead: bool = false
 
 @export var emp_cooldown: float = 8.0
@@ -308,8 +313,12 @@ func _physics_process(delta: float) -> void:
     var input_z = Input.get_action_strength("move_backward") - Input.get_action_strength("move_forward")
     var is_moving = (input_x != 0.0 or input_z != 0.0)
 
+    # Crouch / Crawl input handling
+    if Input.is_action_just_pressed("crouch") and not is_in_duct and not is_on_ladder:
+        set_crouch(not is_crouching)
+
     # Stamina & Sprint logic
-    var wants_sprint = Input.is_action_pressed("sprint") and is_moving
+    var wants_sprint = Input.is_action_pressed("sprint") and is_moving and not is_crouching and not is_in_duct
     if is_exhausted:
         wants_sprint = false
         if current_stamina >= 25.0:
@@ -317,7 +326,9 @@ func _physics_process(delta: float) -> void:
             player_exhausted.emit(false)
 
     var speed = walk_speed
-    if wants_sprint and current_stamina > 0.0:
+    if is_crouching or is_in_duct:
+        speed = crouch_speed
+    elif wants_sprint and current_stamina > 0.0:
         speed = sprint_speed
         current_stamina = maxf(0.0, current_stamina - stamina_drain_rate * delta)
         stamina_changed.emit(current_stamina, max_stamina)
@@ -431,9 +442,12 @@ func _physics_process(delta: float) -> void:
         emp_current_timer = maxf(0.0, emp_current_timer - delta)
         emp_cooldown_updated.emit(emp_current_timer, emp_cooldown)
 
-    # EMP pulse trigger
+    # EMP pulse or Superweapon trigger
     if Input.is_action_just_pressed("emp_pulse"):
-        fire_emp_pulse()
+        if has_superweapon:
+            fire_superweapon_burst()
+        else:
+            fire_emp_pulse()
 
     # Interaction handling
     if Input.is_action_just_pressed("interact"):
@@ -495,7 +509,80 @@ func fire_emp_pulse() -> void:
         if has_node("/root/TheOverseer"):
             get_node("/root/TheOverseer").trigger_dialogue("emp_success", "Electromagnetic disruption detected in Sector node. Glitch entity stunned.")
 
+func set_crouch(crouch: bool) -> void:
+    if is_crouching == crouch and not is_in_duct:
+        return
+    is_crouching = crouch or is_in_duct
+    crouch_state_changed.emit(is_crouching)
+
+    var col = get_node_or_null("CollisionShape3D")
+    if col and col.shape is CapsuleShape3D:
+        var capsule = col.shape as CapsuleShape3D
+        if is_crouching:
+            capsule.height = 0.72
+            col.position.y = 0.36
+            if camera_pivot:
+                camera_pivot.position.y = 0.45
+            if mesh_instance:
+                mesh_instance.scale = Vector3(1.0, 0.45, 1.0)
+        else:
+            capsule.height = 1.8
+            col.position.y = 0.9
+            if camera_pivot:
+                camera_pivot.position.y = 1.45
+            if mesh_instance:
+                mesh_instance.scale = Vector3.ONE
+
+func set_in_duct(in_duct_state: bool) -> void:
+    is_in_duct = in_duct_state
+    set_crouch(in_duct_state)
+    if is_in_duct:
+        print("[Roxy Vance] Entered ventilation duct network. Crawl mode engaged.")
+        if is_inside_tree() and has_node("/root/TheOverseer"):
+            get_node("/root/TheOverseer").trigger_dialogue("duct_crawl")
+    else:
+        print("[Roxy Vance] Exited ventilation duct network.")
+
+func equip_superweapon() -> void:
+    has_superweapon = true
+    print("[Roxy Vance] Hyper-Flux Singularity Cannon EQUIPPED! Ready for prototype discharge.")
+    if is_inside_tree() and has_node("/root/TheOverseer"):
+        get_node("/root/TheOverseer").trigger_dialogue("cannon_assembled")
+
+func discharge_superweapon() -> bool:
+    if not has_superweapon or is_dead:
+        return false
+    has_superweapon = false
+    apply_trauma(0.85)
+    print("[Roxy Vance] Hyper-Flux Singularity Cannon DISCHARGED! Blinding particle lance erupted.")
+    
+    # Meltdown: permanent destruction of weapon to maintain balance
+    if is_inside_tree() and has_node("/root/TheOverseer"):
+        get_node("/root/TheOverseer").trigger_dialogue("cannon_burnout")
+    
+    return true
+
+func fire_superweapon_burst() -> void:
+    if not has_superweapon or is_dead:
+        return
+    discharge_superweapon()
+    if is_inside_tree():
+        var enemies = get_tree().get_nodes_in_group("enemies")
+        for enemy in enemies:
+            if enemy is Node3D and is_instance_valid(enemy):
+                var dist = global_position.distance_to(enemy.global_position)
+                if dist <= 24.0:
+                    if enemy.has_method("take_superweapon_hit"):
+                        enemy.take_superweapon_hit()
+                    elif enemy.has_method("take_damage"):
+                        enemy.take_damage(999, "superweapon")
+
 func jump() -> bool:
+    if is_in_duct:
+        return false
+    if is_crouching:
+        set_crouch(false)
+        return false
     if not is_on_floor() or is_hiding or is_dead or _is_terminal_open():
         return false
     var jump_force = jump_velocity

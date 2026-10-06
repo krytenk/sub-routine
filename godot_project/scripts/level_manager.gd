@@ -18,6 +18,7 @@ var generator_parts: Array = []
 var installed_generator_parts: Array = []
 var is_generator_running: bool = false
 var emp_upgrade_level: int = 1
+var singularity_parts: Array = []
 
 func add_generator_part(part_key: String) -> void:
     if not generator_parts.has(part_key):
@@ -26,6 +27,14 @@ func add_generator_part(part_key: String) -> void:
 
 func has_generator_part(part_key: String) -> bool:
     return generator_parts.has(part_key)
+
+func add_singularity_part(part_key: String) -> void:
+    if not singularity_parts.has(part_key):
+        singularity_parts.append(part_key)
+        print("[LevelManager] Singularity weapon module stored: ", part_key)
+
+func has_singularity_part(part_key: String) -> bool:
+    return singularity_parts.has(part_key)
 
 func upgrade_emp() -> int:
     emp_upgrade_level = mini(3, emp_upgrade_level + 1)

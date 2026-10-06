@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://subroutine_vent_duct_shaft"]
+
+[ext_resource type="Script" path="res://scenes/props/vent_duct_shaft.gd" id="1_duct"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_interior"]
+size = Vector3(1.2, 1.0, 8.0)
+
+[node name="VentDuctShaft" type="Node3D" groups=["vent_ducts"]]
+script = ExtResource("1_duct")
+
+[node name="DuctInteriorArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DuctInteriorArea"]
+shape = SubResource("BoxShape3D_interior")

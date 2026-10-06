@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://singularity_part_pickup_01"]
+
+[ext_resource type="Script" path="res://scenes/props/singularity_part_pickup.gd" id="1_part"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pickup"]
+radius = 2.4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_static"]
+size = Vector3(0.5, 0.6, 0.5)
+
+[node name="SingularityPartPickup" type="Node3D" groups=["interactive_props", "pickups", "singularity_parts"]]
+script = ExtResource("1_part")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_pickup")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 5
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_static")

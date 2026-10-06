@@ -46,7 +46,12 @@ const OVERSEER_LINES = {
     "cyberhusk_alert": "Necrotic tissue grafted with scrap servos. The automated morgue failed decades ago, Roxy. Now they walk.",
     "emp_upgraded": "Capacitor dielectric core integrated. Your discharge coil recycles faster, but higher amperage draws higher attention.",
     "server_vault": "Sector Six. The Deep Server Vault. Petabytes of corrupted data, preserved in liquid nitrogen and regret.",
-    "sub_basement_horror": "Do you hear the coolant pipes rattling? That's not steam pressure. Something is dragging itself through the server aisles."
+    "sub_basement_horror": "Do you hear the coolant pipes rattling? That's not steam pressure. Something is dragging itself through the server aisles.",
+    "duct_crawl": "Crawling through air ducts, Roxy? How very nineteen ninety eight. Just try not to get stuck in the sheet metal when the Goliath walks beneath you.",
+    "titan_warning": "That is the Dredge Titan. Four tons of hydraulic steel and discarded compiler logic. You cannot fight it. Stay in the ducts.",
+    "cannon_assembled": "The Singularity Cannon is live. You're holding a miniature star in your hands... fire it before the thermal threshold detonates your ribcage.",
+    "cannon_burnout": "And just like that, the high energy capacitor burns out. Don't look so disappointed, Roxy. Infinite superweapons make for terrible pacing.",
+    "welcome_sec7": "Sector Seven: Stack Overflow Vault. The system is pushing beyond its physical memory limits. Watch your footing on the overhead gantries."
 }
 
 var last_played_clip: String = ""

@@ -1,0 +1,88 @@
+[gd_scene load_steps=12 format=3 uid="uid://dredge_titan_01"]
+
+[ext_resource type="Script" path="res://scenes/enemies/dredge_titan.gd" id="1_titan"]
+[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="2_rust"]
+[ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="3_server"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_titan"]
+radius = 1.1
+height = 4.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hull"]
+albedo_texture = ExtResource("2_rust")
+metallic = 0.95
+roughness = 0.35
+uv1_scale = Vector3(2, 2, 2)
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_core"]
+albedo_color = Color(1.0, 0.35, 0.05, 1.0)
+emission_enabled = true
+emission = Color(1.0, 0.4, 0.05, 1.0)
+emission_energy_multiplier = 4.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+material = SubResource("StandardMaterial3D_hull")
+size = Vector3(2.2, 2.2, 1.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_head"]
+material = SubResource("StandardMaterial3D_hull")
+size = Vector3(1.1, 0.9, 1.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm"]
+material = SubResource("StandardMaterial3D_hull")
+size = Vector3(0.65, 2.4, 0.65)
+
+[sub_resource type="BoxMesh" id="BoxMesh_leg"]
+material = SubResource("StandardMaterial3D_hull")
+size = Vector3(0.75, 2.2, 0.75)
+
+[node name="DredgeTitan" type="CharacterBody3D" groups=["enemies", "titans"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_titan")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0)
+shape = SubResource("CapsuleShape3D_titan")
+
+[node name="VisualRoot" type="Node3D" parent="."]
+
+[node name="Torso" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+mesh = SubResource("BoxMesh_torso")
+
+[node name="Head" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0.3)
+mesh = SubResource("BoxMesh_head")
+
+[node name="SearchlightBeam" type="SpotLight3D" parent="VisualRoot/Torso/Head"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0.6)
+light_color = Color(1.0, 0.45, 0.15, 1)
+light_energy = 5.5
+spot_range = 24.0
+spot_angle = 38.0
+
+[node name="ArmL" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.45, -0.4, 0)
+mesh = SubResource("BoxMesh_arm")
+
+[node name="ArmR" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.45, -0.4, 0)
+mesh = SubResource("BoxMesh_arm")
+
+[node name="LegL" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.65, 1.1, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="LegR" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 1.1, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="StepAudio" type="AudioStreamPlayer3D" parent="."]
+max_distance = 32.0
+volume_db = 3.0
+
+[node name="SlamAudio" type="AudioStreamPlayer3D" parent="."]
+max_distance = 36.0
+volume_db = 6.0

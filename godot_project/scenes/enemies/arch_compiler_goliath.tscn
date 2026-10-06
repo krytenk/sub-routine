@@ -1,0 +1,87 @@
+[gd_scene load_steps=12 format=3 uid="uid://arch_compiler_goliath_01"]
+
+[ext_resource type="Script" path="res://scenes/enemies/arch_compiler_goliath.gd" id="1_boss"]
+[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="2_rust"]
+[ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="3_server"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_boss"]
+radius = 1.2
+height = 3.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_armor"]
+albedo_texture = ExtResource("2_rust")
+metallic = 0.95
+roughness = 0.25
+uv1_scale = Vector3(2, 2, 2)
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chest_exhaust"]
+albedo_color = Color(1.0, 0.45, 0.1, 1.0)
+emission_enabled = true
+emission = Color(1.0, 0.5, 0.1, 1.0)
+emission_energy_multiplier = 6.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+material = SubResource("StandardMaterial3D_armor")
+size = Vector3(2.4, 2.0, 1.6)
+
+[sub_resource type="SphereMesh" id="SphereMesh_core"]
+material = SubResource("StandardMaterial3D_chest_exhaust")
+radius = 0.35
+height = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_arm"]
+material = SubResource("StandardMaterial3D_armor")
+size = Vector3(0.7, 2.2, 0.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_leg"]
+material = SubResource("StandardMaterial3D_armor")
+size = Vector3(0.8, 2.0, 0.8)
+
+[node name="ArchCompilerGoliath" type="CharacterBody3D" groups=["bosses", "enemies"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_boss")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
+shape = SubResource("CapsuleShape3D_boss")
+
+[node name="VisualRoot" type="Node3D" parent="."]
+
+[node name="Torso" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+mesh = SubResource("BoxMesh_torso")
+
+[node name="ChestCore" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0.75)
+mesh = SubResource("SphereMesh_core")
+
+[node name="ChestCoreLight" type="OmniLight3D" parent="VisualRoot/Torso/ChestCore"]
+light_color = Color(1.0, 0.5, 0.15, 1)
+light_energy = 4.5
+omni_range = 8.0
+
+[node name="ArmL" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.55, -0.2, 0)
+mesh = SubResource("BoxMesh_arm")
+
+[node name="ArmR" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, -0.2, 0)
+mesh = SubResource("BoxMesh_arm")
+
+[node name="LegL" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.65, 1.0, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="LegR" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 1.0, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="SlamAudio" type="AudioStreamPlayer3D" parent="."]
+max_distance = 32.0
+volume_db = 4.0
+
+[node name="ExplodeAudio" type="AudioStreamPlayer3D" parent="."]
+max_distance = 40.0
+volume_db = 6.0
