@@ -37,7 +37,7 @@ func has_singularity_part(part_key: String) -> bool:
     return singularity_parts.has(part_key)
 
 func upgrade_emp() -> int:
-    emp_upgrade_level = mini(3, emp_upgrade_level + 1)
+    emp_upgrade_level = mini(5, emp_upgrade_level + 1)
     print("[LevelManager] EMP upgrade level updated: MK ", emp_upgrade_level)
     return emp_upgrade_level
 

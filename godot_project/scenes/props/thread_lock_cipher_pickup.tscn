@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://subroutine_prop_thread_cipher"]
+
+[ext_resource type="Script" path="res://scenes/props/thread_lock_cipher_pickup.gd" id="1_cipher_script"]
+
+[node name="ThreadLockCipherPickup" type="Node3D"]
+script = ExtResource("1_cipher_script")

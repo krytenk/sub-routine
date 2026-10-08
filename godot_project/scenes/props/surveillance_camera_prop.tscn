@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://subroutine_prop_surveillance_cam"]
+
+[ext_resource type="Script" path="res://scenes/props/surveillance_camera_prop.gd" id="1_cam_script"]
+
+[node name="SurveillanceCameraProp" type="Node3D"]
+script = ExtResource("1_cam_script")

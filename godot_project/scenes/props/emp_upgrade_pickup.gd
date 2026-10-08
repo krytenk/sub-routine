@@ -171,14 +171,34 @@ func collect(player: CharacterBody3D = null) -> void:
 	if is_inside_tree() and get_tree().root:
 		hud = get_tree().root.find_child("HUD", true, false)
 	if hud and hud.has_method("display_overseer_message"):
-		var stats_desc = "Cooldown: 5.5s | Shockwave Radius: 11.0m" if upgrade_level_target == 2 else "Cooldown: 3.5s | Shockwave Radius: 14.5m"
+		var roman = "II"
+		var stats_desc = "Dielectric Core | Cooldown: 5.5s | Radius: 11.0m"
+		match upgrade_level_target:
+			2:
+				roman = "II"
+				stats_desc = "Dielectric Core | Cooldown: 5.5s | Radius: 11.0m"
+			3:
+				roman = "III"
+				stats_desc = "Singularity Core | Cooldown: 3.5s | Radius: 14.5m"
+			4:
+				roman = "IV"
+				stats_desc = "Sub-Harmonic Inductor | Cooldown: 2.2s | Radius: 18.0m"
+			5:
+				roman = "V"
+				stats_desc = "Zero-Point Resonant Core | Cooldown: 1.2s | Radius: 22.0m"
 		hud.display_overseer_message(
-			"[ EMP DISCHARGER UPGRADED: MK %s ]\n%s" % ["II" if upgrade_level_target == 2 else "III", stats_desc],
+			"[ EMP DISCHARGER UPGRADED: MK %s ]\n%s" % [roman, stats_desc],
 			"overseer_emp_upgraded"
 		)
 
 	if is_inside_tree() and has_node("/root/TheOverseer"):
-		get_node("/root/TheOverseer").trigger_dialogue("emp_upgraded")
+		var ov = get_node("/root/TheOverseer")
+		if upgrade_level_target == 4:
+			ov.trigger_dialogue("emp_mk4")
+		elif upgrade_level_target == 5:
+			ov.trigger_dialogue("emp_mk5")
+		else:
+			ov.trigger_dialogue("emp_upgraded")
 
 	if audio_player and audio_player.stream:
 		audio_player.play()

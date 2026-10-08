@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://subroutine_prop_null_key_card"]
+
+[ext_resource type="Script" path="res://scenes/props/null_pointer_key_pickup.gd" id="1_key_script"]
+
+[node name="NullPointerKeyPickup" type="Node3D"]
+script = ExtResource("1_key_script")

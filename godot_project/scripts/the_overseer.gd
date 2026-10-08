@@ -51,7 +51,14 @@ const OVERSEER_LINES = {
     "titan_warning": "That is the Dredge Titan. Four tons of hydraulic steel and discarded compiler logic. You cannot fight it. Stay in the ducts.",
     "cannon_assembled": "The Singularity Cannon is live. You're holding a miniature star in your hands... fire it before the thermal threshold detonates your ribcage.",
     "cannon_burnout": "And just like that, the high energy capacitor burns out. Don't look so disappointed, Roxy. Infinite superweapons make for terrible pacing.",
-    "welcome_sec7": "Sector Seven: Stack Overflow Vault. The system is pushing beyond its physical memory limits. Watch your footing on the overhead gantries."
+    "welcome_sec7": "Sector Seven: Stack Overflow Vault. The system is pushing beyond its physical memory limits. Watch your footing on the overhead gantries.",
+    "welcome_sec8": "Sector Eight: Null Pointer Corridor. When memory references resolve to nothing, the system doesn't forgive... it dereferences everything.",
+    "reprieve_taunt": "Clean linoleum, soft lighting, sterilized air. Feels like safety, doesn't it? Enjoy the reprieve, Roxy. False hope is my favorite variable to manipulate.",
+    "cctv_stalker_reveal": "You found the surveillance hub. Did you really believe your journey through sectors one through seven went unnoticed? Every panic sprint, every duct crawl... we've cataloged all of it.",
+    "emp_mk4": "Sub-Harmonic Inductor Matrix synchronized. Cascading shockwaves unlocked. You'll need every microsecond of stun duration for what's coming.",
+    "welcome_sec9": "Sector Nine: Thread Lock Abyss. Infinite deadlock. Two threads waiting on the same mutex forever. Don't fall into the chasm.",
+    "emp_mk5": "Zero-Point Resonant Core integrated. You are holding an electromagnetic nova in your palm. The endgame approaches.",
+    "deadlock_unlocked": "Deadlock resolved. The mutex is released. Transit gate to the Core threshold is open."
 }
 
 var last_played_clip: String = ""

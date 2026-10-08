@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://subroutine_prop_stalker_shadow"]
+
+[ext_resource type="Script" path="res://scenes/props/stalker_shadow_prop.gd" id="1_shadow_script"]
+
+[node name="StalkerShadowProp" type="Node3D"]
+script = ExtResource("1_shadow_script")

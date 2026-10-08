@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://subroutine_prop_cctv_monitor_wall"]
+
+[ext_resource type="Script" path="res://scenes/props/cctv_monitor_wall_prop.gd" id="1_cctv_script"]
+
+[node name="CCTVMonitorWallProp" type="Node3D"]
+script = ExtResource("1_cctv_script")

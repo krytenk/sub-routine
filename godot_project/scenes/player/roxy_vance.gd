@@ -454,7 +454,7 @@ func _physics_process(delta: float) -> void:
         _attempt_interaction()
 
 func set_emp_upgrade_level(level: int) -> void:
-    emp_upgrade_level = clampi(level, 1, 3)
+    emp_upgrade_level = clampi(level, 1, 5)
     match emp_upgrade_level:
         1:
             emp_cooldown = 8.0
@@ -468,6 +468,14 @@ func set_emp_upgrade_level(level: int) -> void:
             emp_cooldown = 3.5
             emp_pulse_radius = 14.5
             emp_pulse_damage = 120
+        4:
+            emp_cooldown = 2.2
+            emp_pulse_radius = 18.0
+            emp_pulse_damage = 160
+        5:
+            emp_cooldown = 1.2
+            emp_pulse_radius = 22.0
+            emp_pulse_damage = 220
     emp_cooldown_updated.emit(emp_current_timer, emp_cooldown)
 
 func upgrade_emp(target_level: int = -1) -> int:
@@ -483,7 +491,13 @@ func upgrade_emp(target_level: int = -1) -> int:
     print("[Roxy Vance] EMP Discharger UPGRADED to MK ", emp_upgrade_level, "! Cooldown: ", emp_cooldown, "s, Radius: ", emp_pulse_radius, "m, Dmg: ", emp_pulse_damage)
     
     if is_inside_tree() and has_node("/root/TheOverseer"):
-        get_node("/root/TheOverseer").trigger_dialogue("emp_upgraded")
+        var ov = get_node("/root/TheOverseer")
+        if emp_upgrade_level == 4:
+            ov.trigger_dialogue("emp_mk4")
+        elif emp_upgrade_level == 5:
+            ov.trigger_dialogue("emp_mk5")
+        else:
+            ov.trigger_dialogue("emp_upgraded")
     
     return emp_upgrade_level
 
