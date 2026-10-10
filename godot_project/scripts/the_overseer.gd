@@ -92,6 +92,8 @@ func trigger_dialogue(key: String, custom_text: String = "", vo_clip: String = "
                 clip = "overseer_sequence_break"
             "oob", "save_threat":
                 clip = "overseer_savefile_threat"
+            "invisible_wall":
+                clip = "overseer_navmesh_warning"
             _:
                 var cand = "overseer_" + key
                 if is_inside_tree() and has_node("/root/AudioManager"):

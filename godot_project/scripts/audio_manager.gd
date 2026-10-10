@@ -10,9 +10,89 @@ signal ambient_track_started(track_name: String, duration: float)
 
 const VO_DIR_PATH = "res://assets/audio/vo"
 const AMBIENT_DIR_PATH = "res://assets/audio/ambient"
+const SFX_DIR_PATH = "res://assets/audio/sfx"
+
+const KNOWN_VO_CLIPS: Array[String] = [
+    "overseer_art_showcase",
+    "overseer_backtrack_hint",
+    "overseer_breaker_power",
+    "overseer_cannon_assembled",
+    "overseer_cannon_burnout",
+    "overseer_casualty_inspect",
+    "overseer_cctv_stalker_reveal",
+    "overseer_cyberhusk_alert",
+    "overseer_darkness_whisper",
+    "overseer_dead_end_trap",
+    "overseer_deadlock_unlocked",
+    "overseer_decision_choice",
+    "overseer_dimension_shift",
+    "overseer_duct_crawl",
+    "overseer_emp_mk4",
+    "overseer_emp_mk5",
+    "overseer_emp_success",
+    "overseer_emp_upgraded",
+    "overseer_enemy_killed",
+    "overseer_escape_taunt",
+    "overseer_fall_damage",
+    "overseer_generator_need_parts",
+    "overseer_generator_restored",
+    "overseer_jumpscare",
+    "overseer_medkit_used",
+    "overseer_multi_threat",
+    "overseer_navmesh_warning",
+    "overseer_puzzle_solved",
+    "overseer_reprieve_taunt",
+    "overseer_savefile_threat",
+    "overseer_sequence_break",
+    "overseer_server_vault",
+    "overseer_speedrun_warning",
+    "overseer_stairs_ascent",
+    "overseer_stealth_hint",
+    "overseer_stealth_locker",
+    "overseer_sub_basement_horror",
+    "overseer_titan_warning",
+    "overseer_welcome_sec2",
+    "overseer_welcome_sec3",
+    "overseer_welcome_sec7",
+    "overseer_welcome_sec8",
+    "overseer_welcome_sec9",
+    "overseer_wirehound_alert"
+]
+
+const KNOWN_AMBIENT_TRACKS: Array[String] = [
+    "ambient_drone_subterranean",
+    "ambient_server_hum"
+]
+
+const KNOWN_SFX_FILES: Array[String] = [
+    "camera_click",
+    "camera_servo_pan",
+    "cctv_static",
+    "sfx_capacitor_hum",
+    "sfx_electric_spark",
+    "sfx_fall_impact",
+    "sfx_generator_start",
+    "sfx_glitch_growl",
+    "sfx_heartbeat",
+    "sfx_hound_attack",
+    "sfx_hound_bark",
+    "sfx_hound_trot",
+    "sfx_jump",
+    "sfx_jumpscare_sting",
+    "sfx_ladder_climb",
+    "sfx_medkit_respawn",
+    "sfx_metal_footstep",
+    "sfx_part_install",
+    "sfx_part_pickup",
+    "sfx_stealth_enter",
+    "sfx_stealth_exit",
+    "sfx_steam_hiss",
+    "stalker_shadow_whisper"
+]
 
 var vo_streams: Dictionary = {}        # name -> AudioStream
 var ambient_streams: Dictionary = {}   # name -> AudioStream
+var sfx_streams: Dictionary = {}       # name -> AudioStream
 var ambient_playlist: Array[String] = []
 var current_ambient_index: int = 0
 
@@ -49,18 +129,47 @@ func _ready() -> void:
 func scan_audio_directories() -> void:
     vo_streams.clear()
     ambient_streams.clear()
+    sfx_streams.clear()
     ambient_playlist.clear()
     
+    # 1. Dynamic folder scanning (handles local loose dev files & .import/.remap in exported PCK)
     _scan_folder(VO_DIR_PATH, vo_streams)
-    # Ambient tracks should not loop internally when playlist cycling is enabled; they cycle after full playback
     _scan_folder(AMBIENT_DIR_PATH, ambient_streams, false)
+    _scan_folder(SFX_DIR_PATH, sfx_streams, false)
     
+    # 2. Guaranteed manifest registration (ensures 100% indexing in all web/PCK exports)
+    for clip_name in KNOWN_VO_CLIPS:
+        if not vo_streams.has(clip_name):
+            var file_path = VO_DIR_PATH.path_join(clip_name + ".wav")
+            var stream = load_audio_file(file_path, false)
+            if stream:
+                vo_streams[clip_name] = stream
+                vo_streams[clip_name + ".wav"] = stream
+                var short_id = clip_name.trim_prefix("overseer_")
+                vo_streams[short_id] = stream
+
+    for track_name in KNOWN_AMBIENT_TRACKS:
+        if not ambient_streams.has(track_name):
+            var file_path = AMBIENT_DIR_PATH.path_join(track_name + ".wav")
+            var stream = load_audio_file(file_path, false)
+            if stream:
+                ambient_streams[track_name] = stream
+                ambient_streams[track_name + ".wav"] = stream
+
+    for sfx_name in KNOWN_SFX_FILES:
+        if not sfx_streams.has(sfx_name):
+            var file_path = SFX_DIR_PATH.path_join(sfx_name + ".wav")
+            var stream = load_audio_file(file_path, false)
+            if stream:
+                sfx_streams[sfx_name] = stream
+                sfx_streams[sfx_name + ".wav"] = stream
+
     for key in ambient_streams.keys():
         if not key.ends_with(".wav") and not key.ends_with(".ogg"):
             if not ambient_playlist.has(key):
                 ambient_playlist.append(key)
     
-    print("[AudioManager] Scanned audio assets: ", vo_streams.size(), " VO clips, ", ambient_streams.size(), " ambient tracks.")
+    print("[AudioManager] Scanned audio assets: ", vo_streams.size(), " VO entries (44 clips), ", ambient_streams.size(), " ambient tracks, ", sfx_streams.size(), " SFX streams.")
     print("[AudioManager] Ambient Playlist: ", ambient_playlist)
     audio_scanned.emit(vo_streams.size(), ambient_streams.size())
 
@@ -71,20 +180,24 @@ func _scan_folder(path: String, target_dict: Dictionary, is_ambient: bool = fals
         var file_name = dir.get_next()
         while file_name != "":
             if not dir.current_is_dir():
-                var lower_name = file_name.to_lower()
+                # In exported PCK builds, files have .import or .remap appended
+                var clean_file = file_name.trim_suffix(".import").trim_suffix(".remap")
+                var lower_name = clean_file.to_lower()
                 if lower_name.ends_with(".ogg") or lower_name.ends_with(".wav"):
-                    var file_path = path.path_join(file_name)
-                    var stream = load_audio_file(file_path, is_ambient)
-                    if stream:
-                        # Clean up double extensions (e.g. .wav.wav)
-                        var clean_id = file_name
-                        while clean_id.ends_with(".wav") or clean_id.ends_with(".ogg"):
-                            clean_id = clean_id.get_basename()
+                    var clean_id = clean_file
+                    while clean_id.ends_with(".wav") or clean_id.ends_with(".ogg"):
+                        clean_id = clean_id.get_basename()
 
-                        target_dict[clean_id] = stream
-                        target_dict[file_name] = stream
-                        target_dict[clean_id + ".wav"] = stream
-                        print("[AudioManager] Indexed stream: '", clean_id, "' from ", file_path)
+                    if not target_dict.has(clean_id):
+                        var file_path = path.path_join(clean_file)
+                        var stream = load_audio_file(file_path, is_ambient)
+                        if stream:
+                            target_dict[clean_id] = stream
+                            target_dict[clean_file] = stream
+                            target_dict[clean_id + ".wav"] = stream
+                            if clean_id.begins_with("overseer_"):
+                                target_dict[clean_id.trim_prefix("overseer_")] = stream
+                            print("[AudioManager] Indexed stream: '", clean_id, "' from ", file_path)
             file_name = dir.get_next()
         dir.list_dir_end()
     else:
@@ -222,28 +335,51 @@ func _on_ambient_finished() -> void:
 
 func play_sfx(sfx_name: String) -> void:
     var clean = sfx_name.trim_suffix(".wav").trim_suffix(".ogg")
-    var path = "res://assets/audio/sfx/" + clean + ".wav"
-    if ResourceLoader.exists(path):
-        var s = ResourceLoader.load(path)
-        if s is AudioStream:
-            var p = AudioStreamPlayer.new()
-            p.bus = "Master"
-            p.stream = s
-            add_child(p)
-            p.play()
-            p.finished.connect(p.queue_free)
+    var stream: AudioStream = null
+    if sfx_streams.has(clean):
+        stream = sfx_streams[clean]
+    else:
+        var path = "res://assets/audio/sfx/" + clean + ".wav"
+        if ResourceLoader.exists(path):
+            var s = ResourceLoader.load(path)
+            if s is AudioStream:
+                stream = s
+                sfx_streams[clean] = stream
+
+    if stream:
+        var p = AudioStreamPlayer.new()
+        p.bus = "Master"
+        p.stream = stream
+        add_child(p)
+        p.play()
+        p.finished.connect(p.queue_free)
 
 func play_vo(clip_name: String) -> void:
-    if vo_streams.has(clip_name):
-        vo_player.stream = vo_streams[clip_name]
+    var cand = clip_name
+    if not vo_streams.has(cand) and not cand.begins_with("overseer_"):
+        cand = "overseer_" + cand
+    if vo_streams.has(cand):
+        vo_player.stream = vo_streams[cand]
         vo_player.volume_db = 0.0
         vo_player.play()
-        print("[AudioManager] Playing Overseer VO: ", clip_name)
+        print("[AudioManager] Playing Overseer VO: ", cand)
     else:
+        var path = "res://assets/audio/vo/" + cand + ".wav"
+        if ResourceLoader.exists(path):
+            var s = ResourceLoader.load(path)
+            if s is AudioStream:
+                vo_streams[cand] = s
+                vo_player.stream = s
+                vo_player.volume_db = 0.0
+                vo_player.play()
+                print("[AudioManager] Playing Overseer VO (direct load): ", cand)
+                return
         push_warning("[AudioManager] VO clip not found: " + clip_name)
 
 func get_vo_duration(clip_name: String) -> float:
     var clean = clip_name.trim_suffix(".wav").trim_suffix(".ogg")
+    if not vo_streams.has(clean) and not clean.begins_with("overseer_"):
+        clean = "overseer_" + clean
     if vo_streams.has(clean):
         var s = vo_streams[clean]
         if s and s.has_method("get_length"):
@@ -259,13 +395,25 @@ func play_spatial_vo(clip_name: String, world_pos: Vector3) -> AudioStreamPlayer
     return player
 
 func assign_to_spatial_node(clip_name: String, spatial_node: AudioStreamPlayer3D) -> bool:
-    if vo_streams.has(clip_name):
-        spatial_node.stream = vo_streams[clip_name]
+    var cand = clip_name
+    if not vo_streams.has(cand) and not cand.begins_with("overseer_"):
+        cand = "overseer_" + cand
+    if vo_streams.has(cand):
+        spatial_node.stream = vo_streams[cand]
         return true
     elif ambient_streams.has(clip_name):
         spatial_node.stream = ambient_streams[clip_name]
         return true
+    elif sfx_streams.has(clip_name):
+        spatial_node.stream = sfx_streams[clip_name]
+        return true
     else:
+        var path = "res://assets/audio/vo/" + cand + ".wav"
+        if ResourceLoader.exists(path):
+            var s = ResourceLoader.load(path)
+            if s is AudioStream:
+                spatial_node.stream = s
+                return true
         push_warning("[AudioManager] Stream not found for spatial assignment: " + clip_name)
         return false
 

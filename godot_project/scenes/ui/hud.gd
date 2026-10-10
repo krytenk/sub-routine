@@ -56,6 +56,10 @@ func dismiss_intro() -> void:
 		return
 	intro_active = false
 	_play_terminal_chirp()
+	if is_inside_tree() and has_node("/root/AudioManager"):
+		var am = get_node("/root/AudioManager")
+		if am and am.ambient_player and not am.ambient_player.playing:
+			am.start_ambient_drone()
 	var tween = create_tween()
 	if tween:
 		tween.tween_property(intro_sequence, "modulate:a", 0.0, 0.45)

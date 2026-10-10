@@ -53,3 +53,28 @@ func test_spatial_assignment() -> bool:
     spatial_player.free()
     audio_mgr.free()
     return true
+
+func test_complete_audio_manifest_coverage() -> bool:
+    var audio_mgr = load("res://scripts/audio_manager.gd").new()
+    audio_mgr.scan_audio_directories()
+
+    # 1. Verify all 44 Overseer VO lines
+    assert(audio_mgr.KNOWN_VO_CLIPS.size() == 44, "FAILED: Expected exactly 44 KNOWN_VO_CLIPS, got: " + str(audio_mgr.KNOWN_VO_CLIPS.size()))
+    for vo_id in audio_mgr.KNOWN_VO_CLIPS:
+        assert(audio_mgr.vo_streams.has(vo_id), "FAILED: Missing VO line in vo_streams: " + vo_id)
+        assert(audio_mgr.get_vo_duration(vo_id) > 0.5, "FAILED: Invalid VO duration for: " + vo_id)
+
+    # 2. Verify both ambient music tracks
+    assert(audio_mgr.KNOWN_AMBIENT_TRACKS.size() == 2, "FAILED: Expected exactly 2 KNOWN_AMBIENT_TRACKS")
+    for track in audio_mgr.KNOWN_AMBIENT_TRACKS:
+        assert(audio_mgr.ambient_streams.has(track), "FAILED: Missing ambient track: " + track)
+        assert(audio_mgr.ambient_playlist.has(track), "FAILED: Track missing from ambient_playlist: " + track)
+
+    # 3. Verify all 23 SFX assets
+    assert(audio_mgr.KNOWN_SFX_FILES.size() == 23, "FAILED: Expected exactly 23 KNOWN_SFX_FILES")
+    for sfx in audio_mgr.KNOWN_SFX_FILES:
+        assert(audio_mgr.sfx_streams.has(sfx), "FAILED: Missing SFX stream: " + sfx)
+
+    print("[PASS] test_complete_audio_manifest_coverage: All 44 VO clips, 2 ambient music tracks, and 23 SFX assets verified 100% loaded.")
+    audio_mgr.free()
+    return true
