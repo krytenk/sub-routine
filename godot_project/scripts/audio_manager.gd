@@ -7,6 +7,10 @@ extends Node
 
 signal audio_scanned(vo_count: int, ambient_count: int)
 signal ambient_track_started(track_name: String, duration: float)
+signal music_toggled(is_enabled: bool)
+
+const AUDIO_SETTINGS_PATH = "user://audio_settings.cfg"
+
 
 const VO_DIR_PATH = "res://assets/audio/vo"
 const AMBIENT_DIR_PATH = "res://assets/audio/ambient"
@@ -102,6 +106,7 @@ var vo_player: AudioStreamPlayer
 var spatial_players: Array[AudioStreamPlayer3D] = []
 
 var _audio_unlocked: bool = false
+var is_music_enabled: bool = true
 
 # Ambient pacing configuration for 30-minute levels
 @export var ambient_volume_db: float = -2.0
@@ -124,24 +129,53 @@ func _ready() -> void:
     vo_player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
     add_child(vo_player)
 
+    _load_audio_settings()
     scan_audio_directories()
     for arg in OS.get_cmdline_args():
         if arg == "--headless" or arg.ends_with("gdunit4_cli_runner.gd"):
             return
-    if not OS.has_feature("web"):
+    if not OS.has_feature("web") and is_music_enabled:
         start_ambient_drone()
+
+func set_music_enabled(enabled: bool) -> void:
+    is_music_enabled = enabled
+    if ambient_player:
+        if is_music_enabled:
+            ambient_player.volume_db = ambient_volume_db
+            if not ambient_player.playing:
+                start_ambient_drone()
+        else:
+            ambient_player.stop()
+    _save_audio_settings()
+    music_toggled.emit(is_music_enabled)
+    print("[AudioManager] Ambient music set to: ", is_music_enabled)
+
+func toggle_music() -> bool:
+    set_music_enabled(not is_music_enabled)
+    return is_music_enabled
+
+func _save_audio_settings() -> void:
+    var cfg = ConfigFile.new()
+    cfg.set_value("audio", "music_enabled", is_music_enabled)
+    cfg.save(AUDIO_SETTINGS_PATH)
+
+func _load_audio_settings() -> void:
+    var cfg = ConfigFile.new()
+    if cfg.load(AUDIO_SETTINGS_PATH) == OK:
+        is_music_enabled = cfg.get_value("audio", "music_enabled", true)
 
 func unlock_audio() -> void:
     _audio_unlocked = true
     if OS.has_feature("web"):
         JavaScriptBridge.eval("if (window.resumeAllAudio) { window.resumeAllAudio(); }")
-    if ambient_player and not ambient_player.playing:
+    if is_music_enabled and ambient_player and not ambient_player.playing:
         start_ambient_drone()
 
 func _input(event: InputEvent) -> void:
     if not _audio_unlocked and (event is InputEventKey or event is InputEventMouseButton or event is InputEventScreenTouch):
         if event.is_pressed():
             unlock_audio()
+
 
 
 func scan_audio_directories() -> void:
@@ -312,7 +346,7 @@ func _parse_wav_buffer(bytes: PackedByteArray, loop_enabled: bool) -> AudioStrea
     return wav
 
 func start_ambient_drone() -> void:
-    if ambient_playlist.is_empty():
+    if not is_music_enabled or ambient_playlist.is_empty():
         return
 
     current_ambient_index = 0
@@ -320,6 +354,8 @@ func start_ambient_drone() -> void:
     play_ambient_track(track_name)
 
 func play_ambient_track(track_name: String) -> void:
+    if not is_music_enabled:
+        return
     if not ambient_streams.has(track_name):
         push_warning("[AudioManager] Ambient track not found: " + track_name)
         return
@@ -336,6 +372,8 @@ func play_ambient_track(track_name: String) -> void:
 
 func _on_ambient_finished() -> void:
     print("[AudioManager] Ambient track finished playing.")
+    if not is_music_enabled:
+        return
     if not enable_playlist_cycling or ambient_playlist.is_empty():
         ambient_player.play()
         return

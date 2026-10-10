@@ -103,6 +103,14 @@ func _unhandled_input(event: InputEvent) -> void:
             get_viewport().set_input_as_handled()
             return
         _toggle_pause()
+    elif event.is_action_pressed("toggle_music") or (event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_N):
+        if has_node("/root/AudioManager"):
+            var am = get_node("/root/AudioManager")
+            var is_on = am.toggle_music()
+            if hud and hud.has_method("update_objective"):
+                hud.update_objective("Ambient Music: " + ("ENABLED" if is_on else "MUTED"))
+            get_viewport().set_input_as_handled()
+            return
     elif event is InputEventKey and event.pressed and not event.echo:
         if event.keycode == KEY_F12:
             var img = get_viewport().get_texture().get_image()

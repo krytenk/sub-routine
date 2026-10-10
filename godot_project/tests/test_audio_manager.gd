@@ -78,3 +78,45 @@ func test_complete_audio_manifest_coverage() -> bool:
     print("[PASS] test_complete_audio_manifest_coverage: All 44 VO clips, 2 ambient music tracks, and 23 SFX assets verified 100% loaded.")
     audio_mgr.free()
     return true
+
+func test_music_toggle_and_mute() -> bool:
+    var audio_mgr = load("res://scripts/audio_manager.gd").new()
+    audio_mgr._ready()
+    audio_mgr.set_music_enabled(true)
+    assert(audio_mgr.is_music_enabled == true, "FAILED: Music should be enabled by default")
+    
+    var signal_received = [false]
+    var signaled_state = [true]
+    audio_mgr.music_toggled.connect(func(enabled):
+        signal_received[0] = true
+        signaled_state[0] = enabled
+    )
+    
+    # Test turning music off
+    audio_mgr.set_music_enabled(false)
+    assert(audio_mgr.is_music_enabled == false, "FAILED: is_music_enabled should be false after set_music_enabled(false)")
+    assert(signal_received[0] == true, "FAILED: music_toggled signal was not emitted")
+    assert(signaled_state[0] == false, "FAILED: Signaled state should be false")
+    assert(audio_mgr.ambient_player.playing == false, "FAILED: ambient_player should be stopped when music disabled")
+    
+    # Test toggle_music() turning back on
+    signal_received[0] = false
+    var res = audio_mgr.toggle_music()
+    assert(res == true, "FAILED: toggle_music should return true when toggled back on")
+    assert(audio_mgr.is_music_enabled == true, "FAILED: is_music_enabled should be true after toggle")
+    assert(signal_received[0] == true, "FAILED: music_toggled signal was not emitted on toggle")
+    assert(signaled_state[0] == true, "FAILED: Signaled state should be true on toggle")
+    
+    # Test setting off again and verify play_ambient_track is a no-op
+    audio_mgr.set_music_enabled(false)
+    audio_mgr.play_ambient_track("ambient_drone_subterranean")
+    assert(audio_mgr.ambient_player.playing == false, "FAILED: play_ambient_track must not play when music disabled")
+    
+    # Restore enabled state
+    audio_mgr.set_music_enabled(true)
+    
+    print("[PASS] test_music_toggle_and_mute: Music toggle, mute controls, and signal propagation verified.")
+    audio_mgr.free()
+    return true
+
+

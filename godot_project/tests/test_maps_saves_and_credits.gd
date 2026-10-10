@@ -149,3 +149,18 @@ func test_roxy_walks_during_dialogue() -> bool:
 	player.queue_free()
 	print("[PASS] test_roxy_walks_during_dialogue: Roxy Vance traversal permitted during dialogue.")
 	return true
+
+# 7. Test Pause Menu Music Toggle Button
+func test_pause_menu_music_toggle() -> bool:
+	var pause_scene = load("res://scenes/ui/pause_menu.tscn")
+	assert(pause_scene != null, "FAILED: Could not load pause_menu.tscn")
+	var menu = pause_scene.instantiate()
+	menu._ready()
+
+	assert(menu.music_toggle_button != null, "FAILED: music_toggle_button must exist in pause_menu")
+	assert(menu.music_toggle_button.text.contains("Ambient Music"), "FAILED: Button text must mention Ambient Music")
+
+	menu.queue_free()
+	print("[PASS] test_pause_menu_music_toggle: Pause menu music toggle button validated.")
+	return true
+
