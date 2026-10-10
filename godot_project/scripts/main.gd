@@ -11,10 +11,9 @@ func _ready() -> void:
     # Cap frame rate to 60 FPS to prevent thermal throttling on mobile Android devices
     Engine.max_fps = 60
     
-    # Audio Fix: Fix web audio crackling caused by browser buffer underruns in single-threaded WASM
-    if OS.has_feature("web"):
-        AudioServer.set("driver/output_latency", 50)
-        print("[Sub-Routine Init] Web export detected. Set AudioServer driver/output_latency to 50ms.")
+    # Audio Setup: Ensure Master audio bus is unmuted and at 0 dB
+    AudioServer.set_bus_mute(0, false)
+    AudioServer.set_bus_volume_db(0, 0.0)
 
     print("[Sub-Routine Init] Engine initialized at 60 FPS cap on gl_compatibility renderer.")
     

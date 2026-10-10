@@ -55,11 +55,13 @@ func dismiss_intro() -> void:
 	if not intro_active:
 		return
 	intro_active = false
-	_play_terminal_chirp()
 	if is_inside_tree() and has_node("/root/AudioManager"):
 		var am = get_node("/root/AudioManager")
-		if am and am.ambient_player and not am.ambient_player.playing:
+		if am and am.has_method("unlock_audio"):
+			am.unlock_audio()
+		elif am and am.ambient_player and not am.ambient_player.playing:
 			am.start_ambient_drone()
+	_play_terminal_chirp()
 	var tween = create_tween()
 	if tween:
 		tween.tween_property(intro_sequence, "modulate:a", 0.0, 0.45)
@@ -73,6 +75,15 @@ func dismiss_intro() -> void:
 		intro_sequence.visible = false
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		update_objective("Recover the glowing Memory Core and interface with the CRT Terminal [E]")
+
+	# Chilling developer AI greeting 2.2 seconds after boot into Sector 1
+	get_tree().create_timer(2.2).timeout.connect(func():
+		if is_inside_tree() and has_node("/root/TheOverseer"):
+			var ov = get_node("/root/TheOverseer")
+			if ov.dialogue_history.is_empty():
+				ov.trigger_dialogue("darkness_whisper")
+	)
+
 
 func _play_terminal_chirp() -> void:
 	var gen = AudioStreamGenerator.new()

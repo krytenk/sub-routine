@@ -101,8 +101,10 @@ var ambient_fade_tween: Tween
 var vo_player: AudioStreamPlayer
 var spatial_players: Array[AudioStreamPlayer3D] = []
 
+var _audio_unlocked: bool = false
+
 # Ambient pacing configuration for 30-minute levels
-@export var ambient_volume_db: float = -6.0
+@export var ambient_volume_db: float = -2.0
 @export var enable_playlist_cycling: bool = true
 @export var silence_breather_seconds: float = 3.5
 
@@ -112,19 +114,35 @@ func _ready() -> void:
     ambient_player = AudioStreamPlayer.new()
     ambient_player.name = "AmbientMusicPlayer"
     ambient_player.bus = "Master"
+    ambient_player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
     ambient_player.finished.connect(_on_ambient_finished)
     add_child(ambient_player)
     
     vo_player = AudioStreamPlayer.new()
     vo_player.name = "OverseerVOPlayer"
     vo_player.bus = "Master"
+    vo_player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
     add_child(vo_player)
 
     scan_audio_directories()
     for arg in OS.get_cmdline_args():
         if arg == "--headless" or arg.ends_with("gdunit4_cli_runner.gd"):
             return
-    start_ambient_drone()
+    if not OS.has_feature("web"):
+        start_ambient_drone()
+
+func unlock_audio() -> void:
+    _audio_unlocked = true
+    if OS.has_feature("web"):
+        JavaScriptBridge.eval("if (window.resumeAllAudio) { window.resumeAllAudio(); }")
+    if ambient_player and not ambient_player.playing:
+        start_ambient_drone()
+
+func _input(event: InputEvent) -> void:
+    if not _audio_unlocked and (event is InputEventKey or event is InputEventMouseButton or event is InputEventScreenTouch):
+        if event.is_pressed():
+            unlock_audio()
+
 
 func scan_audio_directories() -> void:
     vo_streams.clear()
@@ -307,6 +325,7 @@ func play_ambient_track(track_name: String) -> void:
         return
 
     var stream = ambient_streams[track_name]
+    ambient_player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
     ambient_player.stream = stream
     ambient_player.volume_db = ambient_volume_db
     ambient_player.play()
@@ -349,18 +368,22 @@ func play_sfx(sfx_name: String) -> void:
     if stream:
         var p = AudioStreamPlayer.new()
         p.bus = "Master"
+        p.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
         p.stream = stream
         add_child(p)
         p.play()
         p.finished.connect(p.queue_free)
 
 func play_vo(clip_name: String) -> void:
+    if not _audio_unlocked:
+        unlock_audio()
     var cand = clip_name
     if not vo_streams.has(cand) and not cand.begins_with("overseer_"):
         cand = "overseer_" + cand
     if vo_streams.has(cand):
+        vo_player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
         vo_player.stream = vo_streams[cand]
-        vo_player.volume_db = 0.0
+        vo_player.volume_db = 3.0
         vo_player.play()
         print("[AudioManager] Playing Overseer VO: ", cand)
     else:
@@ -369,8 +392,9 @@ func play_vo(clip_name: String) -> void:
             var s = ResourceLoader.load(path)
             if s is AudioStream:
                 vo_streams[cand] = s
+                vo_player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
                 vo_player.stream = s
-                vo_player.volume_db = 0.0
+                vo_player.volume_db = 3.0
                 vo_player.play()
                 print("[AudioManager] Playing Overseer VO (direct load): ", cand)
                 return
@@ -419,6 +443,7 @@ func assign_to_spatial_node(clip_name: String, spatial_node: AudioStreamPlayer3D
 
 func create_spatial_player(pos: Vector3) -> AudioStreamPlayer3D:
     var sp = AudioStreamPlayer3D.new()
+    sp.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
     sp.position = pos
     sp.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
     sp.unit_size = 10.0
