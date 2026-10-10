@@ -92,7 +92,47 @@ body {
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
-
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script>
+window._audioContexts = [];
+(function() {
+	var OrigAudioContext = window.AudioContext || window.webkitAudioContext;
+	if (OrigAudioContext) {
+		var PatchedAudioContext = function() {
+			var ctx = new OrigAudioContext();
+			window._audioContexts.push(ctx);
+			return ctx;
+		};
+		PatchedAudioContext.prototype = OrigAudioContext.prototype;
+		window.AudioContext = PatchedAudioContext;
+		if (window.webkitAudioContext) window.webkitAudioContext = PatchedAudioContext;
+	}
+	window.resumeAllAudio = function() {
+		if (window._audioContexts) {
+			window._audioContexts.forEach(function(ctx) {
+				if (ctx && ctx.state === 'suspended') {
+					ctx.resume().then(function() {
+						console.log('[Sub-Routine WebAudio] AudioContext resumed successfully!');
+					});
+				}
+			});
+		}
+	};
+	['click', 'keydown', 'pointerdown', 'touchstart', 'mousedown'].forEach(function(evt) {
+		window.addEventListener(evt, window.resumeAllAudio, { passive: true });
+	});
+	var origFetch = window.fetch;
+	window.fetch = function(input, init) {
+		if (typeof input === 'string' && (input.indexOf('.pck') !== -1 || input.indexOf('.wasm') !== -1)) {
+			init = init || {};
+			init.cache = 'no-store';
+		}
+		return origFetch.call(this, input, init);
+	};
+})();
+</script>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -111,7 +151,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":53688804,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":53689892,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
