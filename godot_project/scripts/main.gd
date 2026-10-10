@@ -93,6 +93,16 @@ func _unhandled_input(event: InputEvent) -> void:
             get_viewport().set_input_as_handled()
             return
     elif event.is_action_pressed("pause_game"):
+        var map_modal = find_child("MapViewerModal", true, false)
+        if map_modal and ("is_open" in map_modal and map_modal.is_open or map_modal.visible):
+            map_modal.close_map()
+            get_viewport().set_input_as_handled()
+            return
+        var term = find_child("SubroutineTerminal", true, false)
+        if term and term.visible:
+            term.toggle_terminal()
+            get_viewport().set_input_as_handled()
+            return
         _toggle_pause()
     elif event is InputEventKey and event.pressed and not event.echo:
         if event.keycode == KEY_F12:

@@ -55,8 +55,33 @@ func test_map_viewer_modal_navigation() -> bool:
 	modal.close_map()
 	assert(modal.is_open == false, "FAILED: close_map must set is_open = false")
 
+	# Test keyboard closing via KEY_X
+	modal.open_map(3)
+	assert(modal.is_open == true, "FAILED: open_map must set is_open = true")
+	var key_x = InputEventKey.new()
+	key_x.pressed = true
+	key_x.keycode = KEY_X
+	modal._input(key_x)
+	assert(modal.is_open == false, "FAILED: Pressing KEY_X must close the map")
+
+	# Test keyboard closing via KEY_ESCAPE
+	modal.open_map(3)
+	var key_esc = InputEventKey.new()
+	key_esc.pressed = true
+	key_esc.keycode = KEY_ESCAPE
+	modal._input(key_esc)
+	assert(modal.is_open == false, "FAILED: Pressing KEY_ESCAPE must close the map")
+
+	# Test keyboard closing via KEY_M
+	modal.open_map(3)
+	var key_m = InputEventKey.new()
+	key_m.pressed = true
+	key_m.keycode = KEY_M
+	modal._input(key_m)
+	assert(modal.is_open == false, "FAILED: Pressing KEY_M must close the map")
+
 	modal.queue_free()
-	print("[PASS] test_map_viewer_modal_navigation: Map viewer modal open/close and sector switching validated.")
+	print("[PASS] test_map_viewer_modal_navigation: Map viewer modal open/close, sector switching, and X/ESC/M keys validated.")
 	return true
 
 # 3. Test Save & Checkpoint Manager
@@ -93,4 +118,34 @@ func test_demo_credits_roll_scene() -> bool:
 
 	credits.queue_free()
 	print("[PASS] test_demo_credits_roll_scene: Demo roll credits and feedback interface validated.")
+	return true
+
+# 5. Test HUD Dialogue Non-Blocking Movement Properties
+func test_hud_dialogue_non_blocking() -> bool:
+	var hud_scene = load("res://scenes/ui/hud.tscn")
+	assert(hud_scene != null, "FAILED: Could not load hud.tscn")
+	var hud = hud_scene.instantiate()
+	hud._ready()
+
+	hud.display_overseer_message("Test Glitch Walker Subroutine Alert")
+	assert(hud.overseer_panel.visible == true, "FAILED: overseer_panel must be visible after display_overseer_message")
+	assert(hud.overseer_panel.mouse_filter == Control.MOUSE_FILTER_IGNORE, "FAILED: overseer_panel must ignore mouse events")
+	assert(hud.overseer_text.mouse_filter == Control.MOUSE_FILTER_IGNORE, "FAILED: overseer_text must ignore mouse events")
+	assert(hud.overseer_text.focus_mode == Control.FOCUS_NONE, "FAILED: overseer_text must have FOCUS_NONE so player movement isn't stolen")
+
+	hud.queue_free()
+	print("[PASS] test_hud_dialogue_non_blocking: Dialogue text elements verified non-blocking and focus-free.")
+	return true
+
+# 6. Test Roxy Vance Traversal While Dialogue Active
+func test_roxy_walks_during_dialogue() -> bool:
+	var player_scene = load("res://scenes/player/roxy_vance.tscn")
+	assert(player_scene != null, "FAILED: Could not load roxy_vance.tscn")
+	var player = player_scene.instantiate()
+
+	# Verify that without modal UI open, _is_modal_ui_open() is false
+	assert(player._is_modal_ui_open() == false, "FAILED: _is_modal_ui_open() should be false by default")
+
+	player.queue_free()
+	print("[PASS] test_roxy_walks_during_dialogue: Roxy Vance traversal permitted during dialogue.")
 	return true

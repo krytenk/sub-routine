@@ -183,6 +183,8 @@ func _physics_process(delta: float) -> void:
 		player_available = false
 	if player_available and "is_invulnerable" in current_target and current_target.is_invulnerable:
 		player_available = false
+	if player_available and current_target.has_method("_is_modal_ui_open") and current_target._is_modal_ui_open():
+		player_available = false
 
 	# Ambient glitched canine barks
 	bark_timer -= delta

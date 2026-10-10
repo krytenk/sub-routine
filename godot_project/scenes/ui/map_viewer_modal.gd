@@ -124,19 +124,29 @@ func _on_next_pressed() -> void:
 	current_sector_index = 1 if current_sector_index >= 9 else (current_sector_index + 1)
 	_update_display()
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if not is_open:
 		if event.is_action_pressed("toggle_map"):
 			toggle_map()
 			get_viewport().set_input_as_handled()
 		return
 
+	# Handle closing map via X key, ESC, M key, E key, Space, Enter, or actions
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_X or event.keycode == KEY_ESCAPE or event.keycode == KEY_M or event.keycode == KEY_E or event.keycode == KEY_SPACE or event.keycode == KEY_ENTER:
+			close_map()
+			get_viewport().set_input_as_handled()
+			return
+		elif event.keycode == KEY_A or event.keycode == KEY_LEFT:
+			_on_prev_pressed()
+			get_viewport().set_input_as_handled()
+			return
+		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
+			_on_next_pressed()
+			get_viewport().set_input_as_handled()
+			return
+
 	if event.is_action_pressed("toggle_map") or event.is_action_pressed("pause_game") or event.is_action_pressed("interact"):
 		close_map()
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("move_left"):
-		_on_prev_pressed()
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("move_right"):
-		_on_next_pressed()
-		get_viewport().set_input_as_handled()
+		return

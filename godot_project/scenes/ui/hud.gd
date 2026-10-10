@@ -135,6 +135,10 @@ func display_overseer_message(message: String, _clip_name: String = "") -> void:
 	if overseer_panel and overseer_text:
 		overseer_title.text = "[ THE OVERSEER - RUNTIME DEV AI ]"
 		overseer_text.text = "[shake rate=15.0 level=4]" + message + "[/shake]"
+		overseer_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		overseer_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		overseer_text.focus_mode = Control.FOCUS_NONE
+		overseer_text.release_focus()
 		overseer_panel.visible = true
 		var dur: float = 5.5
 		if is_inside_tree() and has_node("/root/AudioManager"):

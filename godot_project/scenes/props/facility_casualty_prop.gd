@@ -144,9 +144,12 @@ func interact(_player: CharacterBody3D = null) -> void:
 		var text = "[ %s ]\n\"%s\"" % [technician_name.to_upper(), log_entry]
 		hud.display_overseer_message(text, "overseer_casualty_inspect")
 	
-	# Comment from Overseer
-	if is_inside_tree() and has_node("/root/TheOverseer"):
-		get_node("/root/TheOverseer").trigger_dialogue("casualty_inspect")
+	# Comment from Overseer (delayed so the player can read the technician log first)
+	if is_inside_tree() and has_node("/root/TheOverseer") and get_tree():
+		get_tree().create_timer(4.5).timeout.connect(func():
+			if is_inside_tree() and has_node("/root/TheOverseer"):
+				get_node("/root/TheOverseer").trigger_dialogue("casualty_inspect")
+		)
 		
 	# Scavenge component if present
 	if not holds_generator_part.is_empty() and not has_been_searched:

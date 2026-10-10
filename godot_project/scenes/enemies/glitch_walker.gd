@@ -220,13 +220,20 @@ func stagger(duration: float = 8.5) -> void:
     print("[GlitchWalker] Staggered by EMP burst! AI loop frozen for ", duration, "s.")
 
 func _physics_process(delta: float) -> void:
-    # If Subroutine Terminal UI is open, freeze pursuit so player can enter cipher undisturbed
+    # If Map Viewer or Subroutine Terminal modal is open, freeze pursuit so player can inspect undisturbed
     if is_inside_tree():
-        var term = get_tree().root.find_child("SubroutineTerminal", true, false)
-        if term and term.visible:
-            velocity = Vector3.ZERO
-            _update_stalk_animation(delta)
-            return
+        var root = get_tree().root
+        if root:
+            var map_modal = root.find_child("MapViewerModal", true, false)
+            if map_modal and ("is_open" in map_modal and map_modal.is_open or map_modal.visible):
+                velocity = Vector3.ZERO
+                _update_stalk_animation(delta)
+                return
+            var term = root.find_child("SubroutineTerminal", true, false)
+            if term and term.visible:
+                velocity = Vector3.ZERO
+                _update_stalk_animation(delta)
+                return
 
     # Stun state from EMP blast
     if is_stunned:

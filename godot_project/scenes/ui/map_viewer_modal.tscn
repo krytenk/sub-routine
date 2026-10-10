@@ -18,6 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 color = Color(0.015, 0.03, 0.05, 0.95)
 
 [node name="VBox" type="VBoxContainer" parent="."]
@@ -31,30 +32,38 @@ offset_right = -12.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_constants/separation = 4
 
 [node name="TopBar" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="HeaderLabel" type="Label" parent="VBox/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.2, 0.9, 0.95, 1)
 theme_override_font_sizes/font_size = 14
 text = "[ SUB-ROUTINE ARCHITECTURAL BLUEPRINT ARCHIVE ]"
 
 [node name="CloseBtn" type="Button" parent="VBox/TopBar"]
+custom_minimum_size = Vector2(100, 28)
 layout_mode = 2
+mouse_filter = 0
 theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
 theme_override_font_sizes/font_size = 12
 text = "[ X CLOSE ]"
 
 [node name="NavBar" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 12
 
 [node name="PrevBtn" type="Button" parent="VBox/NavBar"]
+custom_minimum_size = Vector2(80, 24)
 layout_mode = 2
+mouse_filter = 0
 theme_override_colors/font_color = Color(0.3, 0.85, 1, 1)
 theme_override_font_sizes/font_size = 11
 text = "< PREV"
@@ -62,13 +71,16 @@ text = "< PREV"
 [node name="SectorTitleLabel" type="Label" parent="VBox/NavBar"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
 theme_override_font_sizes/font_size = 13
 text = "SECTOR 01: SUBTERRANEAN BIOS BOOT"
 horizontal_alignment = 1
 
 [node name="NextBtn" type="Button" parent="VBox/NavBar"]
+custom_minimum_size = Vector2(80, 24)
 layout_mode = 2
+mouse_filter = 0
 theme_override_colors/font_color = Color(0.3, 0.85, 1, 1)
 theme_override_font_sizes/font_size = 11
 text = "NEXT >"
@@ -76,11 +88,13 @@ text = "NEXT >"
 [node name="BlueprintDisplay" type="TextureRect" parent="VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
 [node name="SectorDescLabel" type="Label" parent="VBox"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.7, 0.8, 0.85, 1)
 theme_override_font_sizes/font_size = 10
 text = "Cold Boot Chamber, Primary Bus Corridor, and Coolant Pump Bay."
@@ -88,11 +102,14 @@ horizontal_alignment = 1
 
 [node name="FooterBar" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="HelpLabel" type="Label" parent="VBox/FooterBar"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.4, 0.6, 0.65, 1)
 theme_override_font_sizes/font_size = 9
-text = "[M / ESC / E] Close Map  |  [A / D] Previous / Next Sector"
+text = "[X / ESC / M / E] Close Map  |  [A / D] Previous / Next Sector  |  Click [X CLOSE]"
 horizontal_alignment = 1
+

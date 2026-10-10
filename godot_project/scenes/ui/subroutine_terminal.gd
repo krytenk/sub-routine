@@ -61,14 +61,14 @@ func reset_terminal() -> void:
 func _input(event: InputEvent) -> void:
 	if not visible:
 		if event is InputEventKey and event.pressed and not event.echo:
-			if event.keycode == KEY_M or event.keycode == KEY_TAB:
+			if event.keycode == KEY_TAB:
 				toggle_terminal()
 				get_viewport().set_input_as_handled()
 		return
 
 	# When terminal is visible, capture all keyboard inputs with priority
 	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_ESCAPE or event.keycode == KEY_TAB:
+		if event.keycode == KEY_ESCAPE or event.keycode == KEY_TAB or event.keycode == KEY_X:
 			toggle_terminal()
 			get_viewport().set_input_as_handled()
 			return

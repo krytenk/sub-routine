@@ -102,7 +102,7 @@ func _ready() -> void:
     health_changed.emit(current_health, max_health)
     stamina_changed.emit(current_stamina, max_stamina)
     _setup_limbs()
-    if not _is_terminal_open():
+    if not _is_modal_ui_open():
         Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
     else:
         Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -153,19 +153,21 @@ func _setup_limbs() -> void:
 func _input(event: InputEvent) -> void:
     # Click to capture mouse if window lost focus
     if event is InputEventMouseButton and event.pressed:
-        if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and not _is_terminal_open():
+        if _is_modal_ui_open():
+            return
+        if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
             Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
             get_viewport().set_input_as_handled()
             return
 
     # Toggle camera view between 3rd-Person and 1st-Person with 'V'
     if event is InputEventKey and event.pressed and not event.echo:
-        if event.keycode == KEY_V and not _is_terminal_open():
+        if event.keycode == KEY_V and not _is_modal_ui_open():
             toggle_camera_perspective()
             get_viewport().set_input_as_handled()
             return
         # Emergency unstuck hotkey with 'U' or 'F1'
-        if (event.keycode == KEY_U or event.keycode == KEY_F1) and not _is_terminal_open():
+        if (event.keycode == KEY_U or event.keycode == KEY_F1) and not _is_modal_ui_open():
             execute_unstuck()
             get_viewport().set_input_as_handled()
             return
@@ -206,7 +208,7 @@ func execute_unstuck() -> void:
         get_node("/root/TheOverseer").trigger_dialogue("unstuck_recovered", "Thread deadlock resolved. Resuming runtime traversal.")
 
 func _unhandled_input(event: InputEvent) -> void:
-    if _is_terminal_open():
+    if _is_modal_ui_open():
         return
     if event is InputEventMouseMotion:
         if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
@@ -234,7 +236,7 @@ func _physics_process(delta: float) -> void:
         _update_walk_animation(delta, 0.0)
         return
 
-    if _is_terminal_open():
+    if _is_modal_ui_open():
         velocity.x = 0
         velocity.z = 0
         move_and_slide()
@@ -597,7 +599,7 @@ func jump() -> bool:
     if is_crouching:
         set_crouch(false)
         return false
-    if not is_on_floor() or is_hiding or is_dead or _is_terminal_open():
+    if not is_on_floor() or is_hiding or is_dead or _is_modal_ui_open():
         return false
     var jump_force = jump_velocity
     if is_exhausted or current_stamina < 6.0:
@@ -778,22 +780,37 @@ func _apply_camera_perspective() -> void:
         if ray:
             ray.target_position = Vector3(0, 0, -3.2)
 
-func _is_terminal_open() -> bool:
+func _is_modal_ui_open() -> bool:
     if not is_inside_tree():
         return false
-    var term = get_tree().root.find_child("SubroutineTerminal", true, false)
-    if term != null and term.visible:
+    var root = get_tree().root
+    if not root:
+        return false
+    var map_modal = root.find_child("MapViewerModal", true, false)
+    if map_modal and ("is_open" in map_modal and map_modal.is_open or map_modal.visible):
         return true
-    var intro = get_tree().root.find_child("IntroSequence", true, false)
-    if intro != null and intro.visible:
+    var pause = root.find_child("PauseMenu", true, false)
+    if pause and pause.visible:
+        return true
+    var term = root.find_child("SubroutineTerminal", true, false)
+    if term and term.visible:
+        return true
+    var intro = root.find_child("IntroSequence", true, false)
+    if intro and intro.visible:
+        return true
+    var credits = root.find_child("DemoCreditsRoll", true, false)
+    if credits and credits.visible:
         return true
     return false
+
+func _is_terminal_open() -> bool:
+    return _is_modal_ui_open()
 
 func _update_walk_animation(delta: float, target_speed: float) -> void:
     var h_speed = Vector2(velocity.x, velocity.z).length()
     var on_ground = is_on_floor()
 
-    if on_ground and h_speed > 0.15 and not is_dead and not _is_terminal_open():
+    if on_ground and h_speed > 0.15 and not is_dead and not _is_modal_ui_open():
         # Advance walk cycle rhythm proportional to ground movement speed
         walk_cycle_phase += delta * h_speed * 2.8
         var swing = sin(walk_cycle_phase)
@@ -830,7 +847,7 @@ func _update_walk_animation(delta: float, target_speed: float) -> void:
             arm_l.position.y = rest_arm_l_pos.y - bob
         if arm_r:
             arm_r.position.y = rest_arm_r_pos.y - bob
-    elif not on_ground and not is_dead and not _is_terminal_open():
+    elif not on_ground and not is_dead and not _is_modal_ui_open():
         # Airborne jump/falling pose: tuck legs slightly and raise arms
         var air_blend = clampf(delta * 7.0, 0.0, 1.0)
         if leg_l:
