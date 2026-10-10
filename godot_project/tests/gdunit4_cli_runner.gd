@@ -20,7 +20,8 @@ const TEST_FILES = [
 	"test_sector_05_and_elevator.gd",
 	"test_sector_06_and_emp_upgrade.gd",
 	"test_sector_07_ducts_and_boss.gd",
-	"test_sector_08_and_09_stalking.gd"
+	"test_sector_08_and_09_stalking.gd",
+	"test_maps_saves_and_credits.gd"
 ]
 
 func _init() -> void:

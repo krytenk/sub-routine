@@ -126,6 +126,12 @@ func complete_current_level() -> void:
     level_completed.emit(current_level_index)
     print("[LevelManager] Level ", current_level_index, " COMPLETED! Advancing to next sector...")
     
+    if current_level_index >= 9:
+        print("[LevelManager] Sector 09 cleared! Transitioning to Early Access Roll Credits.")
+        if is_inside_tree():
+            get_tree().change_scene_to_file("res://scenes/ui/demo_credits_roll.tscn")
+        return
+
     if current_level_index < EXPANSION_PACK_1_LEVELS:
         load_level(current_level_index + 1)
     else:

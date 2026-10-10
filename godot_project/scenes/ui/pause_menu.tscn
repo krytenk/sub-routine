@@ -87,6 +87,18 @@ layout_mode = 2
 layout_mode = 2
 text = "Resume Execution"
 
+[node name="ViewMapButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "View Sector Blueprint [M]"
+
+[node name="SaveButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Save Checkpoint"
+
+[node name="LoadButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Reload Checkpoint"
+
 [node name="RestartButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Recompile Sector (Restart)"

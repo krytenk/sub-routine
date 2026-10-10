@@ -24,6 +24,7 @@
 [ext_resource type="Script" path="res://scripts/sector_backtrack_trigger.gd" id="22_backtrack"]
 [ext_resource type="PackedScene" path="res://scenes/props/facility_casualty_prop.tscn" id="23_casualty"]
 [ext_resource type="PackedScene" path="res://scenes/props/generator_part_pickup.tscn" id="24_gen_part"]
+[ext_resource type="PackedScene" path="res://scenes/props/wall_map_panel_prop.tscn" id="25_wall_map"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_texture = ExtResource("4_rust_tex")
@@ -718,6 +719,10 @@ mesh = SubResource("BoxMesh_substation_table")
 [node name="GeneratorPart_Coolant" parent="Props" instance=ExtResource("24_gen_part")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 4.3, 7.5)
 part_type = "coolant"
+
+[node name="WallMapPanel" parent="Props" instance=ExtResource("25_wall_map")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 2.2, -13.5)
+sector_index = 2
 
 [node name="OverseerZone_Entry" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, -12)

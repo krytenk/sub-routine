@@ -22,6 +22,7 @@
 [ext_resource type="Script" path="res://scripts/overseer_trigger_zone.gd" id="20_overseer_zone"]
 [ext_resource type="Script" path="res://scripts/sector_backtrack_trigger.gd" id="21_backtrack"]
 [ext_resource type="PackedScene" path="res://scenes/props/facility_casualty_prop.tscn" id="22_casualty"]
+[ext_resource type="PackedScene" path="res://scenes/props/wall_map_panel_prop.tscn" id="23_wall_map"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_texture = ExtResource("4_rust_tex")
@@ -317,6 +318,9 @@ casualty_style = "curled"
 technician_name = "Surveyor K. Lowell (Cartographic Mapping)"
 log_entry = "Looking down from here, you can see the entire chasm pulsing with corruption. There is no surface... it's just more layers of silicon and bone..."
 
+[node name="WallMapPanel" parent="Props" instance=ExtResource("23_wall_map")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0.5, -13.5)
+sector_index = 3
 
 [node name="OverseerZone_Entry" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -12)

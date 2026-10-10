@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/coolant_pipe_prop.tscn" id="15_pipe"]
 [ext_resource type="Script" path="res://scripts/sector_backtrack_trigger.gd" id="16_backtrack"]
 [ext_resource type="Script" path="res://scripts/sector_exit_trigger.gd" id="17_exit"]
+[ext_resource type="PackedScene" path="res://scenes/props/wall_map_panel_prop.tscn" id="18_wall_map"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_texture = ExtResource("3_rust_tex")
@@ -347,6 +348,10 @@ upgrade_id = "emp_capacitor_mk2"
 
 [node name="VaultCompilationTerminal" parent="VaultTerminal" instance=ExtResource("9_crt")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1, 0.5, 13)
+
+[node name="WallMapPanel" parent="VaultTerminal" instance=ExtResource("18_wall_map")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 13)
+sector_index = 6
 
 [node name="TransitExitGate" type="Node3D" parent="."]
 

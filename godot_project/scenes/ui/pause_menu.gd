@@ -6,6 +6,9 @@ extends Control
 @onready var difficulty_val_label: Label = $CenterContainer/Panel/MarginContainer/VBoxContainer/SliderContainer/DifficultyValLabel
 @onready var multiplier_summary: Label = $CenterContainer/Panel/MarginContainer/VBoxContainer/MultiplierSummary
 @onready var resume_button: Button = $CenterContainer/Panel/MarginContainer/VBoxContainer/ResumeButton
+@onready var view_map_button: Button = $CenterContainer/Panel/MarginContainer/VBoxContainer/ViewMapButton
+@onready var save_button: Button = $CenterContainer/Panel/MarginContainer/VBoxContainer/SaveButton
+@onready var load_button: Button = $CenterContainer/Panel/MarginContainer/VBoxContainer/LoadButton
 @onready var restart_button: Button = $CenterContainer/Panel/MarginContainer/VBoxContainer/RestartButton
 @onready var quit_button: Button = $CenterContainer/Panel/MarginContainer/VBoxContainer/QuitButton
 
@@ -18,10 +21,36 @@ func _ready() -> void:
 
     if resume_button:
         resume_button.pressed.connect(_on_resume_pressed)
+    if view_map_button:
+        view_map_button.pressed.connect(_on_view_map_pressed)
+    if save_button:
+        save_button.pressed.connect(_on_save_pressed)
+    if load_button:
+        load_button.pressed.connect(_on_load_pressed)
     if restart_button:
         restart_button.pressed.connect(_on_restart_pressed)
     if quit_button:
         quit_button.pressed.connect(_on_quit_pressed)
+
+func _on_view_map_pressed() -> void:
+    get_tree().paused = false
+    visible = false
+    var map_modal = null
+    if is_inside_tree() and get_tree().root:
+        map_modal = get_tree().root.find_child("MapViewerModal", true, false)
+    if map_modal and map_modal.has_method("open_map"):
+        map_modal.open_map()
+
+func _on_save_pressed() -> void:
+    if has_node("/root/SaveManager"):
+        get_node("/root/SaveManager").save_game()
+
+func _on_load_pressed() -> void:
+    if has_node("/root/SaveManager"):
+        get_node("/root/SaveManager").load_game()
+        get_tree().paused = false
+        visible = false
+        Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _on_slider_value_changed(val: float) -> void:
     if has_node("/root/DifficultyManager"):

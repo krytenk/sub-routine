@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="16" fill="#0b0e14"/>
+  <rect x="8" y="8" width="112" height="112" rx="12" fill="#131924" stroke="#00ffcc" stroke-width="2"/>
+  <text x="64" y="60" font-family="monospace" font-size="28" font-weight="bold" fill="#00ffcc" text-anchor="middle">SUB</text>
+  <text x="64" y="88" font-family="monospace" font-size="18" font-weight="bold" fill="#ff3366" text-anchor="middle">ROUTINE</text>
+  <circle cx="64" cy="106" r="4" fill="#00e5ff"/>
+</svg>

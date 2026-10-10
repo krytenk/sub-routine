@@ -95,6 +95,11 @@ crouch={
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":4194326,"physical_keycode":4194326,"key_label":0,"unicode":0,"echo":false,"script":null)
 ]
 }
+toggle_map={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":77,"physical_keycode":77,"key_label":0,"unicode":109,"echo":false,"script":null)
+]
+}
 
 [autoload]
 
@@ -102,3 +107,4 @@ AudioManager="*res://scripts/audio_manager.gd"
 DifficultyManager="*res://scripts/difficulty_manager.gd"
 TheOverseer="*res://scripts/the_overseer.gd"
 LevelManager="*res://scripts/level_manager.gd"
+SaveManager="*res://scripts/save_manager.gd"

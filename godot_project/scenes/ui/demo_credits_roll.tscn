@@ -1,0 +1,149 @@
+[gd_scene load_steps=2 format=3 uid="uid://subroutine_ui_demo_credits"]
+
+[ext_resource type="Script" path="res://scenes/ui/demo_credits_roll.gd" id="1_credits_script"]
+
+[node name="DemoCreditsRoll" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_credits_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.015, 0.025, 0.04, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="HeaderLabel" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "[ SUB-ROUTINE // KERNEL SUSPENDED ]"
+horizontal_alignment = 1
+
+[node name="SubHeaderLabel" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "EARLY ACCESS PREVIEW COMPLETE — SECTORS 01 TO 09 CLEARED"
+horizontal_alignment = 1
+
+[node name="EpilogueLabel" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.8, 0.85, 1)
+theme_override_font_sizes/font_size = 10
+text = "Roxy Vance has survived the subterranean depths, bypassed the multi-thread deadlock, and stands before the Sub-Routine Core threshold.
+The Overseer has fallen silent... but the complex is awakening.
+Stay tuned for Expansion: Sectors 10 through 20!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HSeparator1" type="HSeparator" parent="ScrollContainer/VBox"]
+layout_mode = 2
+
+[node name="CreditsTitle" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 12
+text = "DEVELOPMENT CREDITS"
+horizontal_alignment = 1
+
+[node name="CreditsBody" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+text = "DIRECTED & DESIGNED BY: KrytenK
+ENGINE ARCHITECTURE & PAIR-PROGRAMMING: Google DeepMind Antigravity Agent & KrytenK
+VOICE ACTING & PROCEDURAL VO: The Overseer Audio Engine
+GRAPHICS & AESTHETIC: PS1 Lo-Fi Survival Horror Engine"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="ScrollContainer/VBox"]
+layout_mode = 2
+
+[node name="StatsTitle" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 12
+text = "MISSION PERFORMANCE SUMMARY"
+horizontal_alignment = 1
+
+[node name="StatsLabel" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 10
+text = "SECTORS CONQUERED: 09 / 09
+EMP ARSENAL: MK V (Zero-Point Resonant Core)
+FACILITY STATUS: Thread Lock Bypassed // Core Threshold Reached"
+horizontal_alignment = 1
+
+[node name="HSeparator3" type="HSeparator" parent="ScrollContainer/VBox"]
+layout_mode = 2
+
+[node name="FeedbackTitle" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.4, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "COMMUNITY FEEDBACK & EARLY ACCESS"
+horizontal_alignment = 1
+
+[node name="FeedbackBody" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.75, 0.8, 1)
+theme_override_font_sizes/font_size = 10
+text = "This is an active work-in-progress. Your feedback directly shapes future sectors, bosses, and survival mechanics!
+Please share your impressions, bug reports, and difficulty critique on GitHub:
+https://github.com/krytenk/sub-routine"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StatusMsg" type="Label" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+horizontal_alignment = 1
+
+[node name="ButtonContainer" type="HBoxContainer" parent="ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="RestartBtn" type="Button" parent="ScrollContainer/VBox/ButtonContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "[ RESTART FROM SEC 01 ]"
+
+[node name="CheckpointBtn" type="Button" parent="ScrollContainer/VBox/ButtonContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 11
+text = "[ RELOAD CHECKPOINT ]"
+
+[node name="CopyLinkBtn" type="Button" parent="ScrollContainer/VBox/ButtonContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 11
+text = "[ COPY GITHUB LINK ]"

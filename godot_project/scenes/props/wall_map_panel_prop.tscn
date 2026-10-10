@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://subroutine_prop_wall_map_panel"]
+
+[ext_resource type="Script" path="res://scenes/props/wall_map_panel_prop.gd" id="1_panel_script"]
+
+[node name="WallMapPanelProp" type="Node3D"]
+script = ExtResource("1_panel_script")

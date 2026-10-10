@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://c7subroutinehud01" path="res://scenes/ui/hud.tscn" id="3_hud"]
 [ext_resource type="PackedScene" uid="uid://d3subpausemenu01" path="res://scenes/ui/pause_menu.tscn" id="4_pause"]
 [ext_resource type="PackedScene" uid="uid://dmaptrmnl01" path="res://scenes/ui/subroutine_terminal.tscn" id="5_terminal"]
+[ext_resource type="PackedScene" path="res://scenes/ui/map_viewer_modal.tscn" id="6_map_modal"]
 
 [sub_resource type="Environment" id="Environment_main"]
 background_mode = 1
@@ -34,4 +35,7 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.5, -10)
 visible = false
 
 [node name="SubroutineTerminal" parent="." instance=ExtResource("5_terminal")]
+visible = false
+
+[node name="MapViewerModal" parent="." instance=ExtResource("6_map_modal")]
 visible = false

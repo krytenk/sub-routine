@@ -59,6 +59,11 @@ func _on_level_loaded(level_index: int, level_node: Node) -> void:
     if hud and hud.has_method("update_objective") and level_index > 1:
         hud.update_objective("Sector %02d: Recover Corrupted Memory Registers" % level_index)
 
+    if has_node("/root/SaveManager"):
+        var sm = get_node("/root/SaveManager")
+        if not sm.is_loading_save and level_index > 1:
+            sm.save_game("Sector %02d Checkpoint" % level_index)
+
     if "--capture-screenshot" in OS.get_cmdline_args():
         get_tree().create_timer(1.2).timeout.connect(func():
             var intro = find_child("IntroSequence", true, false)
@@ -81,7 +86,13 @@ func _on_overseer_dialogue(text: String, audio_stream_name: String) -> void:
         hud.display_overseer_message(text, audio_stream_name)
 
 func _unhandled_input(event: InputEvent) -> void:
-    if event.is_action_pressed("pause_game"):
+    if event.is_action_pressed("toggle_map"):
+        var map_modal = find_child("MapViewerModal", true, false)
+        if map_modal:
+            map_modal.toggle_map()
+            get_viewport().set_input_as_handled()
+            return
+    elif event.is_action_pressed("pause_game"):
         _toggle_pause()
     elif event is InputEventKey and event.pressed and not event.echo:
         if event.keycode == KEY_F12:

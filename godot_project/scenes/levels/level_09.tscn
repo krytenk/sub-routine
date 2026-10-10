@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/broken_server_rack_prop.tscn" id="16_rack"]
 [ext_resource type="Script" path="res://scripts/sector_backtrack_trigger.gd" id="17_backtrack"]
 [ext_resource type="Script" path="res://scripts/sector_exit_trigger.gd" id="18_exit"]
+[ext_resource type="PackedScene" path="res://scenes/props/wall_map_panel_prop.tscn" id="19_wall_map"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_metal_catwalk"]
 albedo_texture = ExtResource("3_rust_tex")
@@ -311,6 +312,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 20)
 
 [node name="BrokenRack1" parent="Atmosphere" instance=ExtResource("16_rack")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 2)
+
+[node name="WallMapPanel" parent="Atmosphere" instance=ExtResource("19_wall_map")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -21.8)
+sector_index = 9
 
 [node name="BacktrackGate" type="Node3D" parent="."]
 
