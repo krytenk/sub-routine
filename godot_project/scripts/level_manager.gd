@@ -9,6 +9,7 @@ signal level_completed(level_index: int)
 const TOTAL_ROADMAP_LEVELS: int = 120
 const LAUNCH_DAY_LEVELS: int = 20
 const EXPANSION_PACK_1_LEVELS: int = 40
+const DEMO_END_LEVEL_INDEX: int = 12
 const TARGET_GAMEPLAY_MINUTES_PER_LEVEL: int = 30
 
 var current_level_index: int = 1
@@ -19,6 +20,18 @@ var installed_generator_parts: Array = []
 var is_generator_running: bool = false
 var emp_upgrade_level: int = 1
 var singularity_parts: Array = []
+var pending_checkpoint_reload: bool = false
+var pending_restart_campaign: bool = false
+
+func reset_campaign_state() -> void:
+    current_level_index = 1
+    completed_levels.clear()
+    generator_parts.clear()
+    installed_generator_parts.clear()
+    is_generator_running = false
+    emp_upgrade_level = 1
+    singularity_parts.clear()
+    print("[LevelManager] Campaign state reset to clean Sector 01 parameters.")
 
 func add_generator_part(part_key: String) -> void:
     if not generator_parts.has(part_key):
@@ -126,8 +139,8 @@ func complete_current_level() -> void:
     level_completed.emit(current_level_index)
     print("[LevelManager] Level ", current_level_index, " COMPLETED! Advancing to next sector...")
     
-    if current_level_index >= 9:
-        print("[LevelManager] Sector 09 cleared! Transitioning to Early Access Roll Credits.")
+    if current_level_index >= DEMO_END_LEVEL_INDEX:
+        print("[LevelManager] Sector ", current_level_index, " cleared! Transitioning to Early Access Roll Credits.")
         if is_inside_tree():
             get_tree().change_scene_to_file("res://scenes/ui/demo_credits_roll.tscn")
         return

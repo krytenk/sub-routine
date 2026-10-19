@@ -58,7 +58,14 @@ const OVERSEER_LINES = {
     "emp_mk4": "Sub-Harmonic Inductor Matrix synchronized. Cascading shockwaves unlocked. You'll need every microsecond of stun duration for what's coming.",
     "welcome_sec9": "Sector Nine: Thread Lock Abyss. Infinite deadlock. Two threads waiting on the same mutex forever. Don't fall into the chasm.",
     "emp_mk5": "Zero-Point Resonant Core integrated. You are holding an electromagnetic nova in your palm. The endgame approaches.",
-    "deadlock_unlocked": "Deadlock resolved. The mutex is released. Transit gate to the Core threshold is open."
+    "deadlock_unlocked": "Deadlock resolved. The mutex is released. Transit gate to the Core threshold is open.",
+    "welcome_sec10": "Sector Ten: The Clock Cycle Foundry. Three gigahertz of raw thermal resonance. Every tick of the oscillator drives the horde faster, Roxy. Synchronize the quartz relays before the heat cooks you alive.",
+    "foundry_synced": "Oscillator phase locked. You stabilized the clock divider, Roxy, but you just opened the direct memory bus to the Panopticon.",
+    "welcome_sec11": "Sector Eleven: DMA Controller Trench. Welcome to the Panopticon. Every camera, every shadow that trailed you from Sector One converges here. There is nowhere left to hide.",
+    "panopticon_override": "Direct Memory Access overridden. You bypassed my surveillance array... Impressive. Step into the Core Threshold, Roxy. Let us meet face to face.",
+    "welcome_sec12": "Sector Twelve: The Sub-Routine Core Threshold. Behold the Kernel Warden. Your standard EMP pulses cannot pierce my phase-shield until the harmonic cooling pylons are overloaded. Prepare for garbage collection.",
+    "boss_phase2": "Warning: Harmonic cooling pylon overloaded! Core temperature critical! Unleashing emergency security threads—terminate her immediately!",
+    "boss_defeated": "Critical Kernel Panic! Primary Overseer avatar collapsing... You shattered the outer shell, Roxy Vance, but the deeper memory partitions are already waking up."
 }
 
 var last_played_clip: String = ""

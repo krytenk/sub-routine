@@ -48,16 +48,16 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
 theme_override_font_sizes/font_size = 12
-text = "EARLY ACCESS PREVIEW COMPLETE — SECTORS 01 TO 09 CLEARED"
+text = "ACT I COMPLETE — SECTORS 01 TO 12 CLEARED"
 horizontal_alignment = 1
 
 [node name="EpilogueLabel" type="Label" parent="ScrollContainer/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.8, 0.85, 1)
 theme_override_font_sizes/font_size = 10
-text = "Roxy Vance has survived the subterranean depths, bypassed the multi-thread deadlock, and stands before the Sub-Routine Core threshold.
-The Overseer has fallen silent... but the complex is awakening.
-Stay tuned for Expansion: Sectors 10 through 20!"
+text = "Roxy Vance has survived the subterranean depths, conquered the Clock Cycle Foundry & DMA Panopticon, and shattered the Kernel Warden Avatar at the Sub-Routine Core Threshold.
+The Overseer's primary partition has collapsed... yet deeper memory sectors are already re-initializing.
+Stay tuned for Act II Expansion: Sectors 13 through 24!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -95,9 +95,9 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
 theme_override_font_sizes/font_size = 10
-text = "SECTORS CONQUERED: 09 / 09
+text = "SECTORS CONQUERED: 12 / 12 (Act I Complete)
 EMP ARSENAL: MK V (Zero-Point Resonant Core)
-FACILITY STATUS: Thread Lock Bypassed // Core Threshold Reached"
+FACILITY STATUS: Sub-Routine Core Threshold Breached // Act I Complete"
 horizontal_alignment = 1
 
 [node name="HSeparator3" type="HSeparator" parent="ScrollContainer/VBox"]

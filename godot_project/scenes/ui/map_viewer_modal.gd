@@ -43,8 +43,22 @@ const SECTOR_INFO = {
 	9: {
 		"title": "SECTOR 09: THREAD LOCK ABYSS & MULTI-THREAD CORE",
 		"desc": "Suspended Catwalk Abyss, Multi-Thread Deadlock Ring, Induction Observation Deck, and Core Gate."
+	},
+	10: {
+		"title": "SECTOR 10: CLOCK CYCLE FOUNDRY & OSCILLATOR HALL",
+		"desc": "High-Frequency Oscillator Piston Hall, Thermal Sync Chambers, and Quartz Timing Conduit."
+	},
+	11: {
+		"title": "SECTOR 11: DMA CONTROLLER TRENCH & PANOPTICON GAUNTLET",
+		"desc": "Direct Memory Access Bus Tunnels, Surveillance Panopticon Array, and Auxiliary Duct Bypass."
+	},
+	12: {
+		"title": "SECTOR 12: SUB-ROUTINE CORE THRESHOLD (ACT I BOSS)",
+		"desc": "Central Overseer Kernel Rotunda, Harmonic Cooling Pylons, Surge Discharge Ring, and Core Lift."
 	}
 }
+
+const MAX_MAPPED_SECTOR: int = 12
 
 var current_sector_index: int = 1
 var is_open: bool = false
@@ -69,11 +83,11 @@ func _ready() -> void:
 
 func open_map(sector_idx: int = -1) -> void:
 	if sector_idx > 0:
-		current_sector_index = clampi(sector_idx, 1, 9)
+		current_sector_index = clampi(sector_idx, 1, MAX_MAPPED_SECTOR)
 	else:
 		var lm = get_node_or_null("/root/LevelManager")
 		if lm:
-			current_sector_index = clampi(lm.current_level_index, 1, 9)
+			current_sector_index = clampi(lm.current_level_index, 1, MAX_MAPPED_SECTOR)
 		else:
 			current_sector_index = 1
 
@@ -117,11 +131,11 @@ func _update_display() -> void:
 		desc_label.text = info["desc"]
 
 func _on_prev_pressed() -> void:
-	current_sector_index = 9 if current_sector_index <= 1 else (current_sector_index - 1)
+	current_sector_index = MAX_MAPPED_SECTOR if current_sector_index <= 1 else (current_sector_index - 1)
 	_update_display()
 
 func _on_next_pressed() -> void:
-	current_sector_index = 1 if current_sector_index >= 9 else (current_sector_index + 1)
+	current_sector_index = 1 if current_sector_index >= MAX_MAPPED_SECTOR else (current_sector_index + 1)
 	_update_display()
 
 func _input(event: InputEvent) -> void:

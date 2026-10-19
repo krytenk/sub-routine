@@ -60,6 +60,13 @@ const KNOWN_VO_CLIPS: Array[String] = [
     "overseer_welcome_sec7",
     "overseer_welcome_sec8",
     "overseer_welcome_sec9",
+    "overseer_welcome_sec10",
+    "overseer_foundry_synced",
+    "overseer_welcome_sec11",
+    "overseer_panopticon_override",
+    "overseer_welcome_sec12",
+    "overseer_boss_phase2",
+    "overseer_boss_defeated",
     "overseer_wirehound_alert"
 ]
 

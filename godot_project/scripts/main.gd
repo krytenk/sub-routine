@@ -21,11 +21,29 @@ func _ready() -> void:
     if has_node("/root/LevelManager"):
         var lm = get_node("/root/LevelManager")
         lm.level_loaded.connect(_on_level_loaded)
-        var start_lvl = 1
-        for arg in OS.get_cmdline_args():
-            if arg.begins_with("--level="):
-                start_lvl = int(arg.trim_prefix("--level="))
-        lm.load_level(start_lvl)
+        if "pending_checkpoint_reload" in lm and lm.pending_checkpoint_reload:
+            lm.pending_checkpoint_reload = false
+            var intro = find_child("IntroSequence", true, false)
+            if intro:
+                intro.visible = false
+            if hud and "intro_active" in hud:
+                hud.intro_active = false
+            Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+            if has_node("/root/SaveManager") and get_node("/root/SaveManager").has_save_file():
+                get_node("/root/SaveManager").load_game()
+            else:
+                lm.load_level(1)
+        elif "pending_restart_campaign" in lm and lm.pending_restart_campaign:
+            lm.pending_restart_campaign = false
+            if lm.has_method("reset_campaign_state"):
+                lm.reset_campaign_state()
+            lm.load_level(1)
+        else:
+            var start_lvl = 1
+            for arg in OS.get_cmdline_args():
+                if arg.begins_with("--level="):
+                    start_lvl = int(arg.trim_prefix("--level="))
+            lm.load_level(start_lvl)
 
     if has_node("/root/TheOverseer"):
         var overseer = get_node("/root/TheOverseer")
@@ -50,6 +68,8 @@ func _on_level_loaded(level_index: int, level_node: Node) -> void:
             player.global_position = Vector3(0, 0.5, -12)
             player.rotation = Vector3(0, PI, 0)
         player.velocity = Vector3.ZERO
+        if lm and "emp_upgrade_level" in lm and player.has_method("set_emp_upgrade_level"):
+            player.set_emp_upgrade_level(lm.emp_upgrade_level)
         # Preserve player health across level transitions so survival horror mechanics matter
         player.health_changed.emit(player.current_health, player.max_health)
         player.stamina_changed.emit(player.current_stamina, player.max_stamina)

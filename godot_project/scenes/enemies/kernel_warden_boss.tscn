@@ -1,0 +1,105 @@
+[gd_scene load_steps=14 format=3 uid="uid://kernel_warden_boss_sec12"]
+
+[ext_resource type="Script" path="res://scenes/enemies/kernel_warden_boss.gd" id="1_boss"]
+[ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="2_server"]
+[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="3_rust"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_boss"]
+radius = 1.25
+height = 3.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chassis"]
+albedo_texture = ExtResource("2_server")
+albedo_color = Color(0.3, 0.35, 0.45, 1)
+metallic = 0.95
+roughness = 0.2
+uv1_scale = Vector3(2, 2, 2)
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_core"]
+albedo_color = Color(0.95, 0.15, 0.35, 1)
+emission_enabled = true
+emission = Color(1.0, 0.15, 0.35, 1)
+emission_energy_multiplier = 6.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shield"]
+transparency = 1
+albedo_color = Color(0.15, 0.85, 1.0, 0.45)
+emission_enabled = true
+emission = Color(0.2, 0.9, 1.0, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+material = SubResource("StandardMaterial3D_chassis")
+size = Vector3(2.2, 2.3, 1.5)
+
+[sub_resource type="SphereMesh" id="SphereMesh_core"]
+material = SubResource("StandardMaterial3D_core")
+radius = 0.45
+height = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_shield"]
+material = SubResource("StandardMaterial3D_shield")
+top_radius = 2.1
+bottom_radius = 2.1
+height = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_pylon_arm"]
+material = SubResource("StandardMaterial3D_chassis")
+size = Vector3(0.75, 2.4, 0.75)
+
+[sub_resource type="BoxMesh" id="BoxMesh_leg"]
+material = SubResource("StandardMaterial3D_chassis")
+size = Vector3(0.8, 2.0, 0.8)
+
+[node name="KernelWardenBoss" type="CharacterBody3D" groups=["bosses", "enemies"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_boss")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
+shape = SubResource("CapsuleShape3D_boss")
+
+[node name="VisualRoot" type="Node3D" parent="."]
+
+[node name="Torso" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0)
+mesh = SubResource("BoxMesh_torso")
+
+[node name="KernelCore" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0.78)
+mesh = SubResource("SphereMesh_core")
+
+[node name="KernelCoreLight" type="OmniLight3D" parent="VisualRoot/Torso/KernelCore"]
+light_color = Color(0.2, 0.85, 1.0, 1)
+light_energy = 5.5
+omni_range = 10.0
+
+[node name="PhaseShieldRing" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0)
+mesh = SubResource("CylinderMesh_shield")
+
+[node name="ShoulderPylonL" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.1, 0)
+mesh = SubResource("BoxMesh_pylon_arm")
+
+[node name="ShoulderPylonR" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.1, 0)
+mesh = SubResource("BoxMesh_pylon_arm")
+
+[node name="LegL" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.65, 1.0, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="LegR" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 1.0, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="SlamAudio" type="AudioStreamPlayer3D" parent="."]
+max_distance = 36.0
+volume_db = 4.0
+
+[node name="ExplodeAudio" type="AudioStreamPlayer3D" parent="."]
+max_distance = 45.0
+volume_db = 6.0

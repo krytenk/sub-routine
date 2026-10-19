@@ -44,6 +44,8 @@ func _ready() -> void:
 			p.stamina_changed.connect(_on_player_stamina_changed)
 		if p.has_signal("emp_cooldown_updated"):
 			p.emp_cooldown_updated.connect(_on_player_emp_cooldown_updated)
+			if "emp_current_timer" in p and "emp_cooldown" in p:
+				_on_player_emp_cooldown_updated(p.emp_current_timer, p.emp_cooldown)
 
 func _input(event: InputEvent) -> void:
 	if intro_active and intro_sequence and intro_sequence.visible:
@@ -173,7 +175,11 @@ func _set_crt_glitch(val: float) -> void:
 func _on_player_emp_cooldown_updated(current: float, max_val: float) -> void:
 	if emp_label:
 		var mk_text = "MK I"
-		if max_val <= 4.0:
+		if max_val <= 1.5:
+			mk_text = "MK V"
+		elif max_val <= 2.5:
+			mk_text = "MK IV"
+		elif max_val <= 4.0:
 			mk_text = "MK III"
 		elif max_val <= 6.0:
 			mk_text = "MK II"

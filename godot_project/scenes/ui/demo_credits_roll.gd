@@ -32,10 +32,10 @@ func _populate_stats() -> void:
 	if lm and "emp_upgrade_level" in lm:
 		emp_lvl = lm.emp_upgrade_level
 
-	var stats_text = "SECTORS CONQUERED: 09 / 09\n"
+	var stats_text = "SECTORS CONQUERED: 12 / 12 (Act I Complete)\n"
 	stats_text += "EMP ARSENAL: MK %s (Zero-Point Resonant Core)\n" % ("V" if emp_lvl >= 5 else "IV")
-	stats_text += "MAJOR ANOMALIES SURVIVED: Dredge Titan, Arch-Compiler Goliath, Wire Hounds, CyberHusks\n"
-	stats_text += "FACILITY STATUS: Thread Lock Bypassed // Core Threshold Reached"
+	stats_text += "MAJOR ANOMALIES SURVIVED: Dredge Titan, Arch-Compiler Goliath, Kernel Warden Avatar\n"
+	stats_text += "FACILITY STATUS: Sub-Routine Core Threshold Breached // Act I Complete"
 
 	if stats_label:
 		stats_label.text = stats_text
@@ -45,19 +45,20 @@ func _on_restart_pressed() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	var lm = get_node_or_null("/root/LevelManager")
 	if lm:
-		lm.load_level(1)
-	else:
+		lm.pending_restart_campaign = true
+		if lm.has_method("reset_campaign_state"):
+			lm.reset_campaign_state()
+	if is_inside_tree():
 		get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_checkpoint_pressed() -> void:
-	print("[Credits] Returning to Sector 09 Checkpoint...")
+	print("[Credits] Returning to saved Checkpoint...")
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	if has_node("/root/SaveManager"):
-		get_node("/root/SaveManager").load_game()
-	else:
-		var lm = get_node_or_null("/root/LevelManager")
-		if lm:
-			lm.load_level(9)
+	var lm = get_node_or_null("/root/LevelManager")
+	if lm:
+		lm.pending_checkpoint_reload = true
+	if is_inside_tree():
+		get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_copy_link_pressed() -> void:
 	DisplayServer.clipboard_set(GITHUB_URL)
