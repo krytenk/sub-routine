@@ -114,7 +114,7 @@ func test_demo_credits_roll_scene() -> bool:
 	assert(credits.restart_btn != null, "FAILED: Credits must include a restart button")
 	assert(credits.checkpoint_btn != null, "FAILED: Credits must include a reload checkpoint button")
 	assert(credits.copy_link_btn != null, "FAILED: Credits must include a copy link button")
-	assert(credits.stats_label.text.contains("12 / 12"), "FAILED: Stats label must reflect all 12 sectors cleared")
+	assert(credits.stats_label.text.contains("16 / 16"), "FAILED: Stats label must reflect all 16 sectors cleared")
 
 	credits.queue_free()
 	print("[PASS] test_demo_credits_roll_scene: Demo roll credits and feedback interface validated.")

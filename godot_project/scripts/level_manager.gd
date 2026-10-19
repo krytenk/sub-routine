@@ -9,7 +9,7 @@ signal level_completed(level_index: int)
 const TOTAL_ROADMAP_LEVELS: int = 120
 const LAUNCH_DAY_LEVELS: int = 20
 const EXPANSION_PACK_1_LEVELS: int = 40
-const DEMO_END_LEVEL_INDEX: int = 12
+const DEMO_END_LEVEL_INDEX: int = 16
 const TARGET_GAMEPLAY_MINUTES_PER_LEVEL: int = 30
 
 var current_level_index: int = 1

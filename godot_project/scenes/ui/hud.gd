@@ -31,11 +31,11 @@ func _ready() -> void:
 		intro_active = false
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-	if has_node("/root/TheOverseer"):
+	if is_inside_tree() and has_node("/root/TheOverseer"):
 		get_node("/root/TheOverseer").glitch_overlay_requested.connect(_on_glitch_requested)
 
 	# Listen to player signals
-	var players = get_tree().get_nodes_in_group("player")
+	var players = get_tree().get_nodes_in_group("player") if is_inside_tree() else []
 	if not players.is_empty():
 		var p = players[0]
 		if p.has_signal("health_changed"):

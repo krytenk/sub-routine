@@ -48,16 +48,16 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
 theme_override_font_sizes/font_size = 12
-text = "ACT I COMPLETE — SECTORS 01 TO 12 CLEARED"
+text = "ACT II COMPLETE — SECTORS 01 TO 16 CLEARED"
 horizontal_alignment = 1
 
 [node name="EpilogueLabel" type="Label" parent="ScrollContainer/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.8, 0.85, 1)
 theme_override_font_sizes/font_size = 10
-text = "Roxy Vance has survived the subterranean depths, conquered the Clock Cycle Foundry & DMA Panopticon, and shattered the Kernel Warden Avatar at the Sub-Routine Core Threshold.
-The Overseer's primary partition has collapsed... yet deeper memory sectors are already re-initializing.
-Stay tuned for Act II Expansion: Sectors 13 through 24!"
+text = "Roxy Vance has survived the subterranean depths, shattered the Kernel Warden Avatar in Sector 12, uncovered Subject 00 (Julian Vance) in the Interrupt Vector Ward, and flash-frozen the Thermal Overlord in Sector 16.
+The Deep Core Elevator is now descending toward the Final Singularity...
+Stay tuned for Act III Finale: Sectors 17 through 20!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -95,9 +95,9 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
 theme_override_font_sizes/font_size = 10
-text = "SECTORS CONQUERED: 12 / 12 (Act I Complete)
+text = "SECTORS CONQUERED: 16 / 16 (Act II Complete)
 EMP ARSENAL: MK V (Zero-Point Resonant Core)
-FACILITY STATUS: Sub-Routine Core Threshold Breached // Act I Complete"
+FACILITY STATUS: Thermal Throttling Spire Breached // Act II Complete"
 horizontal_alignment = 1
 
 [node name="HSeparator3" type="HSeparator" parent="ScrollContainer/VBox"]

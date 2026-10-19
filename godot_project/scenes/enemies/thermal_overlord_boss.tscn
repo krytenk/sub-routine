@@ -1,0 +1,105 @@
+[gd_scene load_steps=14 format=3 uid="uid://thermal_overlord_boss_sec16"]
+
+[ext_resource type="Script" path="res://scenes/enemies/thermal_overlord_boss.gd" id="1_boss"]
+[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="2_rust"]
+[ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="3_server"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_boss"]
+radius = 1.3
+height = 3.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chassis"]
+albedo_texture = ExtResource("2_rust")
+albedo_color = Color(0.45, 0.25, 0.18, 1)
+metallic = 0.9
+roughness = 0.28
+uv1_scale = Vector3(2, 2, 2)
+texture_filter = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_core"]
+albedo_color = Color(1.0, 0.35, 0.08, 1)
+emission_enabled = true
+emission = Color(1.0, 0.4, 0.08, 1)
+emission_energy_multiplier = 7.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slag"]
+transparency = 1
+albedo_color = Color(1.0, 0.42, 0.1, 0.55)
+emission_enabled = true
+emission = Color(1.0, 0.35, 0.05, 1)
+emission_energy_multiplier = 3.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_torso"]
+material = SubResource("StandardMaterial3D_chassis")
+size = Vector3(2.3, 2.4, 1.6)
+
+[sub_resource type="SphereMesh" id="SphereMesh_core"]
+material = SubResource("StandardMaterial3D_core")
+radius = 0.48
+height = 0.96
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_slag"]
+material = SubResource("StandardMaterial3D_slag")
+top_radius = 2.2
+bottom_radius = 2.2
+height = 0.42
+
+[sub_resource type="BoxMesh" id="BoxMesh_furnace_arm"]
+material = SubResource("StandardMaterial3D_chassis")
+size = Vector3(0.8, 2.5, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_leg"]
+material = SubResource("StandardMaterial3D_chassis")
+size = Vector3(0.85, 2.0, 0.85)
+
+[node name="ThermalOverlordBoss" type="CharacterBody3D" groups=["bosses", "enemies"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_boss")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, 0)
+shape = SubResource("CapsuleShape3D_boss")
+
+[node name="VisualRoot" type="Node3D" parent="."]
+
+[node name="Torso" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+mesh = SubResource("BoxMesh_torso")
+
+[node name="ThermalCore" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0.82)
+mesh = SubResource("SphereMesh_core")
+
+[node name="ThermalCoreLight" type="OmniLight3D" parent="VisualRoot/Torso/ThermalCore"]
+light_color = Color(1.0, 0.4, 0.1, 1)
+light_energy = 6.0
+omni_range = 11.0
+
+[node name="MoltenSlagMantle" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.15, 0)
+mesh = SubResource("CylinderMesh_slag")
+
+[node name="ShoulderFurnaceL" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.55, 0.1, 0)
+mesh = SubResource("BoxMesh_furnace_arm")
+
+[node name="ShoulderFurnaceR" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 0.1, 0)
+mesh = SubResource("BoxMesh_furnace_arm")
+
+[node name="LegL" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 1.0, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="LegR" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 1.0, 0)
+mesh = SubResource("BoxMesh_leg")
+
+[node name="SlamAudio" type="AudioStreamPlayer3D" parent="."]
+max_distance = 36.0
+volume_db = 4.0
+
+[node name="ExplodeAudio" type="AudioStreamPlayer3D" parent="."]
+max_distance = 45.0
+volume_db = 6.0

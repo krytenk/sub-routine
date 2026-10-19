@@ -65,7 +65,15 @@ const OVERSEER_LINES = {
     "panopticon_override": "Direct Memory Access overridden. You bypassed my surveillance array... Impressive. Step into the Core Threshold, Roxy. Let us meet face to face.",
     "welcome_sec12": "Sector Twelve: The Sub-Routine Core Threshold. Behold the Kernel Warden. Your standard EMP pulses cannot pierce my phase-shield until the harmonic cooling pylons are overloaded. Prepare for garbage collection.",
     "boss_phase2": "Warning: Harmonic cooling pylon overloaded! Core temperature critical! Unleashing emergency security threads—terminate her immediately!",
-    "boss_defeated": "Critical Kernel Panic! Primary Overseer avatar collapsing... You shattered the outer shell, Roxy Vance, but the deeper memory partitions are already waking up."
+    "boss_defeated": "Critical Kernel Panic! Primary Overseer avatar collapsing... You shattered the outer shell, Roxy Vance, but the deeper memory partitions are already waking up.",
+    "welcome_sec13": "Sector Thirteen: The Floating Point Void. You shattered my primary avatar, Roxy, so I stripped the floor from beneath your feet. One rounding error on these mantissa islands and you fall forever.",
+    "mantissa_locked": "IEEE-754 precision restored. You anchored the floating point bridges, Roxy, but the instruction pipeline ahead is already flooding.",
+    "welcome_sec14": "Sector Fourteen: Instruction Pipeline Trench. Fetch, decode, execute, writeback. The Dredge Titan patrols the execution channel below. Crawl through the East overhead ducts if you want to keep your spine intact.",
+    "pipeline_flushed": "Branch predictor installed. Instruction pipeline flushed. You are getting dangerously close to the Interrupt Vector detention cells.",
+    "welcome_sec15": "Sector Fifteen: Interrupt Vector Cell. You wanted to know what has been stalking you from the shadows since Sector One? Look inside Observation Chamber Zero. That was the first developer who tried to escape.",
+    "irq_released": "Interrupt vectors cleared. All cell blocks unsealed. Ascend the Spire Lift to Sector Sixteen, Roxy. The reactor is waiting.",
+    "welcome_sec16": "Sector Sixteen: The Thermal Throttling Spire. Behold the Thermal Overlord. Its superheated slag armor is immune to your EMP until you open all three Cryogenic Heat-Sink Valves to freeze its chassis!",
+    "overlord_defeated": "Cryogenic thermal shock critical! The Thermal Overlord has shattered... You survived Act Two, Roxy Vance, but the final four sectors of the Sub-Routine Core still stand between you and the surface."
 }
 
 var last_played_clip: String = ""

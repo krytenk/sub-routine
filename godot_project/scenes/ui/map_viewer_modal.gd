@@ -55,10 +55,26 @@ const SECTOR_INFO = {
 	12: {
 		"title": "SECTOR 12: SUB-ROUTINE CORE THRESHOLD (ACT I BOSS)",
 		"desc": "Central Overseer Kernel Rotunda, Harmonic Cooling Pylons, Surge Discharge Ring, and Core Lift."
+	},
+	13: {
+		"title": "SECTOR 13: FLOATING POINT VOID & MANTISSA ISLANDS",
+		"desc": "North Arrival Bridge, West Mantissa Platform, Central Exponent Hub, East Radix Platform, and Void Spans."
+	},
+	14: {
+		"title": "SECTOR 14: INSTRUCTION PIPELINE TRENCH",
+		"desc": "Fetch Stage Bay, Sunken Decode/Execute Trench, East Overhead Duct Bypass, and Branch Predictor Alcove."
+	},
+	15: {
+		"title": "SECTOR 15: INTERRUPT VECTOR CELL & CONTAINMENT WARD",
+		"desc": "Central Octagonal Interrogation Hub, Cell Blocks A & B, Subject 00 Observation Chamber, and Spire Lift."
+	},
+	16: {
+		"title": "SECTOR 16: THERMAL THROTTLING SPIRE (ACT II BOSS)",
+		"desc": "Central Reactor Spire Arena, Three Cryogenic Heat-Sink Valve Bays, and South Deep Core Transit Gate."
 	}
 }
 
-const MAX_MAPPED_SECTOR: int = 12
+const MAX_MAPPED_SECTOR: int = 16
 
 var current_sector_index: int = 1
 var is_open: bool = false
@@ -142,25 +158,30 @@ func _input(event: InputEvent) -> void:
 	if not is_open:
 		if event.is_action_pressed("toggle_map"):
 			toggle_map()
-			get_viewport().set_input_as_handled()
+			if get_viewport():
+				get_viewport().set_input_as_handled()
 		return
 
 	# Handle closing map via X key, ESC, M key, E key, Space, Enter, or actions
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_X or event.keycode == KEY_ESCAPE or event.keycode == KEY_M or event.keycode == KEY_E or event.keycode == KEY_SPACE or event.keycode == KEY_ENTER:
 			close_map()
-			get_viewport().set_input_as_handled()
+			if get_viewport():
+				get_viewport().set_input_as_handled()
 			return
 		elif event.keycode == KEY_A or event.keycode == KEY_LEFT:
 			_on_prev_pressed()
-			get_viewport().set_input_as_handled()
+			if get_viewport():
+				get_viewport().set_input_as_handled()
 			return
 		elif event.keycode == KEY_D or event.keycode == KEY_RIGHT:
 			_on_next_pressed()
-			get_viewport().set_input_as_handled()
+			if get_viewport():
+				get_viewport().set_input_as_handled()
 			return
 
 	if event.is_action_pressed("toggle_map") or event.is_action_pressed("pause_game") or event.is_action_pressed("interact"):
 		close_map()
-		get_viewport().set_input_as_handled()
+		if get_viewport():
+			get_viewport().set_input_as_handled()
 		return
