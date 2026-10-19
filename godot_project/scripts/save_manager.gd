@@ -45,9 +45,11 @@ func save_game(checkpoint_name: String = "") -> bool:
 
 	var gen_parts = []
 	var sing_parts = []
+	var surf_relics = []
 	if lm:
 		gen_parts = lm.generator_parts.duplicate()
 		sing_parts = lm.singularity_parts.duplicate()
+		surf_relics = lm.surface_relics.duplicate()
 
 	var cp_name = checkpoint_name
 	if cp_name == "":
@@ -64,6 +66,7 @@ func save_game(checkpoint_name: String = "") -> bool:
 		"emp_upgrade_level": emp_lvl,
 		"generator_parts": gen_parts,
 		"singularity_parts": sing_parts,
+		"surface_relics": surf_relics,
 		"timestamp": Time.get_datetime_string_from_system()
 	}
 
@@ -110,6 +113,7 @@ func load_game() -> bool:
 		lm.emp_upgrade_level = int(data.get("emp_upgrade_level", 1))
 		lm.generator_parts = data.get("generator_parts", [])
 		lm.singularity_parts = data.get("singularity_parts", [])
+		lm.surface_relics = data.get("surface_relics", [])
 		lm.load_level(target_lvl)
 
 	var tree = get_tree()

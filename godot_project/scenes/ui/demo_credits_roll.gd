@@ -32,10 +32,10 @@ func _populate_stats() -> void:
 	if lm and "emp_upgrade_level" in lm:
 		emp_lvl = lm.emp_upgrade_level
 
-	var stats_text = "SECTORS CONQUERED: 16 / 16 (Act II Complete)\n"
+	var stats_text = "SECTORS CONQUERED: 18 / 18 (Vance Manor Surface Chapter Complete)\n"
 	stats_text += "EMP ARSENAL: MK %s (Zero-Point Resonant Core)\n" % ("V" if emp_lvl >= 5 else "IV")
-	stats_text += "MAJOR ANOMALIES SURVIVED: Dredge Titan, Arch-Compiler Goliath, Kernel Warden, Thermal Overlord\n"
-	stats_text += "FACILITY STATUS: Thermal Throttling Spire Breached // Act II Complete"
+	stats_text += "MAJOR ANOMALIES SURVIVED: Dredge Titan, Arch-Compiler Goliath, Kernel Warden, Thermal Overlord, Subject 04\n"
+	stats_text += "FACILITY STATUS: Subterranean Sealed Forever // Vance Manor Grand Ballroom Unsealed"
 
 	if stats_label:
 		stats_label.text = stats_text

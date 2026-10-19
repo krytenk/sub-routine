@@ -75,6 +75,12 @@ const KNOWN_VO_CLIPS: Array[String] = [
     "overseer_irq_released",
     "overseer_welcome_sec16",
     "overseer_overlord_defeated",
+    "overseer_welcome_sec17",
+    "overseer_mirror_breach_warning",
+    "overseer_clinic_unsealed",
+    "overseer_welcome_sec18",
+    "overseer_clock_chime_trap",
+    "overseer_manor_ballroom_unlocked",
     "overseer_wirehound_alert"
 ]
 

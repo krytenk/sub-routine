@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://subroutine_prop_surface_relic"]
+
+[ext_resource type="Script" path="res://scenes/props/surface_relic_pickup.gd" id="1_relic_script"]
+
+[node name="SurfaceRelicPickup" type="Node3D"]
+script = ExtResource("1_relic_script")

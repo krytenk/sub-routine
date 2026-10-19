@@ -58,8 +58,8 @@ func test_complete_audio_manifest_coverage() -> bool:
     var audio_mgr = load("res://scripts/audio_manager.gd").new()
     audio_mgr.scan_audio_directories()
 
-    # 1. Verify all 59 Overseer VO lines
-    assert(audio_mgr.KNOWN_VO_CLIPS.size() == 59, "FAILED: Expected exactly 59 KNOWN_VO_CLIPS, got: " + str(audio_mgr.KNOWN_VO_CLIPS.size()))
+    # 1. Verify all 65 Overseer VO lines
+    assert(audio_mgr.KNOWN_VO_CLIPS.size() == 65, "FAILED: Expected exactly 65 KNOWN_VO_CLIPS, got: " + str(audio_mgr.KNOWN_VO_CLIPS.size()))
     for vo_id in audio_mgr.KNOWN_VO_CLIPS:
         assert(audio_mgr.vo_streams.has(vo_id), "FAILED: Missing VO line in vo_streams: " + vo_id)
         assert(audio_mgr.get_vo_duration(vo_id) > 0.5, "FAILED: Invalid VO duration for: " + vo_id)
@@ -75,7 +75,7 @@ func test_complete_audio_manifest_coverage() -> bool:
     for sfx in audio_mgr.KNOWN_SFX_FILES:
         assert(audio_mgr.sfx_streams.has(sfx), "FAILED: Missing SFX stream: " + sfx)
 
-    print("[PASS] test_complete_audio_manifest_coverage: All 59 VO clips, 2 ambient music tracks, and 23 SFX assets verified 100% loaded.")
+    print("[PASS] test_complete_audio_manifest_coverage: All 65 VO clips, 2 ambient music tracks, and 23 SFX assets verified 100% loaded.")
     audio_mgr.free()
     return true
 

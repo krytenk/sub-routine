@@ -71,10 +71,18 @@ const SECTOR_INFO = {
 	16: {
 		"title": "SECTOR 16: THERMAL THROTTLING SPIRE (ACT II BOSS)",
 		"desc": "Central Reactor Spire Arena, Three Cryogenic Heat-Sink Valve Bays, and South Deep Core Transit Gate."
+	},
+	17: {
+		"title": "SECTOR 17: CLINICAL BEHAVIORAL SANATORIUM WING",
+		"desc": "Collapsed Subterranean Shaft (Sealed Forever), Sterile Triage, One-Way Mirror Chamber, X-Ray Lightbox Theatre, Darkroom, and Auditory Booths."
+	},
+	18: {
+		"title": "SECTOR 18: VANCE MANOR — GRAND ATRIUM & PORTRAIT GALLERY",
+		"desc": "1931 Vance Estate Foyer, Grandfather Clock, West Ancestral Portrait Gallery, East Grand Piano Parlor, Secret Study, and Ballroom Doors."
 	}
 }
 
-const MAX_MAPPED_SECTOR: int = 16
+const MAX_MAPPED_SECTOR: int = 18
 
 var current_sector_index: int = 1
 var is_open: bool = false

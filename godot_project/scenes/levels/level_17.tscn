@@ -1,111 +1,344 @@
-[gd_scene load_steps=12 format=3 uid="uid://subroutine_lvl_17"]
+[gd_scene load_steps=38 format=3 uid="uid://subroutine_lvl_17_clinical_sanatorium"]
 
-[ext_resource type="Script" path="res://scripts/puzzles/circuit_breaker_puzzle.gd" id="1_puzzle"]
-[ext_resource type="Script" path="res://scripts/non_euclidean_corridor.gd" id="2_noneuc"]
-[ext_resource type="Script" path="res://scripts/shifting_room.gd" id="3_shift"]
-[ext_resource type="PackedScene" uid="uid://b7glitchwalker01" path="res://scenes/enemies/glitch_walker.tscn" id="4_walker"]
-[ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="5_server_tex"]
-[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="6_rust_tex"]
+[ext_resource type="Script" path="res://scripts/level_17.gd" id="1_level_script"]
+[ext_resource type="Texture2D" path="res://assets/textures/server_labyrinth.jpg" id="2_wall_tex"]
+[ext_resource type="Texture2D" path="res://assets/textures/rusted_metal.jpg" id="3_floor_tex"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/cyber_husk.tscn" id="4_orderly"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/glitch_walker.tscn" id="5_walker"]
+[ext_resource type="PackedScene" path="res://scenes/props/surface_relic_pickup.tscn" id="6_relic"]
+[ext_resource type="PackedScene" path="res://scenes/props/deadlock_relay_prop.tscn" id="7_switch"]
+[ext_resource type="PackedScene" path="res://scenes/props/crt_terminal_prop.tscn" id="8_terminal"]
+[ext_resource type="PackedScene" path="res://scenes/props/surveillance_camera_prop.tscn" id="9_camera"]
+[ext_resource type="PackedScene" path="res://scenes/props/stalker_shadow_prop.tscn" id="10_shadow"]
+[ext_resource type="PackedScene" path="res://scenes/props/facility_casualty_prop.tscn" id="11_casualty"]
+[ext_resource type="PackedScene" path="res://scenes/props/nanite_medkit_prop.tscn" id="12_medkit"]
+[ext_resource type="Script" path="res://scripts/sector_exit_trigger.gd" id="13_exit"]
+[ext_resource type="PackedScene" path="res://scenes/props/wall_map_panel_prop.tscn" id="14_wall_map"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
-size = Vector3(16, 0.2, 32)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
-albedo_texture = ExtResource("6_rust_tex")
-uv1_scale = Vector3(4, 8, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_clinical_floor"]
+albedo_texture = ExtResource("3_floor_tex")
+albedo_color = Color(0.88, 0.94, 0.98, 1)
+metallic = 0.25
+roughness = 0.18
+uv1_scale = Vector3(12, 16, 1)
 texture_filter = 0
 
-[sub_resource type="BoxMesh" id="BoxMesh_floor"]
-material = SubResource("StandardMaterial3D_floor")
-size = Vector3(16, 0.2, 32)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_wall"]
-size = Vector3(0.4, 4, 32)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
-albedo_texture = ExtResource("5_server_tex")
-uv1_scale = Vector3(8, 2, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_clinical_wall"]
+albedo_texture = ExtResource("2_wall_tex")
+albedo_color = Color(0.82, 0.9, 0.95, 1)
+uv1_scale = Vector3(8, 3, 1)
 texture_filter = 0
 
-[sub_resource type="BoxMesh" id="BoxMesh_wall"]
-material = SubResource("StandardMaterial3D_wall")
-size = Vector3(0.4, 4, 32)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_one_way_mirror"]
+transparency = 1
+albedo_color = Color(0.35, 0.78, 0.92, 0.55)
+metallic = 0.95
+roughness = 0.05
+emission_enabled = true
+emission = Color(0.25, 0.65, 0.85, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oak_door"]
+albedo_color = Color(0.38, 0.22, 0.1, 1.0)
+metallic = 0.35
+roughness = 0.45
+emission_enabled = true
+emission = Color(0.65, 0.45, 0.18, 1.0)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_triage_main"]
+size = Vector3(24, 0.3, 30)
+
+[sub_resource type="BoxMesh" id="BoxMesh_triage_main"]
+material = SubResource("StandardMaterial3D_clinical_floor")
+size = Vector3(24, 0.3, 30)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wing_room"]
+size = Vector3(14, 0.3, 16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wing_room"]
+material = SubResource("StandardMaterial3D_clinical_floor")
+size = Vector3(14, 0.3, 16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_corridor"]
+size = Vector3(10, 0.3, 18)
+
+[sub_resource type="BoxMesh" id="BoxMesh_corridor"]
+material = SubResource("StandardMaterial3D_clinical_floor")
+size = Vector3(10, 0.3, 18)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mirror_glass"]
+material = SubResource("StandardMaterial3D_one_way_mirror")
+size = Vector3(0.25, 3.8, 10.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_side"]
+size = Vector3(0.5, 8, 52)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_side"]
+material = SubResource("StandardMaterial3D_clinical_wall")
+size = Vector3(0.5, 8, 52)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_end"]
+size = Vector3(44, 8, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_end"]
+material = SubResource("StandardMaterial3D_clinical_wall")
+size = Vector3(44, 8, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oak_door"]
+material = SubResource("StandardMaterial3D_oak_door")
+size = Vector3(4.6, 4.2, 0.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_trigger"]
-size = Vector3(6, 3, 2)
+size = Vector3(6, 4, 2)
 
 [node name="Level_17" type="Node3D"]
+script = ExtResource("1_level_script")
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -19)
+
+[node name="BacktrackSpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.5, 23)
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="NorthCollapsedShaftVestibule" type="StaticBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, -14)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/NorthCollapsedShaftVestibule"]
+shape = SubResource("BoxShape3D_corridor")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/NorthCollapsedShaftVestibule"]
+mesh = SubResource("BoxMesh_corridor")
+
+[node name="CentralSterileTriageAndMirrorWard" type="StaticBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 4)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/CentralSterileTriageAndMirrorWard"]
+shape = SubResource("BoxShape3D_triage_main")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/CentralSterileTriageAndMirrorWard"]
+mesh = SubResource("BoxMesh_triage_main")
+
+[node name="WestXRayAutopsyAndDarkroom" type="StaticBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, -0.15, 6)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/WestXRayAutopsyAndDarkroom"]
+shape = SubResource("BoxShape3D_wing_room")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/WestXRayAutopsyAndDarkroom"]
+mesh = SubResource("BoxMesh_wing_room")
+
+[node name="EastAuditoryIsolationBooths" type="StaticBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, -0.15, 6)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/EastAuditoryIsolationBooths"]
+shape = SubResource("BoxShape3D_wing_room")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/EastAuditoryIsolationBooths"]
+mesh = SubResource("BoxMesh_wing_room")
+
+[node name="SouthOakDoorThreshold" type="StaticBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 21)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/SouthOakDoorThreshold"]
+shape = SubResource("BoxShape3D_corridor")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/SouthOakDoorThreshold"]
+mesh = SubResource("BoxMesh_corridor")
+
+[node name="OneWayMirrorGlass" type="MeshInstance3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 2.0, 2.0)
+mesh = SubResource("BoxMesh_mirror_glass")
+
+[node name="WallWestOuter" type="StaticBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 4.0, 2)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/WallWestOuter"]
+shape = SubResource("BoxShape3D_wall_side")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/WallWestOuter"]
+mesh = SubResource("BoxMesh_wall_side")
+
+[node name="WallEastOuter" type="StaticBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 4.0, 2)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/WallEastOuter"]
+shape = SubResource("BoxShape3D_wall_side")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/WallEastOuter"]
+mesh = SubResource("BoxMesh_wall_side")
+
+[node name="WallNorthCollapsedBulkhead" type="StaticBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0, -23)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/WallNorthCollapsedBulkhead"]
+shape = SubResource("BoxShape3D_wall_end")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/WallNorthCollapsedBulkhead"]
+mesh = SubResource("BoxMesh_wall_end")
+
+[node name="WallSouthManorBoundary" type="StaticBody3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0, 28)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/WallSouthManorBoundary"]
+shape = SubResource("BoxShape3D_wall_end")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/WallSouthManorBoundary"]
+mesh = SubResource("BoxMesh_wall_end")
 
 [node name="Lighting" type="Node3D" parent="."]
 
-[node name="OmniLight3D_1" type="OmniLight3D" parent="Lighting"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -6)
-light_color = Color(0.8, 0.25, 0.2, 1)
-light_energy = 2.5
-omni_range = 14.0
+[node name="Light_SterileTriage" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.8, -6)
+light_color = Color(0.92, 0.98, 1.0, 1)
+light_energy = 2.6
+omni_range = 18.0
 
-[node name="OmniLight3D_2" type="OmniLight3D" parent="Lighting"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 8)
-light_color = Color(0.8, 0.25, 0.2, 1)
-light_energy = 2.0
-omni_range = 14.0
+[node name="Light_OneWayMirrorCell" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 4.8, 2)
+light_color = Color(0.85, 0.95, 1.0, 1)
+light_energy = 2.4
+omni_range = 16.0
 
-[node name="Architecture" type="StaticBody3D" parent="."]
+[node name="Light_XRayLightbox" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 4.2, 4)
+light_color = Color(0.75, 0.92, 1.0, 1)
+light_energy = 1.4
+omni_range = 15.0
 
-[node name="FloorCollision" type="CollisionShape3D" parent="Architecture"]
-shape = SubResource("BoxShape3D_floor")
+[node name="Light_DarkroomSafeLamp" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 3.8, 12)
+light_color = Color(0.95, 0.18, 0.18, 1)
+light_energy = 1.6
+omni_range = 11.0
 
-[node name="FloorMesh" type="MeshInstance3D" parent="Architecture"]
-mesh = SubResource("BoxMesh_floor")
+[node name="Light_AuditoryBooths" type="OmniLight3D" parent="Lighting"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 4.5, 6)
+light_color = Color(0.9, 0.96, 1.0, 1)
+light_energy = 2.1
+omni_range = 15.0
 
-[node name="LeftWallCol" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2, 0)
-shape = SubResource("BoxShape3D_wall")
+[node name="PuzzleTerminals" type="Node3D" parent="."]
 
-[node name="LeftWallMesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2, 0)
-mesh = SubResource("BoxMesh_wall")
+[node name="CollapsedElevatorShaftTerminal" parent="PuzzleTerminals" instance=ExtResource("8_terminal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0, -21.5)
 
-[node name="RightWallCol" type="CollisionShape3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2, 0)
-shape = SubResource("BoxShape3D_wall")
+[node name="XRayLightboxConsole" parent="PuzzleTerminals" instance=ExtResource("8_terminal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 4.0)
 
-[node name="RightWallMesh" type="MeshInstance3D" parent="Architecture"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2, 0)
-mesh = SubResource("BoxMesh_wall")
+[node name="LightboxKillSwitch" parent="PuzzleTerminals" instance=ExtResource("7_switch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 0, 4.0)
+relay_id = "lightbox_kill_switch"
+relay_name = "X-Ray Lightbox Emergency Dimmer Switch"
 
-[node name="NonEuclideanCorridor" type="Area3D" parent="." node_paths=PackedStringArray("entry_anchor", "puzzle_target")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 14)
-collision_layer = 0
-collision_mask = 2
-script = ExtResource("2_noneuc")
-entry_anchor = NodePath("EntryAnchor")
-puzzle_target = NodePath("../Puzzles/PrimaryPuzzle")
+[node name="SanatoriumOakDoorsTerminal" parent="PuzzleTerminals" instance=ExtResource("8_terminal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 21.5)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NonEuclideanCorridor"]
-shape = SubResource("BoxShape3D_trigger")
+[node name="Pickups" type="Node3D" parent="."]
 
-[node name="EntryAnchor" type="Marker3D" parent="NonEuclideanCorridor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -26)
+[node name="XRayPlate_Cranium" parent="Pickups" instance=ExtResource("6_relic")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.4, -4.0)
+relic_id = "xray_cranium"
+relic_name = "Radiograph X-Ray Plate I (Cranium - Pin #4)"
+relic_description = "Translucent skull radiograph showing surgical titanium pin #4. Mount on the X-Ray Lightbox in the West Autopsy Theatre."
+relic_color = Color(0.35, 0.92, 1.0, 1.0)
 
-[node name="ShiftingRoom" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-collision_layer = 0
-collision_mask = 2
-script = ExtResource("3_shift")
+[node name="XRayPlate_Thorax" parent="Pickups" instance=ExtResource("6_relic")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.0, 0.4, 11.5)
+relic_id = "xray_thorax"
+relic_name = "Radiograph X-Ray Plate II (Thorax - Pin #9)"
+relic_description = "Ribcage radiograph showing neural bus graft and surgical pin #9. Mount on the X-Ray Lightbox."
+relic_color = Color(0.35, 0.92, 1.0, 1.0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ShiftingRoom"]
-shape = SubResource("BoxShape3D_trigger")
+[node name="XRayPlate_Pelvis" parent="Pickups" instance=ExtResource("6_relic")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0, 0.4, 3.5)
+relic_id = "xray_pelvis"
+relic_name = "Radiograph X-Ray Plate III (Pelvis - Pins #2 & #7)"
+relic_description = "Lower spinal radiograph showing surgical pins #2 and #7. Complete set ready for the X-Ray Lightbox!"
+relic_color = Color(0.35, 0.92, 1.0, 1.0)
 
-[node name="Puzzles" type="Node3D" parent="."]
+[node name="Relic_SilverNitrate" parent="Pickups" instance=ExtResource("6_relic")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.0, 0.4, 13.0)
+relic_id = "silver_nitrate_developer"
+relic_name = "Bottle of Silver Nitrate Developer"
+relic_description = "Photographic darkroom reagent. Essential for developing unexposed glass-plate photographs in Vance Manor (Sector 18)."
+relic_color = Color(0.95, 0.75, 0.25, 1.0)
 
-[node name="PrimaryPuzzle" type="Node3D" parent="Puzzles"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, -8)
-script = ExtResource("1_puzzle")
-puzzle_id = "SECTOR_17_REGISTER"
-puzzle_name = "Subterranean Breaker Grid 17"
+[node name="Relic_TuningFork" parent="Pickups" instance=ExtResource("6_relic")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0.4, 8.5)
+relic_id = "clinical_tuning_fork_440"
+relic_name = "440Hz Clinical Tuning Fork"
+relic_description = "Precision acoustic pitch fork used in the Auditory Isolation Booths. Required to tune the Grand Piano in Vance Manor (Sector 18)."
+relic_color = Color(0.9, 0.9, 0.98, 1.0)
+
+[node name="Relic_SerpentHalfCrest" parent="Pickups" instance=ExtResource("6_relic")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.4, -9.5)
+relic_id = "serpent_half_crest"
+relic_name = "Tarnished Serpent Half-Crest (Left Emblem)"
+relic_description = "Found in Roxy Vance's intake locker. Combines with the Raven Half-Crest in Vance Manor (Sector 18) to open the Ballroom."
+relic_color = Color(0.25, 0.95, 0.55, 1.0)
+
+[node name="Medkit_Triage" parent="Pickups" instance=ExtResource("12_medkit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.4, -12.0)
+
+[node name="Medkit_Autopsy" parent="Pickups" instance=ExtResource("12_medkit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.0, 0.4, 9.0)
 
 [node name="Enemies" type="Node3D" parent="."]
 
-[node name="GlitchWalker" parent="Enemies" instance=ExtResource("4_walker")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 6)
+[node name="Subject04_SurgicalOrderly" parent="Enemies" instance=ExtResource("4_orderly")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.5, 2.0)
+patrol_points = [Vector3(6.5, 0.5, -1.0), Vector3(9.5, 0.5, 5.0)]
+
+[node name="SanatoriumOrderly_East" parent="Enemies" instance=ExtResource("4_orderly")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0, 0.5, 10.0)
+patrol_points = [Vector3(11.0, 0.5, 8.0), Vector3(17.0, 0.5, 11.0)]
+
+[node name="PatientHusk_West" parent="Enemies" instance=ExtResource("5_walker")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.0, 0.5, 2.0)
+patrol_points = [Vector3(-15.0, 0.5, 0.0), Vector3(-9.0, 0.5, 6.0)]
+
+[node name="StalkerElements" type="Node3D" parent="."]
+
+[node name="Camera_Triage" parent="StalkerElements" instance=ExtResource("9_camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 3.8, -14.0)
+
+[node name="Camera_MirrorWard" parent="StalkerElements" instance=ExtResource("9_camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0, 3.8, 2.0)
+
+[node name="Camera_Autopsy" parent="StalkerElements" instance=ExtResource("9_camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.0, 3.8, 4.0)
+
+[node name="StalkerShadow_Mirror" parent="StalkerElements" instance=ExtResource("10_shadow")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 2.0)
+
+[node name="Casualties" type="Node3D" parent="."]
+
+[node name="Casualty_DrClaraVance" parent="Casualties" instance=ExtResource("11_casualty")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, 5.5)
+casualty_style = "slumped"
+technician_name = "Dr. Clara Vance (Chief Behavioral Surgeon)"
+log_entry = "The subterranean servers were built beneath our family estate. To unlock the Oak Double Doors into Vance Manor, layer all 3 X-Ray Plates on the Lightbox to read the 4-digit Bone-Pin Code—but shut the Lightbox off immediately after reading it, or the glare will let Subject 04 see you through the One-Way Mirror! And do NOT enter the Manor without the Silver Nitrate, the 440Hz Tuning Fork, and the Serpent Half-Crest."
+
+[node name="Atmosphere" type="Node3D" parent="."]
+
+[node name="WallMapPanel" parent="Atmosphere" instance=ExtResource("14_wall_map")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0, -22.2)
+sector_index = 17
+
+[node name="TransitExitGate" type="Node3D" parent="."]
+
+[node name="ExitOakDoubleDoors" type="MeshInstance3D" parent="TransitExitGate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 26.0)
+mesh = SubResource("BoxMesh_oak_door")
+
+[node name="Sector18ExitTrigger" type="Area3D" parent="TransitExitGate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 27.8)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("13_exit")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransitExitGate/Sector18ExitTrigger"]
+shape = SubResource("BoxShape3D_trigger")

@@ -9,7 +9,7 @@ signal level_completed(level_index: int)
 const TOTAL_ROADMAP_LEVELS: int = 120
 const LAUNCH_DAY_LEVELS: int = 20
 const EXPANSION_PACK_1_LEVELS: int = 40
-const DEMO_END_LEVEL_INDEX: int = 16
+const DEMO_END_LEVEL_INDEX: int = 18
 const TARGET_GAMEPLAY_MINUTES_PER_LEVEL: int = 30
 
 var current_level_index: int = 1
@@ -20,6 +20,7 @@ var installed_generator_parts: Array = []
 var is_generator_running: bool = false
 var emp_upgrade_level: int = 1
 var singularity_parts: Array = []
+var surface_relics: Array = []
 var pending_checkpoint_reload: bool = false
 var pending_restart_campaign: bool = false
 
@@ -31,6 +32,7 @@ func reset_campaign_state() -> void:
     is_generator_running = false
     emp_upgrade_level = 1
     singularity_parts.clear()
+    surface_relics.clear()
     print("[LevelManager] Campaign state reset to clean Sector 01 parameters.")
 
 func add_generator_part(part_key: String) -> void:
@@ -48,6 +50,14 @@ func add_singularity_part(part_key: String) -> void:
 
 func has_singularity_part(part_key: String) -> bool:
     return singularity_parts.has(part_key)
+
+func add_surface_relic(relic_key: String) -> void:
+    if not surface_relics.has(relic_key):
+        surface_relics.append(relic_key)
+        print("[LevelManager] Surface relic stored: ", relic_key, " (Total: ", surface_relics.size(), ")")
+
+func has_surface_relic(relic_key: String) -> bool:
+    return surface_relics.has(relic_key)
 
 func upgrade_emp() -> int:
     emp_upgrade_level = mini(5, emp_upgrade_level + 1)
@@ -74,7 +84,7 @@ func _build_roadmap_metadata() -> void:
         "Stack Overflow Vault", "Null Pointer Corridor", "Thread Lock Abyss",
         "Clock Cycle Foundry", "DMA Controller Trench", "Memory Leak Sump",
         "Floating Point Void", "Instruction Pipeline Trench", "Interrupt Vector Cell",
-        "Thermal Throttling Spire", "Garbage Collector Foundry", "Segfault Catacombs",
+        "Thermal Throttling Spire", "Clinical Behavioral Sanatorium Wing", "Vance Manor: Grand Atrium & Portrait Gallery",
         "Hex Dump Sanctorum", "Sub-Routine Core Threshold"
     ]
 

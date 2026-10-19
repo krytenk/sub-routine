@@ -73,7 +73,13 @@ const OVERSEER_LINES = {
     "welcome_sec15": "Sector Fifteen: Interrupt Vector Cell. You wanted to know what has been stalking you from the shadows since Sector One? Look inside Observation Chamber Zero. That was the first developer who tried to escape.",
     "irq_released": "Interrupt vectors cleared. All cell blocks unsealed. Ascend the Spire Lift to Sector Sixteen, Roxy. The reactor is waiting.",
     "welcome_sec16": "Sector Sixteen: The Thermal Throttling Spire. Behold the Thermal Overlord. Its superheated slag armor is immune to your EMP until you open all three Cryogenic Heat-Sink Valves to freeze its chassis!",
-    "overlord_defeated": "Cryogenic thermal shock critical! The Thermal Overlord has shattered... You survived Act Two, Roxy Vance, but the final four sectors of the Sub-Routine Core still stand between you and the surface."
+    "overlord_defeated": "Cryogenic thermal shock critical! The Thermal Overlord has shattered... You survived Act Two, Roxy Vance, but the final four sectors of the Sub-Routine Core still stand between you and the surface.",
+    "welcome_sec17": "Surface threshold reached. The subterranean hoist cables have sheared, Roxy. Sixteen levels of server bedrock just collapsed behind you. Welcome to the Clinical Behavioral Sanatorium Wing, where you were first admitted.",
+    "mirror_breach_warning": "Warning: High intensity X-Ray Lightbox active. The one-way observation mirror is now transparent from the patient cell. Subject Zero-Four can see you through the glass. Switch off the Lightbox before the glass shatters!",
+    "clinic_unsealed": "Surgical bone-pin sequence verified. The Sanatorium Oak Double Doors are unlatched. Step out of the clinic, Roxy, and see whose house was built above my core.",
+    "welcome_sec18": "Welcome home to Vance Manor. Every portrait in the West Gallery hides a pinhole lens, and the Grandfather Clock does not forgive intruders. Did you remember to bring the Silver Nitrate, the Tuning Fork, and the Serpent Crest from the clinic?",
+    "clock_chime_trap": "The Raven Half-Crest has been lifted from its velvet plinth! The Grandfather Clock has begun its forty-five second Midnight Lockdown. Do not move while the ancestral portraits are watching you!",
+    "manor_ballroom_unlocked": "The Tuning Fork resonated the Grand Piano, the Silver Nitrate developed Julian's glass plate, and the Serpent and Raven Crests are united. The Grand Ballroom doors are open."
 }
 
 var last_played_clip: String = ""
